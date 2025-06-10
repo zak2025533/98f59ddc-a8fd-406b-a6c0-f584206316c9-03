@@ -1,8 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -13,37 +12,132 @@ import {
   ShoppingCart, 
   Users, 
   TrendingUp,
-  Eye
+  Eye,
+  LogOut
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import ProductManagement from "./ProductManagement";
+import CategoryManagement from "./CategoryManagement";
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  stock: number;
+  subcategory_id: string;
+  subcategories: {
+    name: string;
+    categories: {
+      name: string;
+    };
+  };
+}
 
 const AdminDashboard = () => {
-  const [products, setProducts] = useState([
-    { id: 1, name: "كيكة الشوكولاته", category: "كيكات", price: 85, stock: 15, status: "متوفر" },
-    { id: 2, name: "شوكولاته بلجيكية", category: "شوكولاته", price: 45, stock: 32, status: "متوفر" },
-    { id: 3, name: "عصير المانجو", category: "مشروبات", price: 25, stock: 8, status: "قليل" },
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalCategories: 0,
+    totalSubcategories: 0,
+    lowStockProducts: 0,
+  });
+  const { toast } = useToast();
 
-  const stats = [
-    { title: "إجمالي المنتجات", value: "156", icon: Package, color: "text-blue-600" },
-    { title: "الطلبات اليوم", value: "23", icon: ShoppingCart, color: "text-green-600" },
-    { title: "العملاء", value: "1,249", icon: Users, color: "text-purple-600" },
-    { title: "المبيعات", value: "15,750 ر.س", icon: TrendingUp, color: "text-orange-600" },
+  useEffect(() => {
+    fetchProducts();
+    fetchStats();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select(`
+          id,
+          name,
+          price,
+          stock,
+          subcategory_id,
+          subcategories (
+            name,
+            categories (
+              name
+            )
+          )
+        `)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast({
+        title: "خطأ",
+        description: "تعذر تحميل المنتجات",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const { data: productsData } = await supabase
+        .from('products')
+        .select('id, stock');
+      
+      const { data: categoriesData } = await supabase
+        .from('categories')
+        .select('id');
+      
+      const { data: subcategoriesData } = await supabase
+        .from('subcategories')
+        .select('id');
+
+      setStats({
+        totalProducts: productsData?.length || 0,
+        totalCategories: categoriesData?.length || 0,
+        totalSubcategories: subcategoriesData?.length || 0,
+        lowStockProducts: productsData?.filter(p => p.stock < 10).length || 0,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin');
+    window.location.reload();
+  };
+
+  const statsCards = [
+    { title: "إجمالي المنتجات", value: stats.totalProducts, icon: Package, color: "text-blue-600" },
+    { title: "الأقسام", value: stats.totalCategories, icon: ShoppingCart, color: "text-green-600" },
+    { title: "الفئات الفرعية", value: stats.totalSubcategories, icon: Users, color: "text-purple-600" },
+    { title: "منتجات قليلة المخزون", value: stats.lowStockProducts, icon: TrendingUp, color: "text-orange-600" },
   ];
 
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            لوحة التحكم - بلا حدود للحلويات
-          </h1>
-          <p className="text-muted-foreground">إدارة المنتجات والطلبات</p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              لوحة التحكم - بلا حدود للحلويات
+            </h1>
+            <p className="text-muted-foreground">إدارة المنتجات والطلبات</p>
+          </div>
+          <Button onClick={handleLogout} variant="outline" className="gap-2">
+            <LogOut className="h-4 w-4" />
+            تسجيل الخروج
+          </Button>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
+          {statsCards.map((stat, index) => (
             <Card key={index}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -62,58 +156,17 @@ const AdminDashboard = () => {
         <Tabs defaultValue="products" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="products">المنتجات</TabsTrigger>
-            <TabsTrigger value="orders">الطلبات</TabsTrigger>
             <TabsTrigger value="categories">الأقسام</TabsTrigger>
+            <TabsTrigger value="orders">الطلبات</TabsTrigger>
             <TabsTrigger value="settings">الإعدادات</TabsTrigger>
           </TabsList>
 
           <TabsContent value="products" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle>إدارة المنتجات</CardTitle>
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    إضافة منتج جديد
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {products.map((product) => (
-                    <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex items-center space-x-4 space-x-reverse">
-                        <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                          📦
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{product.name}</h3>
-                          <p className="text-sm text-muted-foreground">{product.category}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-4 space-x-reverse">
-                        <Badge variant={product.stock > 10 ? "default" : "destructive"}>
-                          {product.status}
-                        </Badge>
-                        <span className="font-semibold">{product.price} ر.س</span>
-                        <span className="text-sm text-muted-foreground">المخزون: {product.stock}</span>
-                        <div className="flex space-x-2 space-x-reverse">
-                          <Button size="sm" variant="outline">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <ProductManagement onProductChange={fetchProducts} />
+          </TabsContent>
+
+          <TabsContent value="categories" className="space-y-6">
+            <CategoryManagement onCategoryChange={fetchStats} />
           </TabsContent>
 
           <TabsContent value="orders" className="space-y-6">
@@ -129,39 +182,6 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="categories" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle>إدارة الأقسام</CardTitle>
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    إضافة قسم جديد
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {["كيكات", "ويفرات وشوكولاته", "مشروبات وعصائر", "حلوى ومليمات"].map((category) => (
-                    <div key={category} className="p-4 border rounded-lg">
-                      <div className="flex justify-between items-center">
-                        <h3 className="font-semibold">{category}</h3>
-                        <div className="flex space-x-2 space-x-reverse">
-                          <Button size="sm" variant="outline">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="settings" className="space-y-6">
             <Card>
               <CardHeader>
@@ -170,11 +190,17 @@ const AdminDashboard = () => {
               <CardContent className="space-y-4">
                 <div>
                   <label className="text-sm font-medium">اسم المتجر</label>
-                  <Input defaultValue="بلا حدود للحلويات" />
+                  <input 
+                    className="w-full mt-1 p-2 border rounded" 
+                    defaultValue="بلا حدود للحلويات" 
+                  />
                 </div>
                 <div>
                   <label className="text-sm font-medium">وصف المتجر</label>
-                  <Input defaultValue="متجر الحلويات الأول في المملكة" />
+                  <input 
+                    className="w-full mt-1 p-2 border rounded" 
+                    defaultValue="متجر الحلويات الأول في المملكة" 
+                  />
                 </div>
                 <Button>حفظ الإعدادات</Button>
               </CardContent>

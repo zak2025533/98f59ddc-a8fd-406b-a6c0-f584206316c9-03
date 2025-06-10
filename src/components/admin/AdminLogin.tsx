@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -17,27 +18,43 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login process
-    setTimeout(() => {
-      if (username === "zakzakzak" && password === "zak1212zak") {
-        toast({
-          title: "تم تسجيل الدخول بنجاح",
-          description: "مرحباً بك في لوحة التحكم",
-        });
-        onLogin();
-      } else {
+    try {
+      // التحقق من بيانات المشرف من قاعدة البيانات
+      const { data, error } = await supabase
+        .from('admins')
+        .select('*')
+        .eq('username', username)
+        .eq('password', password)
+        .single();
+
+      if (error || !data) {
         toast({
           title: "خطأ في تسجيل الدخول",
           description: "اسم المستخدم أو كلمة المرور غير صحيحة",
           variant: "destructive",
         });
+      } else {
+        // حفظ معلومات المشرف في localStorage
+        localStorage.setItem('admin', JSON.stringify(data));
+        toast({
+          title: "تم تسجيل الدخول بنجاح",
+          description: "مرحباً بك في لوحة التحكم",
+        });
+        onLogin();
       }
+    } catch (error) {
+      toast({
+        title: "خطأ في الاتصال",
+        description: "تعذر الاتصال بقاعدة البيانات",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
