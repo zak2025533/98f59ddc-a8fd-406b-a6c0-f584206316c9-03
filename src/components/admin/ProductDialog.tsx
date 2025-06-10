@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ImageUpload from "./ImageUpload";
 
 interface Category {
   id: string;
@@ -86,6 +87,8 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           image_url: "",
           subcategory_id: "",
         });
+        setSelectedCategoryId("");
+        setSubcategories([]);
       }
     }
   }, [isOpen, product]);
@@ -139,6 +142,10 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     setSelectedCategoryId(categoryId);
     setFormData(prev => ({ ...prev, subcategory_id: "" }));
     fetchSubcategories(categoryId);
+  };
+
+  const handleImageChange = (imageUrl: string | null) => {
+    setFormData(prev => ({ ...prev, image_url: imageUrl || "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -198,7 +205,7 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {product ? "تعديل المنتج" : "إضافة منتج جديد"}
@@ -285,16 +292,11 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
             </Select>
           </div>
 
-          <div>
-            <Label htmlFor="image_url">رابط الصورة</Label>
-            <Input
-              id="image_url"
-              type="url"
-              value={formData.image_url}
-              onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
+          <ImageUpload
+            currentImageUrl={formData.image_url}
+            onImageChange={handleImageChange}
+            label="صورة المنتج"
+          />
 
           <div className="flex gap-4 pt-4">
             <Button type="submit" disabled={isLoading} className="flex-1">

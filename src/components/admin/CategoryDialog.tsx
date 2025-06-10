@@ -9,21 +9,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import ImageUpload from "./ImageUpload";
 
 interface Category {
   id: string;
   name: string;
-  slug?: string;
-  category_id?: string;
+  slug: string;
+  image_url?: string;
 }
 
 interface CategoryDialogProps {
@@ -31,14 +25,13 @@ interface CategoryDialogProps {
   onClose: () => void;
   category?: Category | null;
   onSuccess: () => void;
-  type: "category" | "subcategory";
-  categories?: Category[];
 }
 
-const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories = [] }: CategoryDialogProps) => {
+const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialogProps) => {
   const [formData, setFormData] = useState({
     name: "",
-    category_id: "",
+    slug: "",
+    image_url: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -48,12 +41,14 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories
       if (category) {
         setFormData({
           name: category.name,
-          category_id: category.category_id || "",
+          slug: category.slug,
+          image_url: category.image_url || "",
         });
       } else {
         setFormData({
           name: "",
-          category_id: "",
+          slug: "",
+          image_url: "",
         });
       }
     }
@@ -62,9 +57,25 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories
   const generateSlug = (name: string) => {
     return name
       .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .trim()
+      .replace(/[\s\u0621-\u064A]+/g, '-') // Replace Arabic characters and spaces with hyphens
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars except hyphens
+      .replace(/\-\-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-+/, '') // Trim hyphens from start of text
+      .replace(/-+$/, ''); // Trim hyphens from end of text
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      name,
+      slug: generateSlug(name),
+    }));
+  };
+
+  const handleImageChange = (imageUrl: string | null) => {
+    setFormData(prev => ({ ...prev, image_url: imageUrl || "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,71 +83,37 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories
     setIsLoading(true);
 
     try {
-      if (type === "category") {
-        const categoryData = {
-          name: formData.name,
-          slug: generateSlug(formData.name),
-        };
+      const categoryData = {
+        name: formData.name,
+        slug: formData.slug,
+        image_url: formData.image_url || null,
+      };
 
-        if (category) {
-          // Update existing category
-          const { error } = await supabase
-            .from('categories')
-            .update(categoryData)
-            .eq('id', category.id);
+      if (category) {
+        // Update existing category
+        const { error } = await supabase
+          .from('categories')
+          .update(categoryData)
+          .eq('id', category.id);
 
-          if (error) throw error;
+        if (error) throw error;
 
-          toast({
-            title: "تم التحديث",
-            description: "تم تحديث القسم بنجاح",
-          });
-        } else {
-          // Create new category
-          const { error } = await supabase
-            .from('categories')
-            .insert([categoryData]);
-
-          if (error) throw error;
-
-          toast({
-            title: "تم الإضافة",
-            description: "تم إضافة القسم بنجاح",
-          });
-        }
+        toast({
+          title: "تم التحديث",
+          description: "تم تحديث القسم بنجاح",
+        });
       } else {
-        const subcategoryData = {
-          name: formData.name,
-          slug: generateSlug(formData.name),
-          category_id: formData.category_id,
-        };
+        // Create new category
+        const { error } = await supabase
+          .from('categories')
+          .insert([categoryData]);
 
-        if (category) {
-          // Update existing subcategory
-          const { error } = await supabase
-            .from('subcategories')
-            .update(subcategoryData)
-            .eq('id', category.id);
+        if (error) throw error;
 
-          if (error) throw error;
-
-          toast({
-            title: "تم التحديث",
-            description: "تم تحديث الفئة بنجاح",
-          });
-        } else {
-          // Create new subcategory
-          const { error } = await supabase
-            .from('subcategories')
-            .insert([subcategoryData]);
-
-          if (error) throw error;
-
-          toast({
-            title: "تم الإضافة",
-            description: "تم إضافة الفئة بنجاح",
-          });
-        }
+        toast({
+          title: "تم الإضافة",
+          description: "تم إضافة القسم بنجاح",
+        });
       }
 
       onSuccess();
@@ -145,7 +122,7 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories
       console.error('Error saving category:', error);
       toast({
         title: "خطأ",
-        description: "تعذر حفظ البيانات",
+        description: "تعذر حفظ القسم",
         variant: "destructive",
       });
     } finally {
@@ -158,46 +135,36 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess, type, categories
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {category 
-              ? `تعديل ${type === "category" ? "القسم" : "الفئة"}` 
-              : `إضافة ${type === "category" ? "قسم" : "فئة"} ${type === "subcategory" ? "فرعية" : ""} جديد${type === "subcategory" ? "ة" : ""}`
-            }
+            {category ? "تعديل القسم" : "إضافة قسم جديد"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">
-              {type === "category" ? "اسم القسم" : "اسم الفئة"}
-            </Label>
+            <Label htmlFor="name">اسم القسم</Label>
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={handleNameChange}
               required
             />
           </div>
 
-          {type === "subcategory" && (
-            <div>
-              <Label>القسم الرئيسي</Label>
-              <Select 
-                value={formData.category_id} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="اختر القسم الرئيسي" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          <div>
+            <Label htmlFor="slug">الرابط المختصر</Label>
+            <Input
+              id="slug"
+              value={formData.slug}
+              onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+              required
+            />
+          </div>
+
+          <ImageUpload
+            currentImageUrl={formData.image_url}
+            onImageChange={handleImageChange}
+            label="صورة القسم"
+          />
 
           <div className="flex gap-4 pt-4">
             <Button type="submit" disabled={isLoading} className="flex-1">
