@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +9,7 @@ interface Product {
   price: number;
   originalPrice?: number;
   rating: number;
-  image: string;
+  image: string; // Now it's a URL
   category: string;
   isNew?: boolean;
   isOnSale?: boolean;
@@ -23,7 +22,7 @@ const featuredProducts: Product[] = [
     price: 85,
     originalPrice: 120,
     rating: 4.8,
-    image: "🍰",
+    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80",
     category: "كيكات",
     isOnSale: true
   },
@@ -32,7 +31,7 @@ const featuredProducts: Product[] = [
     name: "شوكولاته بلجيكية مميزة",
     price: 45,
     rating: 4.9,
-    image: "🍫",
+    image: "https://images.unsplash.com/photo-1606312619344-80d4acb91592?auto=format&fit=crop&w=400&q=80",
     category: "شوكولاته",
     isNew: true
   },
@@ -41,7 +40,7 @@ const featuredProducts: Product[] = [
     name: "عصير المانجو الطبيعي",
     price: 25,
     rating: 4.7,
-    image: "🥭",
+    image: "https://images.unsplash.com/photo-1577801599717-4d7d2bfa0a67?auto=format&fit=crop&w=400&q=80",
     category: "مشروبات"
   },
   {
@@ -49,7 +48,7 @@ const featuredProducts: Product[] = [
     name: "حلوى اللوز التقليدية",
     price: 35,
     rating: 4.6,
-    image: "🍯",
+    image: "https://images.unsplash.com/photo-1601050690122-30f7caa1e640?auto=format&fit=crop&w=400&q=80",
     category: "حلوى"
   },
   {
@@ -58,7 +57,7 @@ const featuredProducts: Product[] = [
     price: 28,
     originalPrice: 35,
     rating: 4.5,
-    image: "🧇",
+    image: "https://images.unsplash.com/photo-1614433413534-8487a2c77f38?auto=format&fit=crop&w=400&q=80",
     category: "ويفرات",
     isOnSale: true
   },
@@ -67,7 +66,7 @@ const featuredProducts: Product[] = [
     name: "كب كيك الفراولة",
     price: 15,
     rating: 4.4,
-    image: "🧁",
+    image: "https://images.unsplash.com/photo-1589308078055-eb1c6ec3dca5?auto=format&fit=crop&w=400&q=80",
     category: "كيكات",
     isNew: true
   }
@@ -91,10 +90,14 @@ const FeaturedProducts = () => {
             <Card key={product.id} className="sweet-card-hover group border-0 shadow-lg overflow-hidden">
               <div className="relative">
                 {/* Product Image */}
-                <div className="h-48 bg-gradient-to-br from-sweet-cream to-white flex items-center justify-center">
-                  <span className="text-8xl">{product.image}</span>
+                <div className="h-48 bg-gradient-to-br from-sweet-cream to-white flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="object-cover w-full h-full"
+                  />
                 </div>
-                
+
                 {/* Badges */}
                 <div className="absolute top-3 right-3 flex flex-col gap-2">
                   {product.isNew && (
