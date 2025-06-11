@@ -80,14 +80,29 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال اسم القسم",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
+      console.log('Submitting category data:', formData);
+      
       const categoryData = {
-        name: formData.name,
-        slug: formData.slug,
+        name: formData.name.trim(),
+        slug: formData.slug || generateSlug(formData.name),
         image_url: formData.image_url || null,
       };
+
+      console.log('Prepared category data:', categoryData);
 
       if (category) {
         // Update existing category
@@ -96,7 +111,10 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
           .update(categoryData)
           .eq('id', category.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Update error:', error);
+          throw error;
+        }
 
         toast({
           title: "تم التحديث",
@@ -104,11 +122,17 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
         });
       } else {
         // Create new category
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('categories')
-          .insert([categoryData]);
+          .insert([categoryData])
+          .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Insert error:', error);
+          throw error;
+        }
+
+        console.log('Insert successful:', data);
 
         toast({
           title: "تم الإضافة",
@@ -118,11 +142,11 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
 
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving category:', error);
       toast({
         title: "خطأ",
-        description: "تعذر حفظ القسم",
+        description: error.message || "تعذر حفظ القسم. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -134,29 +158,33 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-right font-cairo">
             {category ? "تعديل القسم" : "إضافة قسم جديد"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">اسم القسم</Label>
+            <Label htmlFor="name" className="text-right font-cairo">اسم القسم *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={handleNameChange}
               required
+              placeholder="أدخل اسم القسم"
+              className="text-right"
             />
           </div>
 
           <div>
-            <Label htmlFor="slug">الرابط المختصر</Label>
+            <Label htmlFor="slug" className="text-right font-cairo">الرابط المختصر</Label>
             <Input
               id="slug"
               value={formData.slug}
               onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
               required
+              placeholder="سيتم إنشاؤه تلقائياً"
+              className="text-right"
             />
           </div>
 
@@ -167,10 +195,10 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
           />
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={isLoading} className="flex-1 font-cairo">
               {isLoading ? "جاري الحفظ..." : category ? "تحديث" : "إضافة"}
             </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-cairo">
               إلغاء
             </Button>
           </div>

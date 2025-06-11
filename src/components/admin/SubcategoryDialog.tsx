@@ -70,6 +70,17 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال اسم الفئة الفرعية",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!formData.category_id) {
       toast({
         title: "خطأ",
@@ -82,11 +93,15 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
     setIsLoading(true);
 
     try {
+      console.log('Submitting subcategory data:', formData);
+      
       const subcategoryData = {
-        name: formData.name,
+        name: formData.name.trim(),
         slug: generateSlug(formData.name),
         category_id: formData.category_id,
       };
+
+      console.log('Prepared subcategory data:', subcategoryData);
 
       if (subcategory) {
         // Update existing subcategory
@@ -95,7 +110,10 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
           .update(subcategoryData)
           .eq('id', subcategory.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Update error:', error);
+          throw error;
+        }
 
         toast({
           title: "تم التحديث",
@@ -103,11 +121,17 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
         });
       } else {
         // Create new subcategory
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('subcategories')
-          .insert([subcategoryData]);
+          .insert([subcategoryData])
+          .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Insert error:', error);
+          throw error;
+        }
+
+        console.log('Insert successful:', data);
 
         toast({
           title: "تم الإضافة",
@@ -117,11 +141,11 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
 
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving subcategory:', error);
       toast({
         title: "خطأ",
-        description: "تعذر حفظ الفئة الفرعية",
+        description: error.message || "تعذر حفظ الفئة الفرعية. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -133,21 +157,21 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-right font-cairo">
             {subcategory ? "تعديل الفئة الفرعية" : "إضافة فئة فرعية جديدة"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="category">القسم الرئيسي</Label>
+            <Label htmlFor="category" className="text-right font-cairo">القسم الرئيسي *</Label>
             <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
-              <SelectTrigger>
+              <SelectTrigger className="text-right">
                 <SelectValue placeholder="اختر القسم الرئيسي" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
+                  <SelectItem key={category.id} value={category.id} className="text-right">
                     {category.name}
                   </SelectItem>
                 ))}
@@ -156,20 +180,22 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
           </div>
 
           <div>
-            <Label htmlFor="name">اسم الفئة الفرعية</Label>
+            <Label htmlFor="name" className="text-right font-cairo">اسم الفئة الفرعية *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
+              placeholder="أدخل اسم الفئة الفرعية"
+              className="text-right"
             />
           </div>
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={isLoading} className="flex-1 font-cairo">
               {isLoading ? "جاري الحفظ..." : subcategory ? "تحديث" : "إضافة"}
             </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-cairo">
               إلغاء
             </Button>
           </div>
