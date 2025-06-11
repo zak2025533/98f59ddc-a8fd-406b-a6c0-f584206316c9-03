@@ -24,35 +24,45 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
 
       // Create unique filename
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = fileName;
+
+      console.log('Uploading file:', fileName);
 
       // Upload file to Supabase Storage
-      const { error: uploadError } = await supabase.storage
+      const { data, error: uploadError } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
       if (uploadError) {
+        console.error('Upload error:', uploadError);
         throw uploadError;
       }
 
+      console.log('Upload successful:', data);
+
       // Get public URL
-      const { data } = supabase.storage
+      const { data: urlData } = supabase.storage
         .from('product-images')
         .getPublicUrl(filePath);
 
-      setPreviewUrl(data.publicUrl);
-      onImageChange(data.publicUrl);
+      console.log('Public URL:', urlData.publicUrl);
+
+      setPreviewUrl(urlData.publicUrl);
+      onImageChange(urlData.publicUrl);
 
       toast({
         title: "تم الرفع",
         description: "تم رفع الصورة بنجاح",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
       toast({
         title: "خطأ",
-        description: "تعذر رفع الصورة",
+        description: error.message || "تعذر رفع الصورة",
         variant: "destructive",
       });
     } finally {
@@ -94,7 +104,7 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
 
   return (
     <div>
-      <Label>{label}</Label>
+      <Label className="text-right font-cairo">{label}</Label>
       <div className="mt-2">
         {previewUrl ? (
           <div className="relative inline-block">
@@ -102,6 +112,11 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
               src={previewUrl}
               alt="معاينة الصورة"
               className="w-32 h-32 object-cover rounded-lg border"
+              onError={(e) => {
+                console.error('Image load error:', e);
+                setPreviewUrl(null);
+                onImageChange(null);
+              }}
             />
             <Button
               type="button"
@@ -116,7 +131,7 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
         ) : (
           <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center">
             <Image className="h-8 w-8 text-gray-400" />
-            <span className="text-sm text-gray-500 mt-1">لا توجد صورة</span>
+            <span className="text-sm text-gray-500 mt-1 font-cairo">لا توجد صورة</span>
           </div>
         )}
 
@@ -134,11 +149,11 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
               type="button"
               variant="outline"
               disabled={uploading}
-              className="cursor-pointer"
+              className="cursor-pointer font-cairo"
               asChild
             >
               <span>
-                <Upload className="h-4 w-4 mr-2" />
+                <Upload className="h-4 w-4 ml-2" />
                 {uploading ? "جاري الرفع..." : "رفع صورة"}
               </span>
             </Button>

@@ -227,11 +227,11 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving product:', error);
       toast({
         title: "خطأ",
-        description: "تعذر حفظ المنتج. يرجى التحقق من البيانات والمحاولة مرة أخرى.",
+        description: error.message || "تعذر حفظ المنتج. يرجى المحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -243,36 +243,38 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-right font-cairo">
             {product ? "تعديل المنتج" : "إضافة منتج جديد"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">اسم المنتج *</Label>
+            <Label htmlFor="name" className="text-right font-cairo">اسم المنتج *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
               placeholder="أدخل اسم المنتج"
+              className="text-right"
             />
           </div>
 
           <div>
-            <Label htmlFor="description">الوصف</Label>
+            <Label htmlFor="description" className="text-right font-cairo">الوصف</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
               placeholder="أدخل وصف المنتج (اختياري)"
+              className="text-right min-h-[80px]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="price">السعر (ر.س) *</Label>
+              <Label htmlFor="price" className="text-right font-cairo">السعر (ر.س) *</Label>
               <Input
                 id="price"
                 type="number"
@@ -282,11 +284,12 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
                 onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                 required
                 placeholder="0.00"
+                className="text-right"
               />
             </div>
 
             <div>
-              <Label htmlFor="stock">المخزون *</Label>
+              <Label htmlFor="stock" className="text-right font-cairo">المخزون *</Label>
               <Input
                 id="stock"
                 type="number"
@@ -295,19 +298,20 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
                 onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
                 required
                 placeholder="0"
+                className="text-right"
               />
             </div>
           </div>
 
           <div>
-            <Label>القسم *</Label>
+            <Label className="text-right font-cairo">القسم *</Label>
             <Select value={selectedCategoryId} onValueChange={handleCategoryChange}>
-              <SelectTrigger>
+              <SelectTrigger className="text-right">
                 <SelectValue placeholder="اختر القسم" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
+                  <SelectItem key={category.id} value={category.id} className="text-right">
                     {category.name}
                   </SelectItem>
                 ))}
@@ -316,18 +320,18 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           </div>
 
           <div>
-            <Label>الفئة الفرعية *</Label>
+            <Label className="text-right font-cairo">الفئة الفرعية *</Label>
             <Select 
               value={formData.subcategory_id} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
               disabled={!selectedCategoryId}
             >
-              <SelectTrigger>
+              <SelectTrigger className="text-right">
                 <SelectValue placeholder={selectedCategoryId ? "اختر الفئة الفرعية" : "اختر القسم أولاً"} />
               </SelectTrigger>
               <SelectContent>
                 {subcategories.map((subcategory) => (
-                  <SelectItem key={subcategory.id} value={subcategory.id}>
+                  <SelectItem key={subcategory.id} value={subcategory.id} className="text-right">
                     {subcategory.name}
                   </SelectItem>
                 ))}
@@ -342,10 +346,10 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           />
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isLoading} className="flex-1">
+            <Button type="submit" disabled={isLoading} className="flex-1 font-cairo">
               {isLoading ? "جاري الحفظ..." : product ? "تحديث" : "إضافة"}
             </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-cairo">
               إلغاء
             </Button>
           </div>
