@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -87,7 +86,7 @@ const ProductManagement = ({ onProductChange }: ProductManagementProps) => {
         title: "تم الحذف",
         description: "تم حذف المنتج بنجاح",
       });
-      
+
       fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -125,7 +124,7 @@ const ProductManagement = ({ onProductChange }: ProductManagementProps) => {
           {products.map((product) => (
             <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
               <div className="flex items-center space-x-4 space-x-reverse">
-                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                   {product.image_url ? (
                     <img 
                       src={product.image_url} 
@@ -133,7 +132,11 @@ const ProductManagement = ({ onProductChange }: ProductManagementProps) => {
                       className="w-full h-full object-cover rounded-lg"
                     />
                   ) : (
-                    <span>📦</span>
+                    <img 
+                      src="https://images.unsplash.com/photo-1606813903154-6fdcdb8bb93c?auto=format&fit=crop&w=400&q=80" 
+                      alt="منتج بدون صورة"
+                      className="w-full h-full object-cover rounded-lg opacity-70"
+                    />
                   )}
                 </div>
                 <div>
@@ -172,7 +175,7 @@ const ProductManagement = ({ onProductChange }: ProductManagementProps) => {
               </div>
             </div>
           ))}
-          
+
           {products.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               لا توجد منتجات حالياً. اضغط على "إضافة منتج جديد" للبدء.
