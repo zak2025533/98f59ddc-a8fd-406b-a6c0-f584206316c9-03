@@ -26,7 +26,7 @@ const categories: Category[] = [
   {
     id: "wafers-chocolate",
     name: "ويفرات وشوكولاته",
-    image: "https://images.unsplash.com/photo-1606312618779-72e9df0a4767?auto=format&fit=crop&w=800&q=80",
+    image: "https://i.postimg.cc/bvTV1yb1/jordinacake1-copy.png",
     description: "مجموعة متنوعة من الويفرات والشوكولاته الفاخرة",
     productCount: 32,
     gradient: "from-amber-400 to-orange-600",
