@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,12 +5,13 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import CategoryDialog from "./CategoryDialog";
+import SubcategoryDialog from "./SubcategoryDialog";
 
 interface Category {
   id: string;
   name: string;
   slug: string;
-  subcategories?: Subcategory[];
+  image_url?: string;
 }
 
 interface Subcategory {
@@ -251,15 +251,13 @@ const CategoryManagement = ({ onCategoryChange }: CategoryManagementProps) => {
         onClose={() => setIsCategoryDialogOpen(false)}
         category={editingCategory}
         onSuccess={fetchCategories}
-        type="category"
       />
 
-      <CategoryDialog
+      <SubcategoryDialog
         isOpen={isSubcategoryDialogOpen}
         onClose={() => setIsSubcategoryDialogOpen(false)}
-        category={editingSubcategory}
+        subcategory={editingSubcategory}
         onSuccess={fetchSubcategories}
-        type="subcategory"
         categories={categories}
       />
     </div>
