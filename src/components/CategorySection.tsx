@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ const categories: Category[] = [
   {
     id: "cakes",
     name: "كيكات",
-    image: "🎂",
+    image: "https://i.postimg.cc/bvTV1yb1/jordinacake1-copy.png",
     description: "كيكات طازجة ولذيذة لجميع المناسبات الخاصة",
     productCount: 25,
     gradient: "from-pink-400 to-pink-600",
@@ -27,7 +26,7 @@ const categories: Category[] = [
   {
     id: "wafers-chocolate",
     name: "ويفرات وشوكولاته",
-    image: "🍫",
+    image: "https://images.unsplash.com/photo-1606312618779-72e9df0a4767?auto=format&fit=crop&w=800&q=80",
     description: "مجموعة متنوعة من الويفرات والشوكولاته الفاخرة",
     productCount: 32,
     gradient: "from-amber-400 to-orange-600",
@@ -36,7 +35,7 @@ const categories: Category[] = [
   {
     id: "beverages",
     name: "مشروبات وعصائر",
-    image: "🥤",
+    image: "https://images.unsplash.com/photo-1561043433-aaf687c4cf4e?auto=format&fit=crop&w=800&q=80",
     description: "مشروبات منعشة وعصائر طبيعية طازجة",
     productCount: 18,
     gradient: "from-blue-400 to-cyan-600",
@@ -45,7 +44,7 @@ const categories: Category[] = [
   {
     id: "sweets-candies",
     name: "حلوى ومليمات",
-    image: "🍭",
+    image: "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?auto=format&fit=crop&w=800&q=80",
     description: "حلويات تقليدية ومليمات شهية ولذيذة",
     productCount: 28,
     gradient: "from-purple-400 to-pink-600",
@@ -71,14 +70,17 @@ const CategorySection = () => {
             <Card 
               key={category.id} 
               className="sweet-card-hover cursor-pointer group overflow-hidden border-0 shadow-xl bg-white"
-              style={{animationDelay: `${index * 0.1}s`}}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className={`h-40 bg-gradient-to-br ${category.gradient} group-hover:bg-gradient-to-br group-hover:${category.hoverGradient} flex items-center justify-center transition-all duration-300 relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300"></div>
-                <span className="text-7xl group-hover:scale-110 transition-transform duration-300 relative z-10">
-                  {category.image}
-                </span>
+              <div className={`h-40 relative group-hover:${category.hoverGradient}`}>
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300 z-10"></div>
               </div>
+
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors font-arabic">
