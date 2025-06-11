@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -56,13 +55,12 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
 
   const generateSlug = (name: string) => {
     return name
-      .toLowerCase()
       .trim()
-      .replace(/[\s\u0621-\u064A]+/g, '-') // Replace Arabic characters and spaces with hyphens
-      .replace(/[^\w\-]+/g, '') // Remove all non-word chars except hyphens
-      .replace(/\-\-+/g, '-') // Replace multiple hyphens with single hyphen
-      .replace(/^-+/, '') // Trim hyphens from start of text
-      .replace(/-+$/, ''); // Trim hyphens from end of text
+      .toLowerCase()
+      .replace(/\s+/g, '-') // استبدال المسافات بشرطة
+      .replace(/[^\w\u0621-\u064A-]/g, '') // حذف الرموز الغريبة، ونسمح بالحروف العربية
+      .replace(/-+/g, '-') // إزالة الشرط المتكررة
+      .replace(/^-+|-+$/g, ''); // إزالة الشرطة من البداية والنهاية
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,8 +78,7 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
+
     if (!formData.name.trim()) {
       toast({
         title: "خطأ",
@@ -94,59 +91,52 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
     setIsLoading(true);
 
     try {
-      console.log('Submitting category data:', formData);
-      
       const categoryData = {
         name: formData.name.trim(),
         slug: formData.slug || generateSlug(formData.name),
         image_url: formData.image_url || null,
       };
 
-      console.log('Prepared category data:', categoryData);
+      // تحقق من تكرار slug
+      const { data: existing, error: checkError } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', categoryData.slug)
+        .neq('id', category?.id || '');
+
+      if (checkError) throw checkError;
+
+      if (existing.length > 0) {
+        throw new Error("الرابط المختصر مستخدم بالفعل، الرجاء اختيار رابط آخر.");
+      }
 
       if (category) {
-        // Update existing category
+        // تحديث
         const { error } = await supabase
           .from('categories')
           .update(categoryData)
           .eq('id', category.id);
 
-        if (error) {
-          console.error('Update error:', error);
-          throw error;
-        }
+        if (error) throw error;
 
-        toast({
-          title: "تم التحديث",
-          description: "تم تحديث القسم بنجاح",
-        });
+        toast({ title: "تم التحديث", description: "تم تحديث القسم بنجاح" });
       } else {
-        // Create new category
-        const { data, error } = await supabase
+        // إضافة جديدة
+        const { error } = await supabase
           .from('categories')
-          .insert([categoryData])
-          .select();
+          .insert([categoryData]);
 
-        if (error) {
-          console.error('Insert error:', error);
-          throw error;
-        }
+        if (error) throw error;
 
-        console.log('Insert successful:', data);
-
-        toast({
-          title: "تم الإضافة",
-          description: "تم إضافة القسم بنجاح",
-        });
+        toast({ title: "تم الإضافة", description: "تم إضافة القسم بنجاح" });
       }
 
       onSuccess();
       onClose();
     } catch (error: any) {
-      console.error('Error saving category:', error);
       toast({
         title: "خطأ",
-        description: error.message || "تعذر حفظ القسم. يرجى المحاولة مرة أخرى.",
+        description: error.message || "تعذر حفظ القسم. حاول مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -168,6 +158,7 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
             <Label htmlFor="name" className="text-right font-cairo">اسم القسم *</Label>
             <Input
               id="name"
+              autoFocus
               value={formData.name}
               onChange={handleNameChange}
               required
@@ -181,9 +172,13 @@ const CategoryDialog = ({ isOpen, onClose, category, onSuccess }: CategoryDialog
             <Input
               id="slug"
               value={formData.slug}
-              onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+              onChange={(e) =>
+                setFormData(prev => ({ ...prev, slug: generateSlug(e.target.value) }))
+              }
+              pattern="^[\u0621-\u064Aa-z0-9-]+$"
+              title="يسمح بالحروف العربية والإنجليزية الصغيرة والأرقام والشرطة فقط"
               required
-              placeholder="سيتم إنشاؤه تلقائياً"
+              placeholder="سيتم إنشاؤه تلقائيًا"
               className="text-right"
             />
           </div>
