@@ -76,8 +76,7 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           image_url: product.image_url || "",
           subcategory_id: product.subcategory_id,
         });
-        // Find the category for this subcategory
-        fetchSubcategories(product.subcategory_id);
+        fetchSubcategoriesForProduct(product.subcategory_id);
       } else {
         setFormData({
           name: "",
@@ -107,30 +106,31 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     }
   };
 
-  const fetchSubcategories = async (categoryId?: string) => {
+  const fetchSubcategoriesForProduct = async (subcategoryId: string) => {
     try {
-      let query = supabase
+      const { data: subcatData } = await supabase
+        .from('subcategories')
+        .select('category_id')
+        .eq('id', subcategoryId)
+        .single();
+      
+      if (subcatData) {
+        setSelectedCategoryId(subcatData.category_id);
+        fetchSubcategories(subcatData.category_id);
+      }
+    } catch (error) {
+      console.error('Error fetching subcategory for product:', error);
+    }
+  };
+
+  const fetchSubcategories = async (categoryId: string) => {
+    try {
+      const { data, error } = await supabase
         .from('subcategories')
         .select('id, name, category_id')
+        .eq('category_id', categoryId)
         .order('name');
 
-      if (categoryId) {
-        // If we have a subcategory_id, find its category
-        const { data: subcatData } = await supabase
-          .from('subcategories')
-          .select('category_id')
-          .eq('id', categoryId)
-          .single();
-        
-        if (subcatData) {
-          setSelectedCategoryId(subcatData.category_id);
-          query = query.eq('category_id', subcatData.category_id);
-        }
-      } else if (selectedCategoryId) {
-        query = query.eq('category_id', selectedCategoryId);
-      }
-
-      const { data, error } = await query;
       if (error) throw error;
       setSubcategories(data || []);
     } catch (error) {
@@ -150,12 +150,50 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال اسم المنتج",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.subcategory_id) {
+      toast({
+        title: "خطأ",
+        description: "يرجى اختيار الفئة الفرعية",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال سعر صحيح",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.stock || parseInt(formData.stock) < 0) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال كمية مخزون صحيحة",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const productData = {
-        name: formData.name,
-        description: formData.description || null,
+        name: formData.name.trim(),
+        description: formData.description.trim() || null,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
         image_url: formData.image_url || null,
@@ -163,7 +201,6 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       };
 
       if (product) {
-        // Update existing product
         const { error } = await supabase
           .from('products')
           .update(productData)
@@ -176,7 +213,6 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           description: "تم تحديث المنتج بنجاح",
         });
       } else {
-        // Create new product
         const { error } = await supabase
           .from('products')
           .insert([productData]);
@@ -195,7 +231,7 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       console.error('Error saving product:', error);
       toast({
         title: "خطأ",
-        description: "تعذر حفظ المنتج",
+        description: "تعذر حفظ المنتج. يرجى التحقق من البيانات والمحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -214,12 +250,13 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">اسم المنتج</Label>
+            <Label htmlFor="name">اسم المنتج *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
+              placeholder="أدخل اسم المنتج"
             />
           </div>
 
@@ -229,36 +266,41 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
               id="description"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              placeholder="أدخل وصف المنتج (اختياري)"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="price">السعر (ر.س)</Label>
+              <Label htmlFor="price">السعر (ر.س) *</Label>
               <Input
                 id="price"
                 type="number"
                 step="0.01"
+                min="0"
                 value={formData.price}
                 onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                 required
+                placeholder="0.00"
               />
             </div>
 
             <div>
-              <Label htmlFor="stock">المخزون</Label>
+              <Label htmlFor="stock">المخزون *</Label>
               <Input
                 id="stock"
                 type="number"
+                min="0"
                 value={formData.stock}
                 onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
                 required
+                placeholder="0"
               />
             </div>
           </div>
 
           <div>
-            <Label>القسم</Label>
+            <Label>القسم *</Label>
             <Select value={selectedCategoryId} onValueChange={handleCategoryChange}>
               <SelectTrigger>
                 <SelectValue placeholder="اختر القسم" />
@@ -274,13 +316,14 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           </div>
 
           <div>
-            <Label>الفئة الفرعية</Label>
+            <Label>الفئة الفرعية *</Label>
             <Select 
               value={formData.subcategory_id} 
               onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
+              disabled={!selectedCategoryId}
             >
               <SelectTrigger>
-                <SelectValue placeholder="اختر الفئة الفرعية" />
+                <SelectValue placeholder={selectedCategoryId ? "اختر الفئة الفرعية" : "اختر القسم أولاً"} />
               </SelectTrigger>
               <SelectContent>
                 {subcategories.map((subcategory) => (
