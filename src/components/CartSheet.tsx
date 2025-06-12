@@ -1,4 +1,3 @@
-
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
@@ -9,6 +8,33 @@ export const CartSheet = () => {
   const { cartItems, cartCount, updateQuantity, removeFromCart, clearCart } = useCart();
 
   const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+
+  const generateOrderMessage = () => {
+    let message = "*📄 فاتورة طلب الشراء*\n\n";
+    message += "مرحباً، أود تأكيد طلبي للمنتجات التالية:\n\n";
+    message += "🛍️ المنتجات:\n";
+
+    cartItems.forEach((item, index) => {
+      message += `${index + 1}. ${item.product.name}\n`;
+      message += `   الكمية: ${item.quantity}\n`;
+      message += `   سعر الوحدة: ${item.product.price} ريال\n`;
+      message += `   الإجمالي: ${(item.product.price * item.quantity).toFixed(2)} ريال\n\n`;
+    });
+
+    message += "----------------------------\n";
+    message += `💰 *المجموع الكلي*: ${total.toFixed(2)} ريال\n`;
+    message += "📍 الرجاء تأكيد الطلب وتحديد عنوان التوصيل.\n\n";
+    message += "مع خالص التحية 🌷";
+
+    return encodeURIComponent(message);
+  };
+
+  const handleOrder = () => {
+    const whatsappNumber = "967715833246"; // بدون "+"
+    const message = generateOrderMessage();
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
+    window.open(whatsappLink, "_blank");
+  };
 
   return (
     <Sheet>
@@ -82,8 +108,11 @@ export const CartSheet = () => {
                   <span className="font-arabic">المجموع: {total.toFixed(2)} ريال</span>
                 </div>
                 <div className="space-y-2">
-                  <Button className="w-full bg-blue-800 hover:bg-blue-900 font-arabic">
-                    إتمام الطلب
+                  <Button
+                    className="w-full bg-green-600 hover:bg-green-700 font-arabic"
+                    onClick={handleOrder}
+                  >
+                    إتمام الطلب عبر واتساب
                   </Button>
                   <Button variant="outline" className="w-full font-arabic" onClick={clearCart}>
                     مسح السلة
