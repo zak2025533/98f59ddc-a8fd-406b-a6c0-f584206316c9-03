@@ -29,12 +29,9 @@ interface Product {
   price: number;
   image_url: string;
   subcategory_id: string;
-  featured?: boolean;
-  stock?: number;
-  // New schema fields (will be available after migration)
   category_id?: string;
-  is_featured?: boolean;
-  in_stock?: boolean;
+  is_featured: boolean;
+  in_stock: boolean;
 }
 
 interface Category {
@@ -69,12 +66,11 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [usingNewSchema, setUsingNewSchema] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
     if (isOpen) {
-      checkSchemaAndFetchCategories();
+      fetchCategories();
       if (product) {
         setFormData({
           name: product.name,
@@ -83,8 +79,8 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           image_url: product.image_url,
           category_id: product.category_id || "",
           subcategory_id: product.subcategory_id || "",
-          is_featured: product.is_featured ?? product.featured ?? false,
-          in_stock: product.in_stock ?? ((product.stock || 0) > 0),
+          is_featured: product.is_featured,
+          in_stock: product.in_stock,
         });
       } else {
         setFormData({
@@ -108,26 +104,6 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       setSubcategories([]);
     }
   }, [formData.category_id]);
-
-  const checkSchemaAndFetchCategories = async () => {
-    try {
-      // Try to fetch with new schema first
-      const { error } = await supabase
-        .from('products')
-        .select('category_id')
-        .limit(1);
-
-      if (error && error.message.includes('column') && error.message.includes('does not exist')) {
-        setUsingNewSchema(false);
-      } else {
-        setUsingNewSchema(true);
-      }
-    } catch (error) {
-      setUsingNewSchema(false);
-    }
-
-    fetchCategories();
-  };
 
   const fetchCategories = async () => {
     try {
@@ -186,32 +162,16 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     setIsLoading(true);
 
     try {
-      let productData;
-
-      if (usingNewSchema) {
-        // Use new schema
-        productData = {
-          name: formData.name.trim(),
-          description: formData.description.trim(),
-          price: formData.price,
-          image_url: formData.image_url || null,
-          category_id: formData.category_id || null,
-          subcategory_id: formData.subcategory_id,
-          is_featured: formData.is_featured,
-          in_stock: formData.in_stock,
-        };
-      } else {
-        // Use old schema
-        productData = {
-          name: formData.name.trim(),
-          description: formData.description.trim(),
-          price: formData.price,
-          image_url: formData.image_url || null,
-          subcategory_id: formData.subcategory_id,
-          featured: formData.is_featured,
-          stock: formData.in_stock ? 10 : 0, // Set a default stock value
-        };
-      }
+      const productData = {
+        name: formData.name.trim(),
+        description: formData.description.trim(),
+        price: formData.price,
+        image_url: formData.image_url || null,
+        category_id: formData.category_id || null,
+        subcategory_id: formData.subcategory_id,
+        is_featured: formData.is_featured,
+        in_stock: formData.in_stock,
+      };
 
       if (product) {
         // تحديث
@@ -300,33 +260,31 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {usingNewSchema && (
-              <div>
-                <Label className="text-right font-arabic">القسم</Label>
-                <Select 
-                  value={formData.category_id} 
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value, subcategory_id: "" }))}
-                >
-                  <SelectTrigger className="text-right font-arabic">
-                    <SelectValue placeholder="اختر القسم" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id} className="font-arabic">
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
+            <div>
+              <Label className="text-right font-arabic">القسم</Label>
+              <Select 
+                value={formData.category_id} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value, subcategory_id: "" }))}
+              >
+                <SelectTrigger className="text-right font-arabic">
+                  <SelectValue placeholder="اختر القسم" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id} className="font-arabic">
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <div>
               <Label className="text-right font-arabic">القسم الفرعي *</Label>
               <Select 
                 value={formData.subcategory_id} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
-                disabled={usingNewSchema && (!formData.category_id || subcategories.length === 0)}
+                disabled={!formData.category_id || subcategories.length === 0}
               >
                 <SelectTrigger className="text-right font-arabic">
                   <SelectValue placeholder="اختر القسم الفرعي" />

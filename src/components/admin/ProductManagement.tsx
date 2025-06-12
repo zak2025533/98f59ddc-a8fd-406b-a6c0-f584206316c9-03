@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,8 +44,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
 
   const fetchProducts = async () => {
     try {
-      // Try new schema first
-      const { data: newSchemaData, error: newSchemaError } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .select(`
           id,
@@ -61,46 +61,8 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         `)
         .order('name');
 
-      if (!newSchemaError && newSchemaData) {
-        setProducts(newSchemaData);
-        return;
-      }
-
-      // Fallback to old schema
-      console.log('Using old schema, migration might not be applied yet');
-      const { data: oldSchemaData, error: oldSchemaError } = await supabase
-        .from('products')
-        .select(`
-          id,
-          name,
-          description,
-          price,
-          image_url,
-          subcategory_id,
-          featured,
-          stock,
-          subcategories (name, category_id, categories (name))
-        `)
-        .order('name');
-      
-      if (oldSchemaError) throw oldSchemaError;
-      
-      // Transform old schema to new format
-      const transformedProducts: Product[] = (oldSchemaData || []).map((product: any) => ({
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        image_url: product.image_url,
-        subcategory_id: product.subcategory_id,
-        category_id: product.subcategories?.category_id || '',
-        is_featured: Boolean(product.featured),
-        in_stock: Boolean(product.stock && product.stock > 0),
-        categories: product.subcategories?.categories,
-        subcategories: product.subcategories,
-      }));
-      
-      setProducts(transformedProducts);
+      if (error) throw error;
+      setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({

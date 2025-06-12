@@ -56,39 +56,49 @@ export type Database = {
       }
       products: {
         Row: {
+          category_id: string | null
           created_at: string
           description: string | null
-          featured: boolean | null
           id: string
           image_url: string | null
+          in_stock: boolean | null
+          is_featured: boolean | null
           name: string
           price: number
-          stock: number | null
           subcategory_id: string
         }
         Insert: {
+          category_id?: string | null
           created_at?: string
           description?: string | null
-          featured?: boolean | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
+          is_featured?: boolean | null
           name: string
           price: number
-          stock?: number | null
           subcategory_id: string
         }
         Update: {
+          category_id?: string | null
           created_at?: string
           description?: string | null
-          featured?: boolean | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
+          is_featured?: boolean | null
           name?: string
           price?: number
-          stock?: number | null
           subcategory_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "products_subcategory_id_fkey"
             columns: ["subcategory_id"]

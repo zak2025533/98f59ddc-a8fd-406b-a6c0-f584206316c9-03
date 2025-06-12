@@ -28,44 +28,15 @@ const FeaturedProducts = () => {
 
   const fetchFeaturedProducts = async () => {
     try {
-      // Try new schema first
-      const { data: newSchemaData, error: newSchemaError } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .select('id, name, description, price, image_url, category_id, subcategory_id, is_featured, in_stock')
         .eq('is_featured', true)
         .eq('in_stock', true)
         .limit(8);
 
-      if (!newSchemaError && newSchemaData) {
-        setProducts(newSchemaData);
-        return;
-      }
-
-      // Fallback to old schema
-      console.log('Using old schema, migration might not be applied yet');
-      const { data: oldSchemaData, error: oldSchemaError } = await supabase
-        .from('products')
-        .select('id, name, description, price, image_url, subcategory_id, featured, stock')
-        .eq('featured', true)
-        .gt('stock', 0)
-        .limit(8);
-      
-      if (oldSchemaError) throw oldSchemaError;
-      
-      // Transform old schema to new format
-      const transformedProducts: Product[] = (oldSchemaData || []).map((product: any) => ({
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        image_url: product.image_url,
-        subcategory_id: product.subcategory_id,
-        category_id: '',
-        is_featured: Boolean(product.featured),
-        in_stock: Boolean(product.stock && product.stock > 0),
-      }));
-      
-      setProducts(transformedProducts);
+      if (error) throw error;
+      setProducts(data || []);
     } catch (error) {
       console.error('Error fetching featured products:', error);
     } finally {
