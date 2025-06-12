@@ -13,12 +13,9 @@ interface Product {
   price: number;
   image_url: string;
   subcategory_id: string;
-  featured?: boolean;
-  stock?: number;
-  // New schema fields (will be available after migration)
   category_id?: string;
-  is_featured?: boolean;
-  in_stock?: boolean;
+  is_featured: boolean;
+  in_stock: boolean;
 }
 
 const FeaturedProducts = () => {
@@ -31,40 +28,44 @@ const FeaturedProducts = () => {
 
   const fetchFeaturedProducts = async () => {
     try {
-      // First try the new schema
-      let { data, error } = await supabase
+      // Try new schema first
+      const { data: newSchemaData, error: newSchemaError } = await supabase
         .from('products')
         .select('id, name, description, price, image_url, category_id, subcategory_id, is_featured, in_stock')
         .eq('is_featured', true)
         .eq('in_stock', true)
         .limit(8);
 
-      // If new schema fails, fallback to old schema
-      if (error && error.message.includes('column') && error.message.includes('does not exist')) {
-        console.log('Using old schema, migration might not be applied yet');
-        const fallbackResult = await supabase
-          .from('products')
-          .select('id, name, description, price, image_url, subcategory_id, featured, stock')
-          .eq('featured', true)
-          .gt('stock', 0)
-          .limit(8);
-        
-        if (fallbackResult.error) throw fallbackResult.error;
-        
-        // Transform old schema to new format
-        const transformedData = fallbackResult.data?.map(product => ({
-          ...product,
-          is_featured: product.featured || false,
-          in_stock: (product.stock || 0) > 0,
-          category_id: '', // Will be populated when migration is complete
-        })) || [];
-        
-        setProducts(transformedData);
-      } else if (error) {
-        throw error;
-      } else {
-        setProducts(data || []);
+      if (!newSchemaError && newSchemaData) {
+        setProducts(newSchemaData);
+        return;
       }
+
+      // Fallback to old schema
+      console.log('Using old schema, migration might not be applied yet');
+      const { data: oldSchemaData, error: oldSchemaError } = await supabase
+        .from('products')
+        .select('id, name, description, price, image_url, subcategory_id, featured, stock')
+        .eq('featured', true)
+        .gt('stock', 0)
+        .limit(8);
+      
+      if (oldSchemaError) throw oldSchemaError;
+      
+      // Transform old schema to new format
+      const transformedProducts: Product[] = (oldSchemaData || []).map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        image_url: product.image_url,
+        subcategory_id: product.subcategory_id,
+        category_id: '',
+        is_featured: Boolean(product.featured),
+        in_stock: Boolean(product.stock && product.stock > 0),
+      }));
+      
+      setProducts(transformedProducts);
     } catch (error) {
       console.error('Error fetching featured products:', error);
     } finally {
