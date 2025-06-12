@@ -15,10 +15,13 @@ interface Product {
   description: string;
   price: number;
   image_url: string;
-  category_id: string;
   subcategory_id: string;
-  is_featured: boolean;
-  in_stock: boolean;
+  featured?: boolean;
+  stock?: number;
+  // New schema fields (will be available after migration)
+  category_id?: string;
+  is_featured?: boolean;
+  in_stock?: boolean;
   categories?: { name: string };
   subcategories?: { name: string };
 }
@@ -44,7 +47,8 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
+      // First try the new schema
+      let { data, error } = await supabase
         .from('products')
         .select(`
           id,
@@ -61,7 +65,38 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         `)
         .order('name');
 
-      if (error) throw error;
+      // If new schema fails, fallback to old schema
+      if (error && error.message.includes('column') && error.message.includes('does not exist')) {
+        console.log('Using old schema, migration might not be applied yet');
+        const fallbackResult = await supabase
+          .from('products')
+          .select(`
+            id,
+            name,
+            description,
+            price,
+            image_url,
+            subcategory_id,
+            featured,
+            stock,
+            subcategories (name, category_id, categories (name))
+          `)
+          .order('name');
+        
+        if (fallbackResult.error) throw fallbackResult.error;
+        
+        // Transform old schema to new format
+        data = fallbackResult.data?.map(product => ({
+          ...product,
+          is_featured: product.featured || false,
+          in_stock: (product.stock || 0) > 0,
+          category_id: product.subcategories?.category_id || '',
+          categories: product.subcategories?.categories,
+        })) || [];
+      } else if (error) {
+        throw error;
+      }
+
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -150,14 +185,14 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 right-2 flex gap-2">
-                    {product.is_featured && (
+                    {(product.is_featured || product.featured) && (
                       <Badge className="bg-yellow-500 text-yellow-900">
                         <Star className="h-3 w-3 ml-1" />
                         مميز
                       </Badge>
                     )}
-                    <Badge variant={product.in_stock ? "secondary" : "destructive"}>
-                      {product.in_stock ? "متوفر" : "غير متوفر"}
+                    <Badge variant={(product.in_stock ?? ((product.stock || 0) > 0)) ? "secondary" : "destructive"}>
+                      {(product.in_stock ?? ((product.stock || 0) > 0)) ? "متوفر" : "غير متوفر"}
                     </Badge>
                   </div>
                 </div>
