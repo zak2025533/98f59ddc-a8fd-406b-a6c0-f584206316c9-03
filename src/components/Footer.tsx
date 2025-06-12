@@ -81,7 +81,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t border-blue-200 mt-8 pt-8 text-center">
           <p className="text-muted-foreground font-arabic">
-            بلا حدود - تصميم وتطوير المهندس: زكريا نبيل محمد الحاج |{" "}
+            بلا حدود للحلويات - تصميم وتطوير المهندس: زكريا نبيل محمد الحاج |{" "}
             <a
               href="https://wa.me/967780652001"
               target="_blank"
