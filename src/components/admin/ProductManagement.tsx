@@ -16,7 +16,7 @@ interface Product {
   price: number;
   image_url: string;
   category_id: string;
-  subcategory_id?: string;
+  subcategory_id: string;
   is_featured: boolean;
   in_stock: boolean;
   categories?: { name: string };
@@ -47,9 +47,17 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
       const { data, error } = await supabase
         .from('products')
         .select(`
-          *,
-          categories (name),
-          subcategories (name)
+          id,
+          name,
+          description,
+          price,
+          image_url,
+          category_id,
+          subcategory_id,
+          is_featured,
+          in_stock,
+          categories!products_category_id_fkey (name),
+          subcategories!products_subcategory_id_fkey (name)
         `)
         .order('name');
 

@@ -13,7 +13,7 @@ interface Product {
   price: number;
   image_url: string;
   category_id: string;
-  subcategory_id?: string;
+  subcategory_id: string;
   is_featured: boolean;
   in_stock: boolean;
 }
@@ -30,7 +30,7 @@ const FeaturedProducts = () => {
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('id, name, description, price, image_url, category_id, subcategory_id, is_featured, in_stock')
         .eq('is_featured', true)
         .eq('in_stock', true)
         .limit(8);

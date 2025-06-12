@@ -29,7 +29,7 @@ interface Product {
   price: number;
   image_url: string;
   category_id: string;
-  subcategory_id?: string;
+  subcategory_id: string;
   is_featured: boolean;
   in_stock: boolean;
 }
