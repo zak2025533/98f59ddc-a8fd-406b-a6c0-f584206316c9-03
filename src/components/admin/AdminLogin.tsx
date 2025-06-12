@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -115,12 +114,6 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
               {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
             </Button>
           </form>
-
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>للاختبار:</p>
-            <p>المستخدم: zakzakzak</p>
-            <p>كلمة المرور: zak1212zak</p>
-          </div>
         </CardContent>
       </Card>
     </div>
