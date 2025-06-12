@@ -58,7 +58,7 @@ const Footer = () => {
                 <span className="text-blue-600">🐦</span>
               </a>
               <a 
-                href="https://wa.me/967780652001" 
+                href="https://wa.me/967770006120" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors"
