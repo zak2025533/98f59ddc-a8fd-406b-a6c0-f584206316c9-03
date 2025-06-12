@@ -86,18 +86,20 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         if (fallbackResult.error) throw fallbackResult.error;
         
         // Transform old schema to new format
-        data = fallbackResult.data?.map(product => ({
+        const transformedData = fallbackResult.data?.map(product => ({
           ...product,
           is_featured: product.featured || false,
           in_stock: (product.stock || 0) > 0,
           category_id: product.subcategories?.category_id || '',
           categories: product.subcategories?.categories,
         })) || [];
+        
+        setProducts(transformedData);
       } else if (error) {
         throw error;
+      } else {
+        setProducts(data || []);
       }
-
-      setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
