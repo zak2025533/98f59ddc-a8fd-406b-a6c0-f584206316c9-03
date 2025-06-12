@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useCart } from "@/hooks/useCart";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface Product {
   id: string;
@@ -21,6 +23,8 @@ interface Product {
 const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -41,6 +45,14 @@ const FeaturedProducts = () => {
       console.error('Error fetching featured products:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFavoriteClick = (productId: string) => {
+    if (isFavorite(productId)) {
+      removeFromFavorites(productId);
+    } else {
+      addToFavorites(productId);
     }
   };
 
@@ -81,8 +93,13 @@ const FeaturedProducts = () => {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute top-4 right-4">
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 bg-white/80 hover:bg-white">
-                      <Heart className="h-4 w-4 text-red-500" />
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="h-8 w-8 p-0 bg-white/80 hover:bg-white"
+                      onClick={() => handleFavoriteClick(product.id)}
+                    >
+                      <Heart className={`h-4 w-4 ${isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-red-500'}`} />
                     </Button>
                   </div>
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300"></div>
@@ -108,7 +125,11 @@ const FeaturedProducts = () => {
                       <span className="text-2xl font-bold text-blue-800 font-arabic">{product.price}</span>
                       <span className="text-sm text-muted-foreground mr-1">ريال</span>
                     </div>
-                    <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-arabic">
+                    <Button 
+                      size="sm" 
+                      className="bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-arabic"
+                      onClick={() => addToCart(product.id)}
+                    >
                       <ShoppingCart className="h-4 w-4 ml-1" />
                       أضف للسلة
                     </Button>

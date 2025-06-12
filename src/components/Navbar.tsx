@@ -2,10 +2,11 @@
 import { ShoppingCart, User, Search, Menu, Heart, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { CartSheet } from "./CartSheet";
+import { FavoritesSheet } from "./FavoritesSheet";
 
 interface Category {
   id: string;
@@ -95,17 +96,8 @@ const Navbar = () => {
               </div>
             </div>
 
-            <Button variant="ghost" size="sm" className="h-12 px-4 hover:bg-blue-50 text-blue-700 font-arabic">
-              <Heart className="h-5 w-5 ml-2" />
-              المفضلة
-            </Button>
-            <Button variant="ghost" size="sm" className="relative h-12 px-4 hover:bg-blue-50 text-blue-700 font-arabic">
-              <ShoppingCart className="h-5 w-5 ml-2" />
-              سلة التسوق
-              <Badge variant="destructive" className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs">
-                3
-              </Badge>
-            </Button>
+            <FavoritesSheet />
+            <CartSheet />
             <Button variant="outline" size="sm" className="h-12 px-6 border-blue-500 text-blue-700 hover:bg-blue-500 hover:text-white transition-all duration-300 font-arabic">
               <User className="h-5 w-5 ml-2" />
               تسجيل الدخول
@@ -155,14 +147,10 @@ const Navbar = () => {
                 ))}
               </div>
               
-              <Button variant="ghost" className="w-full justify-start h-12 font-arabic">
-                <Heart className="h-5 w-5 ml-2" />
-                المفضلة
-              </Button>
-              <Button variant="ghost" className="w-full justify-start h-12 font-arabic">
-                <ShoppingCart className="h-5 w-5 ml-2" />
-                سلة التسوق
-              </Button>
+              <div className="flex gap-2">
+                <FavoritesSheet />
+                <CartSheet />
+              </div>
               <Button variant="ghost" className="w-full justify-start h-12 font-arabic">
                 <User className="h-5 w-5 ml-2" />
                 تسجيل الدخول
