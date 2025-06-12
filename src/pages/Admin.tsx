@@ -4,24 +4,32 @@ import AdminLogin from "@/components/admin/AdminLogin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 
 const Admin = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if admin is already logged in
+    // التحقق من حالة تسجيل الدخول
     const adminData = localStorage.getItem('admin');
     if (adminData) {
-      setIsLoggedIn(true);
+      setIsAuthenticated(true);
     }
   }, []);
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
   return (
-    <div>
-      {isLoggedIn ? (
-        <AdminDashboard />
+    <>
+      {isAuthenticated ? (
+        <AdminDashboard onLogout={handleLogout} />
       ) : (
-        <AdminLogin onLogin={() => setIsLoggedIn(true)} />
+        <AdminLogin onLogin={handleLogin} />
       )}
-    </div>
+    </>
   );
 };
 

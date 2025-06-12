@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Select,
   SelectContent,
@@ -17,9 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import ImageUpload from "./ImageUpload";
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  category_id: string;
+  subcategory_id?: string;
+  is_featured: boolean;
+  in_stock: boolean;
+}
 
 interface Category {
   id: string;
@@ -30,16 +43,6 @@ interface Subcategory {
   id: string;
   name: string;
   category_id: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  stock: number;
-  description?: string;
-  image_url?: string;
-  subcategory_id: string;
 }
 
 interface ProductDialogProps {
@@ -53,14 +56,15 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: "",
-    stock: "",
+    price: 0,
     image_url: "",
+    category_id: "",
     subcategory_id: "",
+    is_featured: false,
+    in_stock: true,
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -70,27 +74,36 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       if (product) {
         setFormData({
           name: product.name,
-          description: product.description || "",
-          price: product.price.toString(),
-          stock: product.stock.toString(),
-          image_url: product.image_url || "",
-          subcategory_id: product.subcategory_id,
+          description: product.description,
+          price: product.price,
+          image_url: product.image_url,
+          category_id: product.category_id,
+          subcategory_id: product.subcategory_id || "",
+          is_featured: product.is_featured,
+          in_stock: product.in_stock,
         });
-        fetchSubcategoriesForProduct(product.subcategory_id);
       } else {
         setFormData({
           name: "",
           description: "",
-          price: "",
-          stock: "",
+          price: 0,
           image_url: "",
+          category_id: "",
           subcategory_id: "",
+          is_featured: false,
+          in_stock: true,
         });
-        setSelectedCategoryId("");
-        setSubcategories([]);
       }
     }
   }, [isOpen, product]);
+
+  useEffect(() => {
+    if (formData.category_id) {
+      fetchSubcategories(formData.category_id);
+    } else {
+      setSubcategories([]);
+    }
+  }, [formData.category_id]);
 
   const fetchCategories = async () => {
     try {
@@ -103,23 +116,6 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
-    }
-  };
-
-  const fetchSubcategoriesForProduct = async (subcategoryId: string) => {
-    try {
-      const { data: subcatData } = await supabase
-        .from('subcategories')
-        .select('category_id')
-        .eq('id', subcategoryId)
-        .single();
-      
-      if (subcatData) {
-        setSelectedCategoryId(subcatData.category_id);
-        fetchSubcategories(subcatData.category_id);
-      }
-    } catch (error) {
-      console.error('Error fetching subcategory for product:', error);
     }
   };
 
@@ -138,51 +134,26 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     }
   };
 
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategoryId(categoryId);
-    setFormData(prev => ({ ...prev, subcategory_id: "" }));
-    fetchSubcategories(categoryId);
-  };
-
   const handleImageChange = (imageUrl: string | null) => {
     setFormData(prev => ({ ...prev, image_url: imageUrl || "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.name.trim()) {
+
+    if (!formData.name.trim() || !formData.description.trim() || !formData.category_id) {
       toast({
         title: "خطأ",
-        description: "يرجى إدخال اسم المنتج",
+        description: "يرجى ملء جميع الحقول المطلوبة",
         variant: "destructive",
       });
       return;
     }
 
-    if (!formData.subcategory_id) {
-      toast({
-        title: "خطأ",
-        description: "يرجى اختيار الفئة الفرعية",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!formData.price || parseFloat(formData.price) <= 0) {
+    if (formData.price <= 0) {
       toast({
         title: "خطأ",
         description: "يرجى إدخال سعر صحيح",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!formData.stock || parseInt(formData.stock) < 0) {
-      toast({
-        title: "خطأ",
-        description: "يرجى إدخال كمية مخزون صحيحة",
         variant: "destructive",
       });
       return;
@@ -193,14 +164,17 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     try {
       const productData = {
         name: formData.name.trim(),
-        description: formData.description.trim() || null,
-        price: parseFloat(formData.price),
-        stock: parseInt(formData.stock),
+        description: formData.description.trim(),
+        price: formData.price,
         image_url: formData.image_url || null,
-        subcategory_id: formData.subcategory_id,
+        category_id: formData.category_id,
+        subcategory_id: formData.subcategory_id || null,
+        is_featured: formData.is_featured,
+        in_stock: formData.in_stock,
       };
 
       if (product) {
+        // تحديث
         const { error } = await supabase
           .from('products')
           .update(productData)
@@ -208,30 +182,24 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
         if (error) throw error;
 
-        toast({
-          title: "تم التحديث",
-          description: "تم تحديث المنتج بنجاح",
-        });
+        toast({ title: "تم التحديث", description: "تم تحديث المنتج بنجاح" });
       } else {
+        // إضافة جديدة
         const { error } = await supabase
           .from('products')
           .insert([productData]);
 
         if (error) throw error;
 
-        toast({
-          title: "تم الإضافة",
-          description: "تم إضافة المنتج بنجاح",
-        });
+        toast({ title: "تم الإضافة", description: "تم إضافة المنتج بنجاح" });
       }
 
       onSuccess();
       onClose();
     } catch (error: any) {
-      console.error('Error saving product:', error);
       toast({
         title: "خطأ",
-        description: error.message || "تعذر حفظ المنتج. يرجى المحاولة مرة أخرى.",
+        description: error.message || "تعذر حفظ المنتج. حاول مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -241,102 +209,95 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-right font-cairo">
+          <DialogTitle className="text-right font-arabic text-blue-800">
             {product ? "تعديل المنتج" : "إضافة منتج جديد"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name" className="text-right font-cairo">اسم المنتج *</Label>
-            <Input
-              id="name"
-              value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              required
-              placeholder="أدخل اسم المنتج"
-              className="text-right"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="description" className="text-right font-cairo">الوصف</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="أدخل وصف المنتج (اختياري)"
-              className="text-right min-h-[80px]"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="price" className="text-right font-cairo">السعر (ر.س) *</Label>
+              <Label htmlFor="name" className="text-right font-arabic">اسم المنتج *</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                required
+                placeholder="أدخل اسم المنتج"
+                className="text-right font-arabic"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="price" className="text-right font-arabic">السعر (ريال) *</Label>
               <Input
                 id="price"
                 type="number"
-                step="0.01"
                 min="0"
+                step="0.01"
                 value={formData.price}
-                onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
                 required
                 placeholder="0.00"
                 className="text-right"
               />
             </div>
+          </div>
+
+          <div>
+            <Label htmlFor="description" className="text-right font-arabic">وصف المنتج *</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              required
+              placeholder="أدخل وصف المنتج"
+              className="text-right font-arabic"
+              rows={3}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-right font-arabic">القسم *</Label>
+              <Select 
+                value={formData.category_id} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value, subcategory_id: "" }))}
+              >
+                <SelectTrigger className="text-right font-arabic">
+                  <SelectValue placeholder="اختر القسم" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id} className="font-arabic">
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
             <div>
-              <Label htmlFor="stock" className="text-right font-cairo">المخزون *</Label>
-              <Input
-                id="stock"
-                type="number"
-                min="0"
-                value={formData.stock}
-                onChange={(e) => setFormData(prev => ({ ...prev, stock: e.target.value }))}
-                required
-                placeholder="0"
-                className="text-right"
-              />
+              <Label className="text-right font-arabic">القسم الفرعي</Label>
+              <Select 
+                value={formData.subcategory_id} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
+                disabled={!formData.category_id || subcategories.length === 0}
+              >
+                <SelectTrigger className="text-right font-arabic">
+                  <SelectValue placeholder="اختر القسم الفرعي (اختياري)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subcategories.map((subcategory) => (
+                    <SelectItem key={subcategory.id} value={subcategory.id} className="font-arabic">
+                      {subcategory.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </div>
-
-          <div>
-            <Label className="text-right font-cairo">القسم *</Label>
-            <Select value={selectedCategoryId} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="text-right">
-                <SelectValue placeholder="اختر القسم" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id} className="text-right">
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label className="text-right font-cairo">الفئة الفرعية *</Label>
-            <Select 
-              value={formData.subcategory_id} 
-              onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
-              disabled={!selectedCategoryId}
-            >
-              <SelectTrigger className="text-right">
-                <SelectValue placeholder={selectedCategoryId ? "اختر الفئة الفرعية" : "اختر القسم أولاً"} />
-              </SelectTrigger>
-              <SelectContent>
-                {subcategories.map((subcategory) => (
-                  <SelectItem key={subcategory.id} value={subcategory.id} className="text-right">
-                    {subcategory.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
 
           <ImageUpload
@@ -345,11 +306,33 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
             label="صورة المنتج"
           />
 
+          <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="in_stock"
+                  checked={formData.in_stock}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, in_stock: checked }))}
+                />
+                <Label htmlFor="in_stock" className="font-arabic">متوفر في المخزون</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_featured: checked }))}
+                />
+                <Label htmlFor="is_featured" className="font-arabic">منتج مميز</Label>
+              </div>
+            </div>
+          </div>
+
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isLoading} className="flex-1 font-cairo">
-              {isLoading ? "جاري الحفظ..." : product ? "تحديث" : "إضافة"}
+            <Button type="submit" disabled={isLoading} className="flex-1 font-arabic bg-blue-600 hover:bg-blue-700">
+              {isLoading ? "جاري الحفظ..." : product ? "تحديث المنتج" : "إضافة المنتج"}
             </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-cairo">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-arabic">
               إلغاء
             </Button>
           </div>

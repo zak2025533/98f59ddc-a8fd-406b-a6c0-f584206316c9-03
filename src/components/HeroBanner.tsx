@@ -5,8 +5,9 @@ import { ShoppingBag, Star, Award, Truck, ArrowDown } from "lucide-react";
 const HeroBanner = () => {
   return (
     <section className="relative min-h-[700px] flex items-center overflow-hidden">
-      {/* Background with enhanced gradient */}
-      <div className="absolute inset-0 sweet-gradient-alt"></div>
+      {/* Background with blue and yellow gradient matching the logo */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/20 via-transparent to-transparent"></div>
       
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -20,14 +21,23 @@ const HeroBanner = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
         <div className="max-w-4xl mx-auto">
+          <div className="animate-bounce-in flex items-center justify-center mb-8">
+            <img 
+              src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png" 
+              alt="بلا حدود للحلويات" 
+              className="h-32 w-32 mb-4"
+            />
+          </div>
+          
           <div className="animate-bounce-in">
             <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight text-shadow font-arabic">
               بلا حدود
               <br />
-              <span className="text-yellow-200 bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">
+              <span className="text-yellow-300 bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">
                 للحلويات
               </span>
             </h1>
+            <p className="text-xl md:text-2xl text-yellow-200 font-bold mb-2">Unlimited Sweets</p>
           </div>
           
           <div className="animate-slide-up" style={{animationDelay: '0.3s'}}>
@@ -39,11 +49,11 @@ const HeroBanner = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up" style={{animationDelay: '0.6s'}}>
-            <Button size="lg" className="text-lg px-8 py-4 glass-effect hover:bg-white/20 border-white/30 text-white transition-all duration-300">
+            <Button size="lg" className="text-lg px-8 py-4 bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-bold transition-all duration-300">
               <ShoppingBag className="ml-2 h-5 w-5" />
               تسوق الآن
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-4 bg-white text-sweet-brown hover:bg-white/90 border-2 border-white transition-all duration-300">
+            <Button size="lg" variant="outline" className="text-lg px-8 py-4 bg-white text-blue-800 hover:bg-blue-50 border-2 border-white transition-all duration-300">
               استكشف المنتجات
               <ArrowDown className="mr-2 h-5 w-5" />
             </Button>
@@ -52,7 +62,7 @@ const HeroBanner = () => {
           {/* Enhanced Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 animate-slide-up" style={{animationDelay: '0.9s'}}>
             <div className="flex flex-col items-center text-center group">
-              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300 bg-white/10">
                 <Star className="h-10 w-10 text-yellow-300" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-arabic">جودة عالية</h3>
@@ -60,7 +70,7 @@ const HeroBanner = () => {
             </div>
             
             <div className="flex flex-col items-center text-center group">
-              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300 bg-white/10">
                 <Truck className="h-10 w-10 text-yellow-300" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-arabic">توصيل سريع</h3>
@@ -68,7 +78,7 @@ const HeroBanner = () => {
             </div>
             
             <div className="flex flex-col items-center text-center group">
-              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="glass-effect rounded-full p-6 mb-4 group-hover:scale-110 transition-transform duration-300 bg-white/10">
                 <Award className="h-10 w-10 text-yellow-300" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-arabic">ضمان الطعم</h3>

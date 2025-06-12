@@ -1,166 +1,134 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Heart, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
   name: string;
+  description: string;
   price: number;
-  originalPrice?: number;
-  rating: number;
-  image: string; // Now it's a URL
-  category: string;
-  isNew?: boolean;
-  isOnSale?: boolean;
+  image_url: string;
+  category_id: string;
+  subcategory_id?: string;
+  is_featured: boolean;
+  in_stock: boolean;
 }
 
-const featuredProducts: Product[] = [
-  {
-    id: "1",
-    name: "كيكة الشوكولاته الفاخرة",
-    price: 85,
-    originalPrice: 120,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=400&q=80",
-    category: "كيكات",
-    isOnSale: true
-  },
-  {
-    id: "2",
-    name: "شوكولاته بلجيكية مميزة",
-    price: 45,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1606312619344-80d4acb91592?auto=format&fit=crop&w=400&q=80",
-    category: "شوكولاته",
-    isNew: true
-  },
-  {
-    id: "3",
-    name: "عصير المانجو الطبيعي",
-    price: 25,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1577801599717-4d7d2bfa0a67?auto=format&fit=crop&w=400&q=80",
-    category: "مشروبات"
-  },
-  {
-    id: "4",
-    name: "حلوى اللوز التقليدية",
-    price: 35,
-    rating: 4.6,
-    image: "https://images.unsplash.com/photo-1601050690122-30f7caa1e640?auto=format&fit=crop&w=400&q=80",
-    category: "حلوى"
-  },
-  {
-    id: "5",
-    name: "ويفر بالكراميل",
-    price: 28,
-    originalPrice: 35,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1614433413534-8487a2c77f38?auto=format&fit=crop&w=400&q=80",
-    category: "ويفرات",
-    isOnSale: true
-  },
-  {
-    id: "6",
-    name: "كب كيك الفراولة",
-    price: 15,
-    rating: 4.4,
-    image: "https://images.unsplash.com/photo-1589308078055-eb1c6ec3dca5?auto=format&fit=crop&w=400&q=80",
-    category: "كيكات",
-    isNew: true
-  }
-];
-
 const FeaturedProducts = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, []);
+
+  const fetchFeaturedProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('is_featured', true)
+        .eq('in_stock', true)
+        .limit(8);
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="animate-pulse">جاري تحميل المنتجات المميزة...</div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="py-16 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            المنتجات المميزة
+    <section id="featured" className="py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-blue-800 mb-6 font-arabic">
+            منتجاتنا المميزة
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            اكتشف أشهى منتجاتنا المختارة بعناية خاصة لك
+          <p className="text-xl text-blue-600 max-w-3xl mx-auto leading-relaxed font-arabic">
+            اختر من بين أفضل منتجاتنا المصنوعة بعناية فائقة ومكونات طبيعية
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredProducts.map((product) => (
-            <Card key={product.id} className="sweet-card-hover group border-0 shadow-lg overflow-hidden">
-              <div className="relative">
-                {/* Product Image */}
-                <div className="h-48 bg-gradient-to-br from-sweet-cream to-white flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="object-cover w-full h-full"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.length > 0 ? (
+            products.map((product, index) => (
+              <Card 
+                key={product.id} 
+                className="sweet-card-hover cursor-pointer group overflow-hidden border-0 shadow-xl bg-white"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="h-48 relative overflow-hidden">
+                  <img
+                    src={product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
-                </div>
-
-                {/* Badges */}
-                <div className="absolute top-3 right-3 flex flex-col gap-2">
-                  {product.isNew && (
-                    <Badge className="bg-green-500 text-white">جديد</Badge>
-                  )}
-                  {product.isOnSale && (
-                    <Badge className="bg-red-500 text-white">عرض</Badge>
-                  )}
-                </div>
-
-                {/* Favorite Button */}
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
-                  className="absolute top-3 left-3 bg-white/80 hover:bg-white"
-                >
-                  <Heart className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <CardContent className="p-4">
-                <div className="mb-2">
-                  <Badge variant="outline" className="text-xs">
-                    {product.category}
-                  </Badge>
-                </div>
-                
-                <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
-                  {product.name}
-                </h3>
-                
-                <div className="flex items-center mb-3">
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm text-muted-foreground mr-1">
-                      {product.rating}
-                    </span>
+                  <div className="absolute top-4 right-4">
+                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 bg-white/80 hover:bg-white">
+                      <Heart className="h-4 w-4 text-red-500" />
+                    </Button>
                   </div>
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300"></div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-primary">
-                      {product.price} ر.س
-                    </span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-muted-foreground line-through">
-                        {product.originalPrice} ر.س
-                      </span>
-                    )}
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-xl font-bold text-blue-800 group-hover:text-blue-600 transition-colors font-arabic">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="text-sm text-muted-foreground mr-1">4.8</span>
+                    </div>
                   </div>
-                  <Button size="sm" className="gap-2">
-                    <ShoppingCart className="h-4 w-4" />
-                    إضافة
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 font-arabic line-clamp-2">
+                    {product.description}
+                  </p>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold text-blue-800 font-arabic">{product.price}</span>
+                      <span className="text-sm text-muted-foreground mr-1">ريال</span>
+                    </div>
+                    <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-arabic">
+                      <ShoppingCart className="h-4 w-4 ml-1" />
+                      أضف للسلة
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-xl text-blue-600 font-arabic">لا توجد منتجات مميزة حالياً</p>
+              <p className="text-muted-foreground mt-2 font-arabic">تحقق مرة أخرى قريباً</p>
+            </div>
+          )}
         </div>
 
         <div className="text-center mt-12">
-          <Button size="lg" variant="outline">
+          <Button 
+            size="lg" 
+            className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-4 text-lg font-arabic"
+          >
             عرض جميع المنتجات
           </Button>
         </div>

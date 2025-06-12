@@ -9,82 +9,105 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Subcategory {
   id: string;
   name: string;
+  slug: string;
   category_id: string;
 }
 
 interface Category {
   id: string;
   name: string;
-  slug: string;
 }
 
 interface SubcategoryDialogProps {
   isOpen: boolean;
   onClose: () => void;
   subcategory?: Subcategory | null;
+  categoryId?: string;
   onSuccess: () => void;
-  categories: Category[];
 }
 
-const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories }: SubcategoryDialogProps) => {
+const SubcategoryDialog = ({ isOpen, onClose, subcategory, categoryId, onSuccess }: SubcategoryDialogProps) => {
   const [formData, setFormData] = useState({
     name: "",
+    slug: "",
     category_id: "",
   });
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (isOpen) {
+      fetchCategories();
       if (subcategory) {
         setFormData({
           name: subcategory.name,
+          slug: subcategory.slug,
           category_id: subcategory.category_id,
         });
       } else {
         setFormData({
           name: "",
-          category_id: "",
+          slug: "",
+          category_id: categoryId || "",
         });
       }
     }
-  }, [isOpen, subcategory]);
+  }, [isOpen, subcategory, categoryId]);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name')
+        .order('name');
+
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
   const generateSlug = (name: string) => {
     return name
-      .toLowerCase()
       .trim()
-      .replace(/[\s\u0621-\u064A]+/g, '-')
-      .replace(/[^\w\-]+/g, '')
-      .replace(/\-\-+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '');
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\u0621-\u064A-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    setFormData(prev => ({
+      ...prev,
+      name,
+      slug: generateSlug(name),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate required fields
-    if (!formData.name.trim()) {
-      toast({
-        title: "خطأ",
-        description: "يرجى إدخال اسم الفئة الفرعية",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    if (!formData.category_id) {
+    if (!formData.name.trim() || !formData.category_id) {
       toast({
         title: "خطأ",
-        description: "يرجى اختيار القسم الرئيسي",
+        description: "يرجى ملء جميع الحقول المطلوبة",
         variant: "destructive",
       });
       return;
@@ -93,59 +116,52 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
     setIsLoading(true);
 
     try {
-      console.log('Submitting subcategory data:', formData);
-      
       const subcategoryData = {
         name: formData.name.trim(),
-        slug: generateSlug(formData.name),
+        slug: formData.slug || generateSlug(formData.name),
         category_id: formData.category_id,
       };
 
-      console.log('Prepared subcategory data:', subcategoryData);
+      // تحقق من تكرار slug
+      const { data: existing, error: checkError } = await supabase
+        .from('subcategories')
+        .select('id')
+        .eq('slug', subcategoryData.slug)
+        .neq('id', subcategory?.id || '');
+
+      if (checkError) throw checkError;
+
+      if (existing.length > 0) {
+        throw new Error("الرابط المختصر مستخدم بالفعل، الرجاء اختيار رابط آخر.");
+      }
 
       if (subcategory) {
-        // Update existing subcategory
+        // تحديث
         const { error } = await supabase
           .from('subcategories')
           .update(subcategoryData)
           .eq('id', subcategory.id);
 
-        if (error) {
-          console.error('Update error:', error);
-          throw error;
-        }
+        if (error) throw error;
 
-        toast({
-          title: "تم التحديث",
-          description: "تم تحديث الفئة الفرعية بنجاح",
-        });
+        toast({ title: "تم التحديث", description: "تم تحديث القسم الفرعي بنجاح" });
       } else {
-        // Create new subcategory
-        const { data, error } = await supabase
+        // إضافة جديدة
+        const { error } = await supabase
           .from('subcategories')
-          .insert([subcategoryData])
-          .select();
+          .insert([subcategoryData]);
 
-        if (error) {
-          console.error('Insert error:', error);
-          throw error;
-        }
+        if (error) throw error;
 
-        console.log('Insert successful:', data);
-
-        toast({
-          title: "تم الإضافة",
-          description: "تم إضافة الفئة الفرعية بنجاح",
-        });
+        toast({ title: "تم الإضافة", description: "تم إضافة القسم الفرعي بنجاح" });
       }
 
       onSuccess();
       onClose();
     } catch (error: any) {
-      console.error('Error saving subcategory:', error);
       toast({
         title: "خطأ",
-        description: error.message || "تعذر حفظ الفئة الفرعية. يرجى المحاولة مرة أخرى.",
+        description: error.message || "تعذر حفظ القسم الفرعي. حاول مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -157,21 +173,24 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-right font-cairo">
-            {subcategory ? "تعديل الفئة الفرعية" : "إضافة فئة فرعية جديدة"}
+          <DialogTitle className="text-right font-arabic text-blue-800">
+            {subcategory ? "تعديل القسم الفرعي" : "إضافة قسم فرعي جديد"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="category" className="text-right font-cairo">القسم الرئيسي *</Label>
-            <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
-              <SelectTrigger className="text-right">
+            <Label className="text-right font-arabic">القسم الرئيسي *</Label>
+            <Select 
+              value={formData.category_id} 
+              onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
+            >
+              <SelectTrigger className="text-right font-arabic">
                 <SelectValue placeholder="اختر القسم الرئيسي" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id} className="text-right">
+                  <SelectItem key={category.id} value={category.id} className="font-arabic">
                     {category.name}
                   </SelectItem>
                 ))}
@@ -180,22 +199,36 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, onSuccess, categories
           </div>
 
           <div>
-            <Label htmlFor="name" className="text-right font-cairo">اسم الفئة الفرعية *</Label>
+            <Label htmlFor="name" className="text-right font-arabic">اسم القسم الفرعي *</Label>
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={handleNameChange}
               required
-              placeholder="أدخل اسم الفئة الفرعية"
+              placeholder="أدخل اسم القسم الفرعي"
+              className="text-right font-arabic"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="slug" className="text-right font-arabic">الرابط المختصر</Label>
+            <Input
+              id="slug"
+              value={formData.slug}
+              onChange={(e) =>
+                setFormData(prev => ({ ...prev, slug: generateSlug(e.target.value) }))
+              }
+              required
+              placeholder="سيتم إنشاؤه تلقائيًا"
               className="text-right"
             />
           </div>
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={isLoading} className="flex-1 font-cairo">
+            <Button type="submit" disabled={isLoading} className="flex-1 font-arabic bg-blue-600 hover:bg-blue-700">
               {isLoading ? "جاري الحفظ..." : subcategory ? "تحديث" : "إضافة"}
             </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-cairo">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-arabic">
               إلغاء
             </Button>
           </div>

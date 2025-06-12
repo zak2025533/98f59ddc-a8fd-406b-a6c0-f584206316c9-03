@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Image } from "lucide-react";
+import { Upload, X, Link } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,46 +14,52 @@ interface ImageUploadProps {
 }
 
 const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }: ImageUploadProps) => {
-  const [uploading, setUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl || null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
+  const [showUrlInput, setShowUrlInput] = useState(false);
   const { toast } = useToast();
 
-  const uploadImage = async (file: File) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // التحقق من نوع الملف
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "خطأ",
+        description: "يرجى اختيار ملف صورة صالح",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // التحقق من حجم الملف (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "خطأ",
+        description: "حجم الملف كبير جداً. الحد الأقصى 5 ميجابايت",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
     try {
-      setUploading(true);
-
-      // Create unique filename
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = fileName;
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
 
-      console.log('Uploading file:', fileName);
-
-      // Upload file to Supabase Storage
-      const { data, error: uploadError } = await supabase.storage
+      const { data, error } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+        .upload(fileName, file);
 
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        throw uploadError;
-      }
+      if (error) throw error;
 
-      console.log('Upload successful:', data);
-
-      // Get public URL
       const { data: urlData } = supabase.storage
         .from('product-images')
-        .getPublicUrl(filePath);
+        .getPublicUrl(fileName);
 
-      console.log('Public URL:', urlData.publicUrl);
-
-      setPreviewUrl(urlData.publicUrl);
       onImageChange(urlData.publicUrl);
-
       toast({
         title: "تم الرفع",
         description: "تم رفع الصورة بنجاح",
@@ -61,105 +67,111 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
     } catch (error: any) {
       console.error('Error uploading image:', error);
       toast({
-        title: "خطأ",
+        title: "خطأ في الرفع",
         description: error.message || "تعذر رفع الصورة",
         variant: "destructive",
       });
     } finally {
-      setUploading(false);
+      setIsUploading(false);
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "خطأ",
-          description: "يجب أن يكون الملف صورة",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Validate file size (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "خطأ",
-          description: "حجم الصورة يجب أن يكون أقل من 5 ميجابايت",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      uploadImage(file);
+  const handleUrlSubmit = () => {
+    if (urlInput.trim()) {
+      onImageChange(urlInput.trim());
+      setUrlInput("");
+      setShowUrlInput(false);
+      toast({
+        title: "تم الحفظ",
+        description: "تم حفظ رابط الصورة",
+      });
     }
   };
 
-  const removeImage = () => {
-    setPreviewUrl(null);
+  const handleRemoveImage = () => {
     onImageChange(null);
+    toast({
+      title: "تم الحذف",
+      description: "تم حذف الصورة",
+    });
   };
 
   return (
-    <div>
-      <Label className="text-right font-cairo">{label}</Label>
-      <div className="mt-2">
-        {previewUrl ? (
-          <div className="relative inline-block">
-            <img
-              src={previewUrl}
-              alt="معاينة الصورة"
-              className="w-32 h-32 object-cover rounded-lg border"
-              onError={(e) => {
-                console.error('Image load error:', e);
-                setPreviewUrl(null);
-                onImageChange(null);
-              }}
-            />
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              className="absolute -top-2 -right-2 rounded-full p-1 h-6 w-6"
-              onClick={removeImage}
-            >
-              <X className="h-3 w-3" />
-            </Button>
-          </div>
-        ) : (
-          <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center">
-            <Image className="h-8 w-8 text-gray-400" />
-            <span className="text-sm text-gray-500 mt-1 font-cairo">لا توجد صورة</span>
-          </div>
-        )}
+    <div className="space-y-4">
+      <Label className="text-right font-arabic">{label}</Label>
+      
+      {currentImageUrl && (
+        <div className="relative inline-block">
+          <img 
+            src={currentImageUrl} 
+            alt="Preview" 
+            className="w-32 h-32 object-cover rounded-lg border"
+          />
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
+            onClick={handleRemoveImage}
+          >
+            <X className="h-3 w-3" />
+          </Button>
+        </div>
+      )}
 
-        <div className="mt-4">
+      <div className="flex gap-2">
+        <div className="flex-1">
           <Input
             type="file"
             accept="image/*"
-            onChange={handleFileChange}
-            disabled={uploading}
+            onChange={handleFileUpload}
+            disabled={isUploading}
             className="hidden"
             id="image-upload"
           />
-          <Label htmlFor="image-upload">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={uploading}
-              className="cursor-pointer font-cairo"
-              asChild
-            >
-              <span>
-                <Upload className="h-4 w-4 ml-2" />
-                {uploading ? "جاري الرفع..." : "رفع صورة"}
-              </span>
-            </Button>
+          <Label
+            htmlFor="image-upload"
+            className={`flex items-center justify-center p-3 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors ${
+              isUploading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            <Upload className="h-4 w-4 ml-2" />
+            <span className="font-arabic">
+              {isUploading ? "جاري الرفع..." : "رفع صورة"}
+            </span>
           </Label>
         </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowUrlInput(!showUrlInput)}
+          className="font-arabic"
+        >
+          <Link className="h-4 w-4 ml-1" />
+          رابط
+        </Button>
       </div>
+
+      {showUrlInput && (
+        <div className="flex gap-2">
+          <Input
+            placeholder="أدخل رابط الصورة"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            className="text-right"
+            dir="ltr"
+          />
+          <Button
+            type="button"
+            onClick={handleUrlSubmit}
+            disabled={!urlInput.trim()}
+            className="font-arabic"
+          >
+            حفظ
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
