@@ -122,20 +122,26 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, categoryId, onSuccess
         category_id: formData.category_id,
       };
 
-      // تحقق من تكرار slug
-      const { data: existing, error: checkError } = await supabase
+      // تحقق من تكرار slug مع تجنب خطأ UUID
+      const slugCheckQuery = supabase
         .from('subcategories')
         .select('id')
-        .eq('slug', subcategoryData.slug)
-        .neq('id', subcategory?.id || '');
+        .eq('slug', subcategoryData.slug);
+
+      // إضافة شرط استثناء المعرف الحالي فقط إذا كان موجوداً وصحيحاً
+      if (subcategory?.id) {
+        slugCheckQuery.neq('id', subcategory.id);
+      }
+
+      const { data: existing, error: checkError } = await slugCheckQuery;
 
       if (checkError) throw checkError;
 
-      if (existing.length > 0) {
+      if (existing && existing.length > 0) {
         throw new Error("الرابط المختصر مستخدم بالفعل، الرجاء اختيار رابط آخر.");
       }
 
-      if (subcategory) {
+      if (subcategory?.id) {
         // تحديث
         const { error } = await supabase
           .from('subcategories')
@@ -159,6 +165,7 @@ const SubcategoryDialog = ({ isOpen, onClose, subcategory, categoryId, onSuccess
       onSuccess();
       onClose();
     } catch (error: any) {
+      console.error('Subcategory operation error:', error);
       toast({
         title: "خطأ",
         description: error.message || "تعذر حفظ القسم الفرعي. حاول مرة أخرى.",
