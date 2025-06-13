@@ -9,31 +9,29 @@ export const CartSheet = () => {
 
   const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
-  const generateOrderMessage = () => {
-    let message = "*📄 فاتورة طلب الشراء*\n\n";
-    message += "مرحباً، أود تأكيد طلبي للمنتجات التالية:\n\n";
-    message += "🛍️ المنتجات:\n";
+  const generateInvoiceMessage = () => {
+    let message = "🧾 *فاتورة طلب شراء - متجر بلا حدود للحلويات* 🍬\n\n";
+    message += "📦 تفاصيل الطلب:\n\n";
 
     cartItems.forEach((item, index) => {
-      message += `${index + 1}. ${item.product.name}\n`;
-      message += `   الكمية: ${item.quantity}\n`;
-      message += `   سعر الوحدة: ${item.product.price} ريال\n`;
-      message += `   الإجمالي: ${(item.product.price * item.quantity).toFixed(2)} ريال\n\n`;
+      message += `${index + 1}️⃣ *المنتج:* ${item.product.name}\n`;
+      message += `   - الكمية: ${item.quantity}\n`;
+      message += `   - السعر للوحدة: ${item.product.price.toFixed(2)} ريال\n`;
+      message += `   - الإجمالي: ${(item.product.price * item.quantity).toFixed(2)} ريال\n`;
+      message += "───────────────\n";
     });
 
-    message += "----------------------------\n";
-    message += `💰 *المجموع الكلي*: ${total.toFixed(2)} ريال\n`;
-    message += "📍 الرجاء تأكيد الطلب وتحديد عنوان التوصيل.\n\n";
-    message += "مع خالص التحية 🌷";
+    message += `\n💵 *المجموع الكلي:* ${total.toFixed(2)} ريال\n`;
+    message += "\n📍 *عنوان التوصيل:* يرجى إرسال عنوان التوصيل الكامل.\n";
+    message += `\n📞 للتواصل والاستفسار عبر واتساب: https://wa.me/967715833246\n`;
+    message += "\n🙏 *شكراً لتسوقكم معنا*\n*متجر بلا حدود للحلويات* 💝";
 
     return encodeURIComponent(message);
   };
 
   const handleOrder = () => {
-    const whatsappNumber = "967715833246"; // بدون "+"
-    const message = generateOrderMessage();
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
-    window.open(whatsappLink, "_blank");
+    const message = generateInvoiceMessage();
+    window.open(`https://wa.me/967715833246?text=${message}`, '_blank');
   };
 
   return (
@@ -108,10 +106,7 @@ export const CartSheet = () => {
                   <span className="font-arabic">المجموع: {total.toFixed(2)} ريال</span>
                 </div>
                 <div className="space-y-2">
-                  <Button
-                    className="w-full bg-green-600 hover:bg-green-700 font-arabic"
-                    onClick={handleOrder}
-                  >
+                  <Button onClick={handleOrder} className="w-full bg-blue-800 hover:bg-blue-900 font-arabic">
                     إتمام الطلب عبر واتساب
                   </Button>
                   <Button variant="outline" className="w-full font-arabic" onClick={clearCart}>
