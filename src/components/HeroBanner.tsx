@@ -82,7 +82,7 @@ const HeroBanner = () => {
                 <Truck className="h-10 w-10 text-yellow-300" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-arabic">توصيل سريع</h3>
-              <p className="text-white/80 leading-relaxed">توصيل مجاني للطلبات فوق 100 ريال في نفس اليوم</p>
+              <p className="text-white/80 leading-relaxed">توصيل مجاني للطلبات فوق 100 الف </p>
             </div>
 
             <div className="flex flex-col items-center text-center group">
