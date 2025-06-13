@@ -4,12 +4,10 @@ import { ShoppingBag, Star, Award, Truck, ArrowDown } from "lucide-react";
 const HeroBanner = () => {
   return (
     <section className="relative min-h-[700px] flex items-center overflow-hidden">
-      {/* Background gradients and dark overlay for better readability */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 z-0"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/20 via-transparent to-transparent z-0"></div>
       <div className="absolute inset-0 bg-black/20 z-0"></div>
 
-      {/* Animated emojis (shown on medium screens and up) */}
       <div className="hidden md:block absolute inset-0 overflow-hidden z-0">
         <div className="absolute top-20 left-10 opacity-30 text-6xl float-animation">🍰</div>
         <div className="absolute top-40 right-20 opacity-25 text-4xl float-animation" style={{ animationDelay: '1s' }}>🧁</div>
@@ -82,7 +80,7 @@ const HeroBanner = () => {
                 <Truck className="h-10 w-10 text-yellow-300" />
               </div>
               <h3 className="text-xl font-bold mb-3 font-arabic">توصيل سريع</h3>
-              <p className="text-white/80 leading-relaxed">توصيل مجاني للطلبات فوق 100 الف </p>
+              <p className="text-white/80 leading-relaxed">توصيل مجاني للطلبات فوق 100 الف  </p>
             </div>
 
             <div className="flex flex-col items-center text-center group">
