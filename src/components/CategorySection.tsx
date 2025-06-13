@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -61,7 +61,7 @@ const CategorySection = () => {
 
   if (loading) {
     return (
-      <section className="py-16 px-4 bg-gradient-to-b from-sweet-cream to-white">
+      <section className="py-8 sm:py-16 px-4 bg-gradient-to-b from-sweet-cream to-white" id="categories">
         <div className="max-w-7xl mx-auto text-center">
           <div className="animate-pulse text-xl text-blue-600 font-arabic">جاري تحميل الأقسام...</div>
         </div>
@@ -70,61 +70,64 @@ const CategorySection = () => {
   }
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-b from-sweet-cream to-white">
+    <section className="py-8 sm:py-16 px-4 bg-gradient-to-b from-sweet-cream to-white" id="categories">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-foreground mb-6 font-arabic">
+        <div className="text-center mb-8 sm:mb-16">
+          <h2 className="text-3xl sm:text-5xl font-bold text-foreground mb-4 sm:mb-6 font-arabic">
             أقسامنا المميزة
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-arabic">
             اكتشف مجموعتنا الواسعة من الحلويات والمشروبات اللذيذة المحضرة بعناية فائقة
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {categories.length > 0 ? (
             categories.map((category, index) => (
               <Card 
                 key={category.id} 
-                className="sweet-card-hover cursor-pointer group overflow-hidden border-0 shadow-xl bg-white"
+                className="sweet-card-hover cursor-pointer group overflow-hidden border-0 shadow-xl bg-white hover:shadow-2xl transition-all duration-500"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => handleCategoryClick(category.slug)}
               >
-                <div className="h-40 relative">
+                <div className="h-32 sm:h-40 relative overflow-hidden">
                   <img
                     src={category.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
                     alt={category.name}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-all duration-300 z-10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:from-black/60 transition-all duration-500"></div>
+                  <Badge 
+                    variant="secondary" 
+                    className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-blue-800 border-0 shadow-md font-arabic flex items-center gap-1"
+                  >
+                    <Package className="h-3 w-3" />
+                    {category.product_count}
+                  </Badge>
                 </div>
 
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors font-arabic">
-                      {category.name}
-                    </h3>
-                    <Badge variant="secondary" className="text-sm px-3 py-1 font-arabic">
-                      {category.product_count} منتج
-                    </Badge>
-                  </div>
-                  <p className="text-muted-foreground text-base leading-relaxed mb-4 font-arabic">
-                    اكتشف مجموعة رائعة من المنتجات في هذا القسم
+                <CardContent className="p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors font-arabic mb-2">
+                    {category.name}
+                  </h3>
+                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-4 font-arabic">
+                    اكتشف مجموعة رائعة من المنتجات المميزة
                   </p>
                   <Button 
                     variant="ghost" 
-                    className="w-full group-hover:bg-primary group-hover:text-white transition-all duration-300 font-arabic"
+                    className="w-full group-hover:bg-primary group-hover:text-white transition-all duration-300 font-arabic justify-between"
                   >
                     تصفح المنتجات
-                    <ArrowLeft className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowLeft className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </CardContent>
               </Card>
             ))
           ) : (
             <div className="col-span-full text-center py-12">
-              <p className="text-xl text-blue-600 font-arabic">لا توجد أقسام حالياً</p>
-              <p className="text-muted-foreground mt-2 font-arabic">تحقق مرة أخرى قريباً</p>
+              <Package className="h-16 w-16 mx-auto text-blue-300 mb-4" />
+              <p className="text-xl text-blue-600 font-arabic mb-2">لا توجد أقسام حالياً</p>
+              <p className="text-muted-foreground font-arabic">تحقق مرة أخرى قريباً</p>
             </div>
           )}
         </div>

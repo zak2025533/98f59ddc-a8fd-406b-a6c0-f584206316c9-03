@@ -1,160 +1,130 @@
 
-import { ShoppingCart, User, Search, Menu, Heart, Home } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Menu, X, ShoppingCart, Heart, User, Home, Grid3X3, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
+import { useCart } from "@/hooks/useCart";
+import { useFavorites } from "@/hooks/useFavorites";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { cartCount } = useCart();
+  const { favoriteCount } = useFavorites();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const fetchCategories = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('categories')
-        .select('id, name, slug')
-        .limit(4);
-
-      if (error) throw error;
-      setCategories(data || []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-    }
-  };
+  const navItems = [
+    { icon: Home, label: "الرئيسية", href: "/" },
+    { icon: Grid3X3, label: "الأقسام", href: "#categories" },
+    { icon: Phone, label: "اتصل بنا", href: "#contact" },
+  ];
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-blue-200">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 group cursor-pointer flex items-center gap-3">
-              <img 
-                src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png" 
-                alt="بلا حدود للحلويات" 
-                className="h-14 w-14 group-hover:scale-105 transition-transform duration-300"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-blue-800 group-hover:text-blue-600 transition-colors duration-300 font-arabic">
-                  بلا حدود للحلويات
-                </h1>
-                <p className="text-xs text-yellow-600 font-arabic">Unlimited Sweets</p>
-              </div>
-            </Link>
+          <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform">
+            <img
+              src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png"
+              alt="بلا حدود للحلويات"
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-full shadow-md"
+            />
+            <div className="hidden sm:block">
+              <h1 className="text-lg sm:text-xl font-bold text-blue-800 font-arabic">
+                بلا حدود للحلويات
+              </h1>
+              <p className="text-xs text-blue-600 font-arabic">Unlimited Sweets</p>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className="flex items-center gap-2 text-blue-700 hover:text-blue-900 transition-colors font-arabic text-sm font-medium"
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Search Bar - Hidden on mobile */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-              <Input 
-                placeholder="ابحث عن حلوياتك المفضلة..." 
-                className="pl-12 pr-4 h-12 border-2 border-blue-200 focus:border-blue-500 bg-white/80 backdrop-blur-sm font-arabic"
-                dir="rtl"
-              />
-            </div>
-          </div>
-
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-2 space-x-reverse">
-            <Link to="/">
-              <Button variant="ghost" size="sm" className="h-12 px-4 hover:bg-blue-50 text-blue-700 font-arabic">
-                <Home className="h-5 w-5 ml-2" />
-                الرئيسية
-              </Button>
-            </Link>
-            
-            {/* Categories Dropdown */}
-            <div className="relative group">
-              <Button variant="ghost" size="sm" className="h-12 px-4 hover:bg-blue-50 text-blue-700 font-arabic">
-                الأقسام
-              </Button>
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-blue-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                {categories.map((category) => (
-                  <Link
-                    key={category.id}
-                    to={`/category/${category.slug}`}
-                    className="block px-4 py-3 text-sm text-blue-700 hover:bg-blue-50 font-arabic border-b border-blue-100 last:border-b-0"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-              </div>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Favorites - Hidden on very small screens */}
+            <div className="hidden sm:block">
+              <FavoritesSheet />
             </div>
 
-            <FavoritesSheet />
+            {/* Cart */}
             <CartSheet />
-            <Button variant="outline" size="sm" className="h-12 px-6 border-blue-500 text-blue-700 hover:bg-blue-500 hover:text-white transition-all duration-300 font-arabic">
-              <User className="h-5 w-5 ml-2" />
-              تسجيل الدخول
-            </Button>
-          </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button 
-              variant="ghost" 
+            {/* Admin Link - Hidden on small screens */}
+            <Link to="/admin" className="hidden md:block">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-10 sm:h-12 px-3 sm:px-4 hover:bg-blue-50 text-blue-700 font-arabic transition-colors"
+              >
+                <User className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                <span className="hidden lg:inline">الإدارة</span>
+              </Button>
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
               size="sm"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="h-12 w-12"
+              onClick={toggleMenu}
+              className="lg:hidden h-10 w-10 p-0 hover:bg-blue-50"
             >
-              <Menu className="h-6 w-6" />
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-blue-200 bg-white/95 backdrop-blur-md">
-              <div className="mb-4">
-                <Input 
-                  placeholder="ابحث عن حلوياتك المفضلة..." 
-                  className="w-full h-12 border-2 border-blue-200 font-arabic"
-                  dir="rtl"
-                />
-              </div>
-              <Link to="/">
-                <Button variant="ghost" className="w-full justify-start h-12 font-arabic">
-                  <Home className="h-5 w-5 ml-2" />
-                  الرئيسية
-                </Button>
-              </Link>
-              
-              {/* Mobile Categories */}
-              <div className="py-2">
-                <p className="px-3 text-sm font-semibold text-blue-700 font-arabic mb-2">الأقسام</p>
-                {categories.map((category) => (
-                  <Link key={category.id} to={`/category/${category.slug}`}>
-                    <Button variant="ghost" className="w-full justify-start h-10 text-right font-arabic pl-6">
-                      {category.name}
-                    </Button>
+          <div className="lg:hidden border-t border-blue-100 bg-white/98 backdrop-blur-sm">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3 rounded-md text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors font-arabic"
+                  >
+                    <Icon className="h-5 w-5" />
+                    {item.label}
                   </Link>
-                ))}
-              </div>
+                );
+              })}
               
-              <div className="flex gap-2">
+              {/* Favorites in mobile menu */}
+              <div className="sm:hidden px-3 py-2">
                 <FavoritesSheet />
-                <CartSheet />
               </div>
-              <Button variant="ghost" className="w-full justify-start h-12 font-arabic">
-                <User className="h-5 w-5 ml-2" />
-                تسجيل الدخول
-              </Button>
+
+              {/* Admin link in mobile menu */}
+              <Link
+                to="/admin"
+                onClick={() => setIsMenuOpen(false)}
+                className="md:hidden flex items-center gap-3 px-3 py-3 rounded-md text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors font-arabic"
+              >
+                <User className="h-5 w-5" />
+                لوحة الإدارة
+              </Link>
             </div>
           </div>
         )}
