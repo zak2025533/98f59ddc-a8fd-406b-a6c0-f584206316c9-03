@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -129,7 +128,8 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
       general: "إعلان عام",
       discount: "تخفيض",
       promotion: "عرض ترويجي",
-      news: "أخبار"
+      news: "أخبار",
+      event: "إعلان مناسبة"
     };
     return types[type] || type;
   };
@@ -139,7 +139,8 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
       general: "bg-blue-100 text-blue-800",
       discount: "bg-red-100 text-red-800",
       promotion: "bg-green-100 text-green-800",
-      news: "bg-purple-100 text-purple-800"
+      news: "bg-purple-100 text-purple-800",
+      event: "bg-orange-100 text-orange-800"
     };
     return colors[type] || "bg-gray-100 text-gray-800";
   };
@@ -167,7 +168,18 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
             <Megaphone className="h-5 w-5" />
             إدارة الإعلانات
           </CardTitle>
-          <AnnouncementDialog onSave={() => { fetchAnnouncements(); onStatsUpdate(); }} />
+          <div className="flex gap-2">
+            <AnnouncementDialog onSave={() => { fetchAnnouncements(); onStatsUpdate(); }} />
+            <AnnouncementDialog 
+              onSave={() => { fetchAnnouncements(); onStatsUpdate(); }}
+              trigger={
+                <Button className="font-arabic bg-orange-600 hover:bg-orange-700">
+                  <Video className="h-4 w-4 ml-2" />
+                  إضافة إعلان مناسبة
+                </Button>
+              }
+            />
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -175,14 +187,25 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
           <div className="text-center py-8">
             <Megaphone className="h-16 w-16 mx-auto text-gray-300 mb-4" />
             <p className="text-gray-500 font-arabic">لا توجد إعلانات حتى الآن</p>
-            <AnnouncementDialog 
-              onSave={() => { fetchAnnouncements(); onStatsUpdate(); }}
-              trigger={
-                <Button className="mt-4 font-arabic">
-                  إضافة أول إعلان
-                </Button>
-              }
-            />
+            <div className="flex gap-2 justify-center mt-4">
+              <AnnouncementDialog 
+                onSave={() => { fetchAnnouncements(); onStatsUpdate(); }}
+                trigger={
+                  <Button className="font-arabic">
+                    إضافة أول إعلان
+                  </Button>
+                }
+              />
+              <AnnouncementDialog 
+                onSave={() => { fetchAnnouncements(); onStatsUpdate(); }}
+                trigger={
+                  <Button className="font-arabic bg-orange-600 hover:bg-orange-700">
+                    <Video className="h-4 w-4 ml-2" />
+                    إضافة إعلان مناسبة
+                  </Button>
+                }
+              />
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -232,7 +255,7 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
                         {announcement.video_url && (
                           <Badge className="bg-green-100 text-green-800 font-arabic text-xs flex items-center gap-1">
                             <Video className="h-3 w-3" />
-                            فيديو
+                            {announcement.type === 'event' ? 'فيديو مناسبة' : 'فيديو'}
                           </Badge>
                         )}
                         {announcement.image_url && (

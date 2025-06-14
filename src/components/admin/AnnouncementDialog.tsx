@@ -9,12 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Plus, Edit, Upload } from "lucide-react";
+import { CalendarIcon, Plus, Edit } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import ImageUpload from "./ImageUpload";
+import VideoUpload from "./VideoUpload";
 
 interface Product {
   id: string;
@@ -189,7 +190,7 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-arabic text-right">
             {announcement ? "تعديل الإعلان" : "إضافة إعلان جديد"}
@@ -223,6 +224,7 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
                   <SelectItem value="discount">تخفيض</SelectItem>
                   <SelectItem value="promotion">عرض ترويجي</SelectItem>
                   <SelectItem value="news">أخبار</SelectItem>
+                  <SelectItem value="event">إعلان مناسبة</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -239,7 +241,7 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
             />
           </div>
 
-          {/* Banner Settings */}
+          {/* إعدادات البانر */}
           <div className="p-4 border rounded-lg bg-blue-50">
             <div className="flex items-center space-x-2 space-x-reverse mb-4">
               <Switch
@@ -262,21 +264,23 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
                     placeholder="نص إضافي للبانر الرئيسي"
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="video_url" className="font-arabic">رابط الفيديو</Label>
-                  <Input
-                    id="video_url"
-                    value={formData.video_url}
-                    onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                    className="text-right font-arabic"
-                    placeholder="https://example.com/video.mp4"
-                  />
-                </div>
               </div>
             )}
           </div>
 
+          {/* قسم إعلانات المناسبات مع رفع الفيديو */}
+          {formData.type === 'event' && (
+            <div className="p-4 border rounded-lg bg-purple-50">
+              <h3 className="font-arabic font-semibold mb-4 text-right">إعدادات إعلان المناسبة</h3>
+              <VideoUpload
+                currentVideoUrl={formData.video_url}
+                onVideoChange={(url) => setFormData({ ...formData, video_url: url || "" })}
+                label="فيديو المناسبة"
+              />
+            </div>
+          )}
+
+          {/* قسم التخفيضات */}
           {formData.type === 'discount' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg bg-yellow-50">
               <div className="space-y-2">
@@ -326,14 +330,18 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
             </div>
           )}
 
-          <div className="space-y-2">
-            <ImageUpload
-              currentImageUrl={formData.image_url}
-              onImageChange={(url) => setFormData({ ...formData, image_url: url || "" })}
-              label="صورة الإعلان"
-            />
-          </div>
+          {/* رفع الصور للإعلانات العادية */}
+          {formData.type !== 'event' && (
+            <div className="space-y-2">
+              <ImageUpload
+                currentImageUrl={formData.image_url}
+                onImageChange={(url) => setFormData({ ...formData, image_url: url || "" })}
+                label="صورة الإعلان"
+              />
+            </div>
+          )}
 
+          {/* قسم التواريخ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="font-arabic">تاريخ البداية</Label>

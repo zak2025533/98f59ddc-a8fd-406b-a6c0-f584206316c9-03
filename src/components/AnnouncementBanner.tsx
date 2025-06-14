@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Percent, Tag, Megaphone, Newspaper } from "lucide-react";
+import { X, Percent, Tag, Megaphone, Newspaper, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Announcement {
@@ -29,6 +29,7 @@ interface Announcement {
 const AnnouncementBanner = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [bannerAnnouncements, setBannerAnnouncements] = useState<Announcement[]>([]);
+  const [eventAnnouncements, setEventAnnouncements] = useState<Announcement[]>([]);
   const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>([]);
 
   useEffect(() => {
@@ -63,9 +64,11 @@ const AnnouncementBanner = () => {
       
       const allAnnouncements = data || [];
       const banners = allAnnouncements.filter(a => a.is_banner);
-      const regular = allAnnouncements.filter(a => !a.is_banner).slice(0, 3);
+      const events = allAnnouncements.filter(a => a.type === 'event' && !a.is_banner);
+      const regular = allAnnouncements.filter(a => !a.is_banner && a.type !== 'event').slice(0, 3);
       
       setBannerAnnouncements(banners);
+      setEventAnnouncements(events);
       setAnnouncements(regular);
     } catch (error) {
       console.error('Error fetching announcements:', error);
@@ -86,6 +89,8 @@ const AnnouncementBanner = () => {
         return <Tag className="h-4 w-4" />;
       case 'news':
         return <Newspaper className="h-4 w-4" />;
+      case 'event':
+        return <Calendar className="h-4 w-4" />;
       default:
         return <Megaphone className="h-4 w-4" />;
     }
@@ -99,6 +104,8 @@ const AnnouncementBanner = () => {
         return 'bg-green-50 border-green-200 text-green-800';
       case 'news':
         return 'bg-blue-50 border-blue-200 text-blue-800';
+      case 'event':
+        return 'bg-orange-50 border-orange-200 text-orange-800';
       default:
         return 'bg-yellow-50 border-yellow-200 text-yellow-800';
     }
@@ -112,6 +119,8 @@ const AnnouncementBanner = () => {
         return 'عرض ترويجي';
       case 'news':
         return 'أخبار';
+      case 'event':
+        return 'مناسبة';
       default:
         return 'إعلان عام';
     }
@@ -125,7 +134,11 @@ const AnnouncementBanner = () => {
     banner => !dismissedAnnouncements.includes(banner.id)
   );
 
-  if (visibleAnnouncements.length === 0 && visibleBanners.length === 0) {
+  const visibleEvents = eventAnnouncements.filter(
+    event => !dismissedAnnouncements.includes(event.id)
+  );
+
+  if (visibleAnnouncements.length === 0 && visibleBanners.length === 0 && visibleEvents.length === 0) {
     return null;
   }
 
@@ -191,6 +204,77 @@ const AnnouncementBanner = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Event Announcements */}
+      {visibleEvents.length > 0 && (
+        <div className="bg-gradient-to-r from-orange-50 to-amber-50 py-8">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-center mb-6">
+              <Calendar className="h-6 w-6 text-orange-600 ml-2" />
+              <h2 className="text-2xl font-bold text-orange-800 font-arabic">إعلانات المناسبات</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {visibleEvents.map((event) => (
+                <Card key={event.id} className="relative bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-2 left-2 h-6 w-6 p-0 text-gray-500 hover:text-gray-700 z-10"
+                    onClick={() => dismissAnnouncement(event.id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                  
+                  <CardContent className="p-0">
+                    {event.video_url && (
+                      <div className="relative">
+                        <video
+                          controls
+                          className="w-full h-48 object-cover rounded-t-lg"
+                          poster={event.image_url || undefined}
+                        >
+                          <source src={event.video_url} type="video/mp4" />
+                          متصفحك لا يدعم تشغيل الفيديو
+                        </video>
+                      </div>
+                    )}
+                    
+                    <div className="p-6 pt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <Badge className="bg-orange-100 text-orange-800 font-arabic">
+                          {getTypeLabel(event.type)}
+                        </Badge>
+                        {getAnnouncementIcon(event.type)}
+                      </div>
+
+                      <h3 className="text-xl font-bold text-gray-800 font-arabic mb-3 text-right">
+                        {event.title}
+                      </h3>
+
+                      {event.description && (
+                        <p className="text-gray-600 font-arabic mb-4 text-right leading-relaxed">
+                          {event.description}
+                        </p>
+                      )}
+
+                      {event.image_url && !event.video_url && (
+                        <div className="mt-3">
+                          <img
+                            src={event.image_url}
+                            alt={event.title}
+                            className="w-full h-32 object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
