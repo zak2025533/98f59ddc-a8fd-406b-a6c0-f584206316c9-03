@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   Facebook, 
@@ -220,7 +219,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-green-600 hover:bg-green-700 px-3 py-1 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg group"
                 >
-                  <MessageSquare className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
+                  <MessageCircle className="h-4 w-4 group-hover:scale-110 transition-transform duration-300" />
                   <span className="text-xs">780652001</span>
                 </a>
               </div>
