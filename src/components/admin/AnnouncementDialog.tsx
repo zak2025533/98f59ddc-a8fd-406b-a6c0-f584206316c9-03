@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -274,10 +273,10 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
           )}
 
           <div className="space-y-2">
-            <Label className="font-arabic">صورة الإعلان</Label>
             <ImageUpload
-              onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
-              currentImage={formData.image_url}
+              currentImageUrl={formData.image_url}
+              onImageChange={(url) => setFormData({ ...formData, image_url: url || "" })}
+              label="صورة الإعلان"
             />
           </div>
 
