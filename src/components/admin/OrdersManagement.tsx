@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, Package, Truck, CheckCircle, Clock, User, MapPin, Phone, ExternalLink } from "lucide-react";
+import { Eye, Package, Truck, CheckCircle, Clock, User, MapPin, Phone, ExternalLink, Trash2 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -131,6 +132,37 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
     }
   };
 
+  const deleteOrder = async (orderId: string) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId);
+
+      if (error) throw error;
+      
+      setOrders(prev => prev.filter(order => order.id !== orderId));
+      
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder(null);
+      }
+      
+      toast({
+        title: "تم حذف الطلب",
+        description: "تم حذف الطلب بنجاح",
+      });
+      
+      onStatsUpdate();
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast({
+        title: "خطأ",
+        description: "فشل في حذف الطلب",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusBadge = (status: Order['status']) => {
     const statusConfig = {
       pending: { variant: 'default' as const, icon: Clock, text: 'قيد الانتظار' },
@@ -180,6 +212,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right font-arabic">رقم الطلب</TableHead>
+                  <TableHead className="text-right font-arabic">بيانات العميل</TableHead>
                   <TableHead className="text-right font-arabic">العناصر</TableHead>
                   <TableHead className="text-right font-arabic">المبلغ الإجمالي</TableHead>
                   <TableHead className="text-right font-arabic">الحالة</TableHead>
@@ -192,10 +225,36 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                   <TableRow key={order.id}>
                     <TableCell className="font-medium font-arabic">#{order.id.slice(0, 8)}</TableCell>
                     <TableCell>
+                      <div className="space-y-1 text-sm">
+                        {order.customer_name && (
+                          <div className="flex items-center gap-1 font-arabic">
+                            <User className="h-3 w-3" />
+                            {order.customer_name}
+                          </div>
+                        )}
+                        {order.customer_phone && (
+                          <div className="flex items-center gap-1 font-arabic">
+                            <Phone className="h-3 w-3" />
+                            {order.customer_phone}
+                          </div>
+                        )}
+                        {order.customer_address && (
+                          <div className="flex items-center gap-1 font-arabic">
+                            <MapPin className="h-3 w-3" />
+                            <span className="truncate max-w-[150px]">{order.customer_address}</span>
+                          </div>
+                        )}
+                        {!order.customer_name && !order.customer_phone && !order.customer_address && (
+                          <span className="text-gray-500 font-arabic">لا توجد بيانات</span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
                       <div className="space-y-1">
                         {order.items.slice(0, 2).map((item, index) => (
                           <div key={index} className="text-sm font-arabic">
                             {item.product_name} × {item.quantity}
+                            <span className="text-blue-600 mr-2">({item.price} ريال)</span>
                           </div>
                         ))}
                         {order.items.length > 2 && (
@@ -245,13 +304,44 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                             قبول
                           </Button>
                         )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="font-arabic"
+                            >
+                              <Trash2 className="h-4 w-4 ml-2" />
+                              حذف
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle className="text-right font-arabic">
+                                تأكيد حذف الطلب
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="text-right font-arabic">
+                                هل أنت متأكد من حذف الطلب #{order.id.slice(0, 8)}؟ لا يمكن التراجع عن هذا الإجراء.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel className="font-arabic">إلغاء</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteOrder(order.id)}
+                                className="font-arabic bg-red-600 hover:bg-red-700"
+                              >
+                                حذف الطلب
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
                 ))}
                 {orders.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8">
+                    <TableCell colSpan={7} className="text-center py-8">
                       <div className="text-gray-500 font-arabic">لا توجد طلبات حتى الآن</div>
                     </TableCell>
                   </TableRow>
@@ -275,20 +365,51 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                 <h3 className="font-semibold text-lg font-arabic text-blue-700">تفاصيل الطلب</h3>
                 <div className="space-y-2">
                   {selectedOrder.items.map((item, index) => (
-                    <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
-                      <span className="font-arabic">{item.product_name}</span>
-                      <div className="text-sm">
-                        <span className="font-arabic">{item.quantity} × {item.price} ريال</span>
+                    <div key={index} className="flex justify-between p-3 bg-gray-50 rounded border">
+                      <div>
+                        <span className="font-arabic font-medium">{item.product_name}</span>
+                        <div className="text-sm text-gray-600 font-arabic">
+                          الكمية: {item.quantity} × السعر: {item.price} ريال
+                        </div>
+                      </div>
+                      <div className="text-sm font-bold text-blue-600">
+                        <span className="font-arabic">{(item.quantity * item.price).toFixed(2)} ريال</span>
                       </div>
                     </div>
                   ))}
-                  <div className="border-t pt-2 font-bold">
+                  <div className="border-t pt-3 font-bold bg-blue-50 p-3 rounded">
                     <div className="flex justify-between">
                       <span className="font-arabic">المجموع الكلي:</span>
-                      <span className="font-arabic">{selectedOrder.total_amount} ريال</span>
+                      <span className="font-arabic text-blue-800">{selectedOrder.total_amount} ريال</span>
                     </div>
                   </div>
                 </div>
+
+                {(selectedOrder.customer_name || selectedOrder.customer_phone || selectedOrder.customer_address) && (
+                  <div className="mt-6">
+                    <h3 className="font-semibold text-lg font-arabic text-blue-700 mb-3">بيانات العميل</h3>
+                    <div className="space-y-2 bg-gray-50 p-3 rounded">
+                      {selectedOrder.customer_name && (
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-blue-600" />
+                          <span className="font-arabic">{selectedOrder.customer_name}</span>
+                        </div>
+                      )}
+                      {selectedOrder.customer_phone && (
+                        <div className="flex items-center gap-2">
+                          <Phone className="h-4 w-4 text-blue-600" />
+                          <span className="font-arabic">{selectedOrder.customer_phone}</span>
+                        </div>
+                      )}
+                      {selectedOrder.customer_address && (
+                        <div className="flex items-start gap-2">
+                          <MapPin className="h-4 w-4 text-blue-600 mt-1" />
+                          <span className="font-arabic">{selectedOrder.customer_address}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
               
               <div className="space-y-4">
@@ -310,7 +431,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                 {selectedOrder.whatsapp_message && (
                   <div className="mt-4">
                     <h4 className="font-semibold text-sm font-arabic text-blue-700 mb-2">رسالة واتساب:</h4>
-                    <div className="bg-gray-50 p-3 rounded text-sm max-h-32 overflow-y-auto">
+                    <div className="bg-gray-50 p-3 rounded text-sm max-h-32 overflow-y-auto border">
                       <pre className="whitespace-pre-wrap font-arabic text-xs">
                         {selectedOrder.whatsapp_message}
                       </pre>
