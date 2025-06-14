@@ -36,13 +36,13 @@ const About = () => {
       {/* Hero Section */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <Badge variant="secondary" className="mb-4 font-arabic">
+          <Badge variant="secondary" className="mb-4 font-arabic bg-blue-100 text-blue-800">
             من نحن
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold text-blue-800 mb-6 font-arabic">
             بلا حدود للحلويات
           </h1>
-          <p className="text-xl text-gray-600 mb-8 font-arabic max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 mb-8 font-arabic max-w-3xl mx-auto">
             متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي.
             نسعى لتقديم تجربة مميزة لعملائنا الكرام.
           </p>
@@ -50,10 +50,10 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="py-16 px-4 bg-white/50">
+      <section className="py-16 px-4 bg-white/70">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12">
-            <Card className="border-blue-200 shadow-lg">
+            <Card className="border-2 border-blue-200 bg-white">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-blue-800 font-arabic text-right">
                   <Target className="h-6 w-6" />
@@ -68,9 +68,9 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-orange-200 shadow-lg">
+            <Card className="border-2 border-purple-200 bg-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-orange-800 font-arabic text-right">
+                <CardTitle className="flex items-center gap-3 text-purple-800 font-arabic text-right">
                   <Award className="h-6 w-6" />
                   مهمتنا
                 </CardTitle>
@@ -93,7 +93,7 @@ const About = () => {
             <h2 className="text-3xl font-bold text-blue-800 mb-4 font-arabic">
               لماذا تختارنا؟
             </h2>
-            <p className="text-gray-600 font-arabic">
+            <p className="text-gray-700 font-arabic">
               نتميز بالعديد من المزايا التي تجعلنا الخيار الأمثل لك
             </p>
           </div>
@@ -102,15 +102,15 @@ const About = () => {
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="border-purple-200 hover:shadow-lg transition-all duration-300 group">
+                <Card key={index} className="border-2 border-blue-200 hover:border-purple-300 transition-all duration-300 group bg-white">
                   <CardContent className="p-6 text-center">
-                    <div className="mb-4 mx-auto w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                      <Icon className="h-8 w-8 text-purple-600" />
+                    <div className="mb-4 mx-auto w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Icon className="h-8 w-8 text-blue-600" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2 font-arabic">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-2 font-arabic">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600 font-arabic text-sm">
+                    <p className="text-gray-700 font-arabic text-sm">
                       {feature.description}
                     </p>
                   </CardContent>
