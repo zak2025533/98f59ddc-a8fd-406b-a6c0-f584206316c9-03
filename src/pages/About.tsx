@@ -20,20 +20,13 @@ const About = () => {
     {
       icon: Award,
       title: "خبرة طويلة",
-      description: "أكثر من 10 سنوات في بيع الحلويات"
+      description: "خبرة واسعة في صناعة وبيع الحلويات"
     },
     {
       icon: Users,
       title: "خدمة عملاء ممتازة",
-      description: "فريق محترف لخدمتكم على مدار الساعة"
+      description: "فريق محترف لخدمتكم"
     }
-  ];
-
-  const stats = [
-    { number: "10,000+", label: "عميل سعيد" },
-    { number: "500+", label: "منتج متنوع" },
-    { number: "5", label: "فرع في اليمن" },
-    { number: "24/7", label: "خدمة العملاء" }
   ];
 
   return (
@@ -51,24 +44,8 @@ const About = () => {
           </h1>
           <p className="text-xl text-gray-600 mb-8 font-arabic max-w-3xl mx-auto">
             متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي.
-            نسعى لتقديم تجربة مميزة لعملائنا الكرام في جميع أنحاء الجمهورية اليمنية.
+            نسعى لتقديم تجربة مميزة لعملائنا الكرام.
           </p>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-            {stats.map((stat, index) => (
-              <Card key={index} className="border-blue-200 bg-white/70 backdrop-blur-sm">
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl font-bold text-blue-800 mb-2 font-arabic">
-                    {stat.number}
-                  </div>
-                  <div className="text-gray-600 font-arabic">
-                    {stat.label}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -85,8 +62,8 @@ const About = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 font-arabic text-right leading-relaxed">
-                  أن نكون الخيار الأول لمحبي الحلويات في الجمهورية اليمنية، ونساهم في نشر 
-                  ثقافة الحلويات العربية الأصيلة مع لمسة عصرية مبتكرة تواكب أذواق جميع الأجيال.
+                  أن نكون الخيار الأول لمحبي الحلويات، ونساهم في نشر 
+                  ثقافة الحلويات العربية الأصيلة مع لمسة عصرية مبتكرة.
                 </p>
               </CardContent>
             </Card>
@@ -101,7 +78,7 @@ const About = () => {
               <CardContent>
                 <p className="text-gray-700 font-arabic text-right leading-relaxed">
                   تقديم حلويات ومشروبات عالية الجودة باستخدام أفضل المكونات الطبيعية، مع الحفاظ على 
-                  التراث العربي وإضافة الابتكار والإبداع لتلبية احتياجات وتطلعات عملائنا.
+                  التراث العربي وإضافة الابتكار والإبداع لتلبية احتياجات عملائنا.
                 </p>
               </CardContent>
             </Card>
@@ -157,11 +134,11 @@ const About = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="flex items-center gap-3 justify-center">
               <MapPin className="h-5 w-5" />
-              <span className="font-arabic">اليمن - محافظة إب</span>
+              <span className="font-arabic">اليمن</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
               <Clock className="h-5 w-5" />
-              <span className="font-arabic">24/7 خدمة العملاء</span>
+              <span className="font-arabic">خدمة العملاء</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
               <Users className="h-5 w-5" />
