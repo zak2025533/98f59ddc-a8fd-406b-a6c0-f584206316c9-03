@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import AdminLogin from "@/components/admin/AdminLogin";
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import { Toaster } from "@/components/ui/sonner";
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,6 +30,7 @@ const Admin = () => {
       ) : (
         <AdminLogin onLogin={handleLogin} />
       )}
+      <Toaster position="top-right" closeButton />
     </>
   );
 };

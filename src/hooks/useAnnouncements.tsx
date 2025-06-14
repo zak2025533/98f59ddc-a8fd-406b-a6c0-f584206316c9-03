@@ -108,28 +108,6 @@ export const useAnnouncements = () => {
     }
   };
 
-  const sendNotificationForAnnouncement = async (announcement: any) => {
-    try {
-      console.log('Sending notification for announcement:', announcement);
-      const { error } = await supabase.functions.invoke('send-push-notification', {
-        body: {
-          title: 'إعلان جديد!',
-          body: announcement.title,
-          type: 'announcement',
-          related_id: announcement.id
-        }
-      });
-
-      if (error) {
-        console.error('Error sending notification:', error);
-      } else {
-        console.log('Notification sent successfully');
-      }
-    } catch (error) {
-      console.error('Error sending notification:', error);
-    }
-  };
-
   useEffect(() => {
     fetchAnnouncements();
   }, []);
@@ -140,6 +118,5 @@ export const useAnnouncements = () => {
     fetchAnnouncements,
     deleteAnnouncement,
     toggleAnnouncementStatus,
-    sendNotificationForAnnouncement,
   };
 };

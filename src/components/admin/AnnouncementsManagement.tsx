@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Megaphone, Video } from "lucide-react";
 import { useAnnouncements, Announcement } from "@/hooks/useAnnouncements";
+import { useInternalNotifications } from "@/hooks/useInternalNotifications";
 import AnnouncementDialog from "./AnnouncementDialog";
 import AnnouncementsTable from "./AnnouncementsTable";
 
@@ -18,8 +19,9 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
     fetchAnnouncements,
     deleteAnnouncement,
     toggleAnnouncementStatus,
-    sendNotificationForAnnouncement,
   } = useAnnouncements();
+
+  const { sendNotificationForAnnouncement } = useInternalNotifications();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
@@ -37,9 +39,9 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
     setDialogOpen(false);
     setEditingAnnouncement(null);
 
-    // إرسال إشعار للإعلان الجديد فقط
+    // إرسال إشعار داخلي للإعلان الجديد فقط
     if (newAnnouncement && !editingAnnouncement) {
-      await sendNotificationForAnnouncement(newAnnouncement);
+      sendNotificationForAnnouncement(newAnnouncement);
     }
   };
 
