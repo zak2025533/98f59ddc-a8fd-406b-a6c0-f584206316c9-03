@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Edit, Trash2, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useInternalNotifications } from "@/hooks/useInternalNotifications";
 import ProductDialog from "./ProductDialog";
 
 interface Product {
@@ -37,6 +38,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
   }>({ isOpen: false });
 
   const { toast } = useToast();
+  const { sendNotificationForProduct } = useInternalNotifications();
 
   useEffect(() => {
     fetchProducts();
@@ -95,6 +97,16 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         description: error.message || "تعذر حذف المنتج",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleProductDialogSuccess = (newProduct?: any) => {
+    fetchProducts();
+    onStatsUpdate();
+    
+    // إرسال إشعار داخلي للمنتج الجديد فقط
+    if (newProduct && !productDialog.product) {
+      sendNotificationForProduct(newProduct);
     }
   };
 
@@ -207,10 +219,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         isOpen={productDialog.isOpen}
         onClose={() => setProductDialog({ isOpen: false })}
         product={productDialog.product}
-        onSuccess={() => {
-          fetchProducts();
-          onStatsUpdate();
-        }}
+        onSuccess={handleProductDialogSuccess}
       />
     </Card>
   );

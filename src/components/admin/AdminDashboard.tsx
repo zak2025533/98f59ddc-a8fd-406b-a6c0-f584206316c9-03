@@ -8,7 +8,7 @@ import ProductManagement from "./ProductManagement";
 import CategoryManagement from "./CategoryManagement";
 import AnnouncementsManagement from "./AnnouncementsManagement";
 import OrdersManagement from "./OrdersManagement";
-import NotificationManager from "./NotificationManager";
+import InternalNotificationManager from "./InternalNotificationManager";
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -93,7 +93,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
           </TabsContent>
 
           <TabsContent value="notifications">
-            <NotificationManager />
+            <InternalNotificationManager />
           </TabsContent>
         </Tabs>
       </div>
