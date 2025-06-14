@@ -225,7 +225,7 @@ export type Database = {
           created_at: string
           id: string
           related_id: string | null
-          sent_to_count: number | null
+          sent_to_count: number
           title: string
           type: string
         }
@@ -234,16 +234,16 @@ export type Database = {
           created_at?: string
           id?: string
           related_id?: string | null
-          sent_to_count?: number | null
+          sent_to_count?: number
           title: string
-          type: string
+          type?: string
         }
         Update: {
           body?: string
           created_at?: string
           id?: string
           related_id?: string | null
-          sent_to_count?: number | null
+          sent_to_count?: number
           title?: string
           type?: string
         }
@@ -392,6 +392,7 @@ export type Database = {
           created_at: string
           endpoint: string
           id: string
+          ip_address: string | null
           is_active: boolean
           keys: Json
           updated_at: string
@@ -401,6 +402,7 @@ export type Database = {
           created_at?: string
           endpoint: string
           id?: string
+          ip_address?: string | null
           is_active?: boolean
           keys: Json
           updated_at?: string
@@ -410,6 +412,7 @@ export type Database = {
           created_at?: string
           endpoint?: string
           id?: string
+          ip_address?: string | null
           is_active?: boolean
           keys?: Json
           updated_at?: string
