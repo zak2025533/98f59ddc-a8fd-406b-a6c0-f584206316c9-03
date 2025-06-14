@@ -20,7 +20,7 @@ const About = () => {
     {
       icon: Award,
       title: "خبرة طويلة",
-      description: "أكثر من 10 سنوات في صناعة الحلويات"
+      description: "أكثر من 10 سنوات في بيع الحلويات"
     },
     {
       icon: Users,
@@ -32,7 +32,7 @@ const About = () => {
   const stats = [
     { number: "10,000+", label: "عميل سعيد" },
     { number: "500+", label: "منتج متنوع" },
-    { number: "15", label: "فرع في المملكة" },
+    { number: "5", label: "فرع في اليمن" },
     { number: "24/7", label: "خدمة العملاء" }
   ];
 
@@ -50,8 +50,8 @@ const About = () => {
             بلا حدود للحلويات
           </h1>
           <p className="text-xl text-gray-600 mb-8 font-arabic max-w-3xl mx-auto">
-            متجر متخصص في صناعة أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي.
-            نسعى لتقديم تجربة مميزة لعملائنا الكرام في جميع أنحاء المملكة العربية السعودية.
+            متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي.
+            نسعى لتقديم تجربة مميزة لعملائنا الكرام في جميع أنحاء الجمهورية اليمنية.
           </p>
           
           {/* Stats */}
@@ -85,7 +85,7 @@ const About = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 font-arabic text-right leading-relaxed">
-                  أن نكون الخيار الأول لمحبي الحلويات في المملكة العربية السعودية، ونساهم في نشر 
+                  أن نكون الخيار الأول لمحبي الحلويات في الجمهورية اليمنية، ونساهم في نشر 
                   ثقافة الحلويات العربية الأصيلة مع لمسة عصرية مبتكرة تواكب أذواق جميع الأجيال.
                 </p>
               </CardContent>
@@ -157,7 +157,7 @@ const About = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="flex items-center gap-3 justify-center">
               <MapPin className="h-5 w-5" />
-              <span className="font-arabic">الرياض، المملكة العربية السعودية</span>
+              <span className="font-arabic">اليمن - محافظة إب</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
               <Clock className="h-5 w-5" />

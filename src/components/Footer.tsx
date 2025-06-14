@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   Facebook, 
@@ -60,7 +59,7 @@ const Footer = () => {
             </div>
             
             <p className="text-blue-100 font-arabic leading-relaxed">
-              متجر متخصص في صناعة أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي
+              متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي
             </p>
             
             {/* Social Media */}
