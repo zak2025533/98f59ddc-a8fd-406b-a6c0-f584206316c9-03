@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -138,6 +137,21 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
     setFormData(prev => ({ ...prev, image_url: imageUrl || "" }));
   };
 
+  const sendNotificationForNewProduct = async (productName: string) => {
+    try {
+      await supabase.functions.invoke('send-push-notification', {
+        body: {
+          title: 'منتج جديد متاح!',
+          body: `تم إضافة منتج جديد: ${productName}`,
+          type: 'product',
+          related_id: null
+        }
+      });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -192,6 +206,9 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
         if (error) throw error;
 
         toast({ title: "تم الإضافة", description: "تم إضافة المنتج بنجاح" });
+        
+        // إرسال إشعار للمنتج الجديد
+        await sendNotificationForNewProduct(formData.name);
       }
 
       onSuccess();

@@ -1,394 +1,356 @@
-
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Plus, Edit } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { ar } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ImageUpload from "./ImageUpload";
 import VideoUpload from "./VideoUpload";
-
-interface Product {
-  id: string;
-  name: string;
-}
 
 interface Announcement {
   id: string;
   title: string;
   description: string | null;
   type: string;
+  is_active: boolean;
+  start_date: string | null;
+  end_date: string | null;
+  image_url: string | null;
+  video_url: string | null;
   product_id: string | null;
   discount_percentage: number | null;
   discount_amount: number | null;
-  image_url: string | null;
-  video_url: string | null;
-  banner_text: string | null;
-  is_active: boolean;
   is_banner: boolean | null;
-  start_date: string | null;
-  end_date: string | null;
+  banner_text: string | null;
 }
 
 interface AnnouncementDialogProps {
-  announcement?: Announcement;
-  onSave: () => void;
-  trigger?: React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+  announcement?: Announcement | null;
+  onSuccess: () => void;
 }
 
-const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialogProps) => {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
+const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: AnnouncementDialogProps) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     type: "general",
-    product_id: "",
-    discount_percentage: "",
-    discount_amount: "",
-    image_url: "",
-    video_url: "",
-    banner_text: "",
     is_active: true,
-    is_banner: false,
     start_date: null as Date | null,
     end_date: null as Date | null,
+    image_url: "",
+    video_url: "",
+    product_id: "",
+    discount_percentage: null as number | null,
+    discount_amount: null as number | null,
+    is_banner: false,
+    banner_text: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    if (open) {
-      fetchProducts();
+    if (isOpen) {
       if (announcement) {
         setFormData({
           title: announcement.title,
           description: announcement.description || "",
           type: announcement.type,
-          product_id: announcement.product_id || "",
-          discount_percentage: announcement.discount_percentage?.toString() || "",
-          discount_amount: announcement.discount_amount?.toString() || "",
-          image_url: announcement.image_url || "",
-          video_url: announcement.video_url || "",
-          banner_text: announcement.banner_text || "",
           is_active: announcement.is_active,
-          is_banner: announcement.is_banner || false,
           start_date: announcement.start_date ? new Date(announcement.start_date) : null,
           end_date: announcement.end_date ? new Date(announcement.end_date) : null,
+          image_url: announcement.image_url || "",
+          video_url: announcement.video_url || "",
+          product_id: announcement.product_id || "",
+          discount_percentage: announcement.discount_percentage || null,
+          discount_amount: announcement.discount_amount || null,
+          is_banner: announcement.is_banner || false,
+          banner_text: announcement.banner_text || "",
         });
       } else {
         setFormData({
           title: "",
           description: "",
           type: "general",
-          product_id: "",
-          discount_percentage: "",
-          discount_amount: "",
-          image_url: "",
-          video_url: "",
-          banner_text: "",
           is_active: true,
-          is_banner: false,
           start_date: null,
           end_date: null,
+          image_url: "",
+          video_url: "",
+          product_id: "",
+          discount_percentage: null,
+          discount_amount: null,
+          is_banner: false,
+          banner_text: "",
         });
       }
     }
-  }, [open, announcement]);
+  }, [isOpen, announcement]);
 
-  const fetchProducts = async () => {
+  const handleImageChange = (imageUrl: string | null) => {
+    setFormData(prev => ({ ...prev, image_url: imageUrl || "" }));
+  };
+
+  const handleVideoChange = (videoUrl: string | null) => {
+    setFormData(prev => ({ ...prev, video_url: videoUrl || "" }));
+  };
+
+  const sendNotificationForNewAnnouncement = async (title: string) => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, name')
-        .order('name');
-
-      if (error) throw error;
-      setProducts(data || []);
+      await supabase.functions.invoke('send-push-notification', {
+        body: {
+          title: 'إعلان جديد!',
+          body: title,
+          type: 'announcement',
+          related_id: null
+        }
+      });
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error sending notification:', error);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    if (!formData.title.trim()) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال عنوان الإعلان",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.type === 'discount' && !formData.discount_percentage && !formData.discount_amount) {
+      toast({
+        title: "خطأ",
+        description: "يرجى إدخال قيمة الخصم",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
-      const submitData = {
-        title: formData.title,
-        description: formData.description || null,
+      const announcementData = {
+        title: formData.title.trim(),
+        description: formData.description.trim() || null,
         type: formData.type,
-        product_id: formData.product_id || null,
-        discount_percentage: formData.discount_percentage ? parseInt(formData.discount_percentage) : null,
-        discount_amount: formData.discount_amount ? parseFloat(formData.discount_amount) : null,
-        image_url: formData.image_url || null,
-        video_url: formData.video_url || null,
-        banner_text: formData.banner_text || null,
         is_active: formData.is_active,
-        is_banner: formData.is_banner,
         start_date: formData.start_date?.toISOString() || null,
         end_date: formData.end_date?.toISOString() || null,
+        image_url: formData.image_url || null,
+        video_url: formData.video_url || null,
+        product_id: formData.product_id || null,
+        discount_percentage: formData.discount_percentage || null,
+        discount_amount: formData.discount_amount || null,
+        is_banner: formData.is_banner,
+        banner_text: formData.banner_text.trim() || null,
       };
 
       if (announcement) {
         const { error } = await supabase
           .from('announcements')
-          .update(submitData)
+          .update(announcementData)
           .eq('id', announcement.id);
 
         if (error) throw error;
 
-        toast({
-          title: "تم التحديث بنجاح",
-          description: "تم تحديث الإعلان بنجاح",
-        });
+        toast({ title: "تم التحديث", description: "تم تحديث الإعلان بنجاح" });
       } else {
         const { error } = await supabase
           .from('announcements')
-          .insert([submitData]);
+          .insert([announcementData]);
 
         if (error) throw error;
 
-        toast({
-          title: "تم الحفظ بنجاح",
-          description: "تم إضافة الإعلان بنجاح",
-        });
+        toast({ title: "تم الإضافة", description: "تم إضافة الإعلان بنجاح" });
+        
+        // إرسال إشعار للإعلان الجديد
+        await sendNotificationForNewAnnouncement(formData.title);
       }
 
-      setOpen(false);
-      onSave();
-    } catch (error) {
-      console.error('Error saving announcement:', error);
+      onSuccess();
+      onClose();
+    } catch (error: any) {
       toast({
         title: "خطأ",
-        description: "حدث خطأ أثناء حفظ الإعلان",
+        description: error.message || "تعذر حفظ الإعلان",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button className="font-arabic">
-            <Plus className="h-4 w-4 ml-2" />
-            إضافة إعلان جديد
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-arabic text-right">
-            {announcement ? "تعديل الإعلان" : "إضافة إعلان جديد"}
+          <DialogTitle className="text-right font-arabic text-blue-800">
+            {announcement ? "تعديل إعلان" : "إضافة إعلان جديد"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="title" className="font-arabic">عنوان الإعلان</Label>
+            <div>
+              <Label htmlFor="title" className="text-right font-arabic">عنوان الإعلان *</Label>
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="text-right font-arabic"
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 required
+                placeholder="أدخل عنوان الإعلان"
+                className="text-right font-arabic"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="type" className="font-arabic">نوع الإعلان</Label>
+            <div>
+              <Label htmlFor="type" className="text-right font-arabic">نوع الإعلان</Label>
               <Select
                 value={formData.type}
-                onValueChange={(value) => setFormData({ ...formData, type: value })}
+                onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
               >
                 <SelectTrigger className="text-right font-arabic">
-                  <SelectValue />
+                  <SelectValue placeholder="اختر نوع الإعلان" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="general">إعلان عام</SelectItem>
-                  <SelectItem value="discount">تخفيض</SelectItem>
-                  <SelectItem value="promotion">عرض ترويجي</SelectItem>
-                  <SelectItem value="news">أخبار</SelectItem>
-                  <SelectItem value="event">إعلان مناسبة</SelectItem>
+                  <SelectItem value="general" className="font-arabic">عام</SelectItem>
+                  <SelectItem value="discount" className="font-arabic">خصم</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description" className="font-arabic">وصف الإعلان</Label>
+          <div>
+            <Label htmlFor="description" className="text-right font-arabic">وصف الإعلان</Label>
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              placeholder="أدخل وصف الإعلان"
               className="text-right font-arabic"
               rows={3}
             />
           </div>
 
-          {/* إعدادات البانر */}
-          <div className="p-4 border rounded-lg bg-blue-50">
-            <div className="flex items-center space-x-2 space-x-reverse mb-4">
-              <Switch
-                id="is_banner"
-                checked={formData.is_banner}
-                onCheckedChange={(checked) => setFormData({ ...formData, is_banner: checked })}
-              />
-              <Label htmlFor="is_banner" className="font-arabic font-semibold">عرض كبانر رئيسي</Label>
-            </div>
-
-            {formData.is_banner && (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="banner_text" className="font-arabic">نص البانر الرئيسي</Label>
-                  <Input
-                    id="banner_text"
-                    value={formData.banner_text}
-                    onChange={(e) => setFormData({ ...formData, banner_text: e.target.value })}
-                    className="text-right font-arabic"
-                    placeholder="نص إضافي للبانر الرئيسي"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* قسم إعلانات المناسبات مع رفع الفيديو */}
-          {formData.type === 'event' && (
-            <div className="p-4 border rounded-lg bg-purple-50">
-              <h3 className="font-arabic font-semibold mb-4 text-right">إعدادات إعلان المناسبة</h3>
-              <VideoUpload
-                currentVideoUrl={formData.video_url}
-                onVideoChange={(url) => setFormData({ ...formData, video_url: url || "" })}
-                label="فيديو المناسبة"
-              />
-            </div>
-          )}
-
-          {/* قسم التخفيضات */}
-          {formData.type === 'discount' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg bg-yellow-50">
-              <div className="space-y-2">
-                <Label htmlFor="product" className="font-arabic">المنتج</Label>
-                <Select
-                  value={formData.product_id}
-                  onValueChange={(value) => setFormData({ ...formData, product_id: value })}
-                >
-                  <SelectTrigger className="text-right font-arabic">
-                    <SelectValue placeholder="اختر المنتج" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {products.map((product) => (
-                      <SelectItem key={product.id} value={product.id}>
-                        {product.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="discount_percentage" className="font-arabic">نسبة التخفيض (%)</Label>
+          {formData.type === "discount" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="discount_percentage" className="text-right font-arabic">نسبة الخصم (%)</Label>
                 <Input
                   id="discount_percentage"
                   type="number"
                   min="0"
                   max="100"
-                  value={formData.discount_percentage}
-                  onChange={(e) => setFormData({ ...formData, discount_percentage: e.target.value })}
-                  className="text-right font-arabic"
+                  step="0.01"
+                  value={formData.discount_percentage || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, discount_percentage: Number(e.target.value) }))}
+                  placeholder="أدخل نسبة الخصم"
+                  className="text-right"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="discount_amount" className="font-arabic">مبلغ التخفيض (ريال)</Label>
+              <div>
+                <Label htmlFor="discount_amount" className="text-right font-arabic">قيمة الخصم (ريال)</Label>
                 <Input
                   id="discount_amount"
                   type="number"
                   min="0"
                   step="0.01"
-                  value={formData.discount_amount}
-                  onChange={(e) => setFormData({ ...formData, discount_amount: e.target.value })}
-                  className="text-right font-arabic"
+                  value={formData.discount_amount || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, discount_amount: Number(e.target.value) }))}
+                  placeholder="أدخل قيمة الخصم"
+                  className="text-right"
                 />
               </div>
             </div>
           )}
 
-          {/* رفع الصور للإعلانات العادية */}
-          {formData.type !== 'event' && (
-            <div className="space-y-2">
-              <ImageUpload
-                currentImageUrl={formData.image_url}
-                onImageChange={(url) => setFormData({ ...formData, image_url: url || "" })}
-                label="صورة الإعلان"
-              />
-            </div>
-          )}
-
-          {/* قسم التواريخ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="font-arabic">تاريخ البداية</Label>
+            <div>
+              <Label className="text-right font-arabic">تاريخ البداية</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant={"outline"}
                     className={cn(
-                      "w-full justify-start text-right font-arabic",
+                      "w-full justify-start text-right font-normal",
                       !formData.start_date && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.start_date ? format(formData.start_date, "PPP") : "اختر التاريخ"}
+                    {formData.start_date ? (
+                      format(formData.start_date, "d MMMM yyyy", { locale: ar })
+                    ) : (
+                      <span>اختر تاريخ البداية</span>
+                    )}
+                    <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="end">
                   <Calendar
                     mode="single"
-                    selected={formData.start_date || undefined}
-                    onSelect={(date) => setFormData({ ...formData, start_date: date || null })}
+                    locale={ar}
+                    selected={formData.start_date}
+                    onSelect={(date) => setFormData(prev => ({ ...prev, start_date: date }))}
+                    disabled={formData.end_date ? { after: formData.end_date } : undefined}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
             </div>
 
-            <div className="space-y-2">
-              <Label className="font-arabic">تاريخ النهاية</Label>
+            <div>
+              <Label className="text-right font-arabic">تاريخ النهاية</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant={"outline"}
                     className={cn(
-                      "w-full justify-start text-right font-arabic",
+                      "w-full justify-start text-right font-normal",
                       !formData.end_date && "text-muted-foreground"
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.end_date ? format(formData.end_date, "PPP") : "اختر التاريخ"}
+                    {formData.end_date ? (
+                      format(formData.end_date, "d MMMM yyyy", { locale: ar })
+                    ) : (
+                      <span>اختر تاريخ النهاية</span>
+                    )}
+                    <CalendarIcon className="mr-2 h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0" align="end">
                   <Calendar
                     mode="single"
-                    selected={formData.end_date || undefined}
-                    onSelect={(date) => setFormData({ ...formData, end_date: date || null })}
+                    locale={ar}
+                    selected={formData.end_date}
+                    onSelect={(date) => setFormData(prev => ({ ...prev, end_date: date }))}
+                    disabled={formData.start_date ? { before: formData.start_date } : undefined}
                     initialFocus
                   />
                 </PopoverContent>
@@ -396,26 +358,59 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <Switch
-              id="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-            />
-            <Label htmlFor="is_active" className="font-arabic">نشط</Label>
+          <ImageUpload
+            currentImageUrl={formData.image_url}
+            onImageChange={handleImageChange}
+            label="صورة الإعلان"
+          />
+
+          <VideoUpload
+            currentVideoUrl={formData.video_url}
+            onVideoChange={handleVideoChange}
+            label="فيديو الإعلان"
+          />
+
+          <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+                />
+                <Label htmlFor="is_active" className="font-arabic">تفعيل الإعلان</Label>
+              </div>
+
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <Switch
+                  id="is_banner"
+                  checked={formData.is_banner}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_banner: checked }))}
+                />
+                <Label htmlFor="is_banner" className="font-arabic">إعلان بانر</Label>
+              </div>
+
+              {formData.is_banner && (
+                <div>
+                  <Label htmlFor="banner_text" className="text-right font-arabic">نص البانر</Label>
+                  <Input
+                    id="banner_text"
+                    value={formData.banner_text}
+                    onChange={(e) => setFormData(prev => ({ ...prev, banner_text: e.target.value }))}
+                    placeholder="أدخل نص البانر"
+                    className="text-right font-arabic"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              className="font-arabic"
-            >
-              إلغاء
+          <div className="flex gap-4 pt-4">
+            <Button type="submit" disabled={isLoading} className="flex-1 font-arabic bg-blue-600 hover:bg-blue-700">
+              {isLoading ? "جاري الحفظ..." : announcement ? "تحديث الإعلان" : "إضافة الإعلان"}
             </Button>
-            <Button type="submit" disabled={loading} className="font-arabic">
-              {loading ? "جاري الحفظ..." : (announcement ? "تحديث" : "حفظ")}
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 font-arabic">
+              إلغاء
             </Button>
           </div>
         </form>
