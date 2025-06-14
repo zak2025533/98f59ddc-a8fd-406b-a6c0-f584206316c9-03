@@ -2,10 +2,8 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 export const useInternalNotifications = () => {
-  // تفعيل الإشعارات افتراضياً لجميع المستخدمين
   const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const { toast: shadcnToast } = useToast();
@@ -14,7 +12,6 @@ export const useInternalNotifications = () => {
     // تفعيل الإشعارات تلقائياً عند تحميل التطبيق
     const savedState = localStorage.getItem('internal_notifications_enabled');
     if (savedState === null) {
-      // إذا لم يتم تعيين حالة من قبل، فعّل الإشعارات تلقائياً
       localStorage.setItem('internal_notifications_enabled', 'true');
       setIsEnabled(true);
     } else {
@@ -31,7 +28,6 @@ export const useInternalNotifications = () => {
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      // أصوات مختلفة حسب نوع الإشعار
       const frequencies: { [key: string]: number[] } = {
         success: [800, 1000],
         warning: [400, 300],
@@ -59,7 +55,6 @@ export const useInternalNotifications = () => {
   const sendGlobalNotification = (title: string, description: string, type: string = 'general') => {
     console.log('Sending global notification:', { title, description, type });
     
-    // إرسال إشعار عبر CustomEvent للمكون الجديد
     const event = new CustomEvent('newNotification', {
       detail: { title, description, type }
     });
@@ -77,14 +72,12 @@ export const useInternalNotifications = () => {
         description: "تم تفعيل الإشعارات الداخلية بنجاح",
       });
 
-      // إشعار ترحيبي
       toast.success("مرحباً! تم تفعيل الإشعارات الداخلية", {
         description: "ستتلقى إشعارات داخل التطبيق عند إضافة منتجات أو إعلانات جديدة",
         duration: 4000,
       });
 
       playNotificationSound('success');
-
       sendGlobalNotification(
         "تم تفعيل الإشعارات",
         "ستتلقى إشعارات عند إضافة منتجات أو إعلانات جديدة",
@@ -125,7 +118,6 @@ export const useInternalNotifications = () => {
   };
 
   const sendTestNotification = () => {
-    // إرسال إشعار تجريبي متقدم
     playNotificationSound('info');
     
     toast.info("إشعار تجريبي محسّن", {
@@ -152,7 +144,6 @@ export const useInternalNotifications = () => {
   const sendNotificationForAnnouncement = (announcement: any) => {
     console.log('Sending notification for announcement:', announcement);
     
-    // إرسال الإشعار دائماً بدون التحقق من التفعيل
     playNotificationSound('info');
     
     toast.success("إعلان جديد!", {
@@ -174,16 +165,20 @@ export const useInternalNotifications = () => {
   };
 
   const sendNotificationForProduct = (product: any) => {
-    console.log('Sending notification for product:', product);
+    console.log('=== PRODUCT NOTIFICATION DEBUG ===');
+    console.log('Product data received:', product);
     
     if (!product || !product.name) {
       console.error('Invalid product data for notification:', product);
       return;
     }
     
-    // إرسال الإشعار دائماً بدون التحقق من التفعيل
+    console.log('Sending notification for product:', product.name);
+    
+    // تشغيل الصوت
     playNotificationSound('success');
     
+    // إرسال toast notification
     toast.success("منتج جديد!", {
       description: `تم إضافة منتج جديد: ${product.name}`,
       duration: 6000,
@@ -191,15 +186,25 @@ export const useInternalNotifications = () => {
         label: "عرض",
         onClick: () => {
           console.log("Viewing product:", product.id);
+          // يمكن إضافة التنقل للمنتج هنا
         },
       },
     });
 
+    // إرسال الإشعار الداخلي
     sendGlobalNotification(
       "منتج جديد!",
       `تم إضافة منتج جديد: ${product.name}`,
       "product"
     );
+
+    // إرسال shadcn toast أيضاً
+    shadcnToast({
+      title: "تم إضافة المنتج",
+      description: `تم إضافة ${product.name} بنجاح وإرسال إشعار للمستخدمين`,
+    });
+
+    console.log('=== NOTIFICATION SENT SUCCESSFULLY ===');
   };
 
   // إشعارات متقدمة جديدة

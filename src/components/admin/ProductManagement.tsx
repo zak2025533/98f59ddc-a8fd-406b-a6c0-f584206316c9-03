@@ -24,16 +24,60 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
     product.categories?.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDialogSuccess = (newProduct?: any) => {
-    console.log("Product dialog success called with:", newProduct);
+  const handleDialogSuccess = (productData?: any) => {
+    console.log("Product dialog success called with:", productData);
+    
+    // تحديث الإحصائيات
     onStatsUpdate();
+    
+    // إغلاق النافذة
     setDialogOpen(false);
-    setEditingProduct(null);
-
+    
     // إرسال إشعار للمنتج الجديد فقط (وليس عند التعديل)
-    if (newProduct && !editingProduct) {
-      console.log("Sending notification for new product:", newProduct);
-      sendNotificationForProduct(newProduct);
+    if (productData && !editingProduct) {
+      console.log("Sending notification for new product:", productData);
+      
+      // إرسال الإشعار الداخلي
+      sendNotificationForProduct(productData);
+      
+      // إرسال إشعار push notification أيضاً
+      sendPushNotification(productData);
+    }
+    
+    // إعادة تعيين المنتج المحرر
+    setEditingProduct(null);
+  };
+
+  const sendPushNotification = async (product: any) => {
+    try {
+      console.log('Sending push notification for product:', product);
+      
+      const response = await fetch(`https://xwajnjrojryebgcesebe.supabase.co/functions/v1/send-push-notification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3YWpuanJvanJ5ZWJnY2VzZWJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk0ODUxNzMsImV4cCI6MjA2NTA2MTE3M30.iPHCrdtwFHQyI1ZdZtb_mZ3YZ7UondFUN7UsgODsRLM`
+        },
+        body: JSON.stringify({
+          title: 'منتج جديد!',
+          body: `تم إضافة منتج جديد: ${product.name}`,
+          type: 'product',
+          related_id: product.id,
+          icon: '/favicon.ico',
+          data: {
+            product_id: product.id,
+            product_name: product.name
+          }
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Failed to send push notification:', await response.text());
+      } else {
+        console.log('Push notification sent successfully');
+      }
+    } catch (error) {
+      console.error('Error sending push notification:', error);
     }
   };
 
