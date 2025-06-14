@@ -5,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
+import { useNativeApp } from "@/hooks/useNativeApp";
 
 const Navbar = () => {
+  const { isNative } = useNativeApp();
+
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className={`bg-white shadow-sm border-b ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -27,7 +30,7 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4 space-x-reverse">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="touch-target">
               <Search className="h-5 w-5" />
             </Button>
             
@@ -35,7 +38,7 @@ const Navbar = () => {
             
             <CartSheet />
             
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="touch-target">
               <User className="h-5 w-5" />
             </Button>
 
@@ -43,17 +46,17 @@ const Navbar = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="touch-target">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <nav className="flex flex-col space-y-4 mt-6">
-                    <a href="/" className="text-gray-700 hover:text-blue-600 font-arabic text-lg">الرئيسية</a>
-                    <a href="/category" className="text-gray-700 hover:text-blue-600 font-arabic text-lg">الفئات</a>
-                    <a href="/about" className="text-gray-700 hover:text-blue-600 font-arabic text-lg">من نحن</a>
-                    <a href="/contact" className="text-gray-700 hover:text-blue-600 font-arabic text-lg">اتصل بنا</a>
-                    <a href="/admin" className="text-gray-700 hover:text-blue-600 font-arabic text-lg">الإدارة</a>
+                    <a href="/" className="text-gray-700 hover:text-blue-600 font-arabic text-lg py-2">الرئيسية</a>
+                    <a href="/category" className="text-gray-700 hover:text-blue-600 font-arabic text-lg py-2">الفئات</a>
+                    <a href="/about" className="text-gray-700 hover:text-blue-600 font-arabic text-lg py-2">من نحن</a>
+                    <a href="/contact" className="text-gray-700 hover:text-blue-600 font-arabic text-lg py-2">اتصل بنا</a>
+                    <a href="/admin" className="text-gray-700 hover:text-blue-600 font-arabic text-lg py-2">الإدارة</a>
                   </nav>
                 </SheetContent>
               </Sheet>

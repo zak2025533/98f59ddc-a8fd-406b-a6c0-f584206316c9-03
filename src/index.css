@@ -1,231 +1,87 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
-@layer base {
-  :root {
-    --background: 30 100% 98%;
-    --foreground: 30 10% 10%;
-
-    --card: 30 100% 99%;
-    --card-foreground: 30 10% 10%;
-
-    --popover: 30 100% 99%;
-    --popover-foreground: 30 10% 10%;
-
-    --primary: 25 95% 53%;
-    --primary-foreground: 30 100% 98%;
-
-    --secondary: 35 85% 85%;
-    --secondary-foreground: 30 10% 15%;
-
-    --muted: 35 50% 92%;
-    --muted-foreground: 30 5% 40%;
-
-    --accent: 40 95% 60%;
-    --accent-foreground: 30 10% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 30 100% 98%;
-
-    --border: 35 30% 88%;
-    --input: 35 30% 88%;
-    --ring: 25 95% 53%;
-
-    --radius: 0.75rem;
-
-    --sidebar-background: 30 100% 98%;
-    --sidebar-foreground: 30 10% 15%;
-    --sidebar-primary: 25 95% 53%;
-    --sidebar-primary-foreground: 30 100% 98%;
-    --sidebar-accent: 35 85% 85%;
-    --sidebar-accent-foreground: 30 10% 15%;
-    --sidebar-border: 35 30% 88%;
-    --sidebar-ring: 25 95% 53%;
-
-    /* Custom sweet shop colors */
-    --sweet-orange: 25 95% 53%;
-    --sweet-gold: 40 95% 60%;
-    --sweet-cream: 35 85% 95%;
-    --sweet-brown: 20 30% 25%;
-  }
-
-  .dark {
-    --background: 30 15% 8%;
-    --foreground: 30 100% 95%;
-
-    --card: 30 15% 10%;
-    --card-foreground: 30 100% 95%;
-
-    --popover: 30 15% 10%;
-    --popover-foreground: 30 100% 95%;
-
-    --primary: 25 95% 53%;
-    --primary-foreground: 30 15% 8%;
-
-    --secondary: 30 10% 15%;
-    --secondary-foreground: 30 100% 95%;
-
-    --muted: 30 8% 18%;
-    --muted-foreground: 30 15% 60%;
-
-    --accent: 40 95% 60%;
-    --accent-foreground: 30 15% 8%;
-
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 30 100% 95%;
-
-    --border: 30 8% 18%;
-    --input: 30 8% 18%;
-    --ring: 25 95% 53%;
-    
-    --sidebar-background: 30 15% 8%;
-    --sidebar-foreground: 30 100% 90%;
-    --sidebar-primary: 25 95% 53%;
-    --sidebar-primary-foreground: 30 15% 8%;
-    --sidebar-accent: 30 10% 15%;
-    --sidebar-accent-foreground: 30 100% 90%;
-    --sidebar-border: 30 8% 18%;
-    --sidebar-ring: 25 95% 53%;
-  }
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Cairo', 'Inter', sans-serif;
-    direction: rtl;
-  }
-
-  /* Fix for RTL layout */
-  html {
-    direction: rtl;
-  }
-
-  /* Responsive improvements */
-  .container {
-    @apply px-4 sm:px-6 lg:px-8;
-  }
+body {
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  overscroll-behavior-y: contain;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Sweet shop specific styles */
-.sweet-gradient {
-  background: linear-gradient(135deg, hsl(var(--sweet-orange)) 0%, hsl(var(--sweet-gold)) 100%);
+.font-arabic {
+  font-family: 'Cairo', sans-serif;
 }
 
-.sweet-gradient-alt {
-  background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
+/* Safe area utilities for native apps */
+.pt-safe-area-inset-top {
+  padding-top: var(--safe-area-inset-top);
 }
 
-.sweet-card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.pb-safe-area-inset-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
 }
 
-.sweet-card-hover:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+.pl-safe-area-inset-left {
+  padding-left: var(--safe-area-inset-left);
 }
 
-.glass-effect {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.pr-safe-area-inset-right {
+  padding-right: var(--safe-area-inset-right);
 }
 
-.text-shadow {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+/* Touch targets for better mobile interaction */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
 }
 
-/* Responsive text scaling */
-@media (max-width: 640px) {
-  .sweet-card-hover:hover {
-    transform: translateY(-4px) scale(1.01);
-  }
+/* Prevent zoom on input focus */
+input, select, textarea {
+  font-size: 16px !important;
 }
 
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Enhanced scroll behavior */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Loading states */
-.loading-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-/* Mobile-first responsive utilities */
-.mobile-scroll {
-  overflow-x: auto;
+/* Smooth scrolling for mobile */
+* {
   -webkit-overflow-scrolling: touch;
 }
 
-.mobile-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .mobile-grid {
-    gap: 1.5rem;
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
   }
 }
 
-/* RTL Support improvements */
-[dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
-  margin-right: calc(var(--tw-space-x-reverse) * var(--tw-space-x));
-  margin-left: calc((1 - var(--tw-space-x-reverse)) * var(--tw-space-x));
-}
-
-/* Enhanced focus states for accessibility */
-.focus-visible:focus-visible {
-  outline: 2px solid hsl(var(--primary));
-  outline-offset: 2px;
-}
-
-/* Custom scrollbar */
+/* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-  border-radius: 4px;
+  background: #c1c1c1;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: #a8a8a8;
 }
