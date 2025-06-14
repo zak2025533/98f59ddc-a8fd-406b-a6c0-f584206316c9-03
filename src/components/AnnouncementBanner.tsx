@@ -1,9 +1,9 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Percent, Tag, Megaphone, Newspaper, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Percent, Tag, Megaphone, Newspaper, Calendar } from "lucide-react";
 
 interface Announcement {
   id: string;
@@ -30,16 +30,9 @@ const AnnouncementBanner = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [bannerAnnouncements, setBannerAnnouncements] = useState<Announcement[]>([]);
   const [eventAnnouncements, setEventAnnouncements] = useState<Announcement[]>([]);
-  const [dismissedAnnouncements, setDismissedAnnouncements] = useState<string[]>([]);
 
   useEffect(() => {
     fetchActiveAnnouncements();
-    
-    // Load dismissed announcements from localStorage
-    const dismissed = localStorage.getItem('dismissedAnnouncements');
-    if (dismissed) {
-      setDismissedAnnouncements(JSON.parse(dismissed));
-    }
   }, []);
 
   const fetchActiveAnnouncements = async () => {
@@ -73,12 +66,6 @@ const AnnouncementBanner = () => {
     } catch (error) {
       console.error('Error fetching announcements:', error);
     }
-  };
-
-  const dismissAnnouncement = (announcementId: string) => {
-    const newDismissed = [...dismissedAnnouncements, announcementId];
-    setDismissedAnnouncements(newDismissed);
-    localStorage.setItem('dismissedAnnouncements', JSON.stringify(newDismissed));
   };
 
   const getAnnouncementIcon = (type: string) => {
@@ -126,38 +113,17 @@ const AnnouncementBanner = () => {
     }
   };
 
-  const visibleAnnouncements = announcements.filter(
-    announcement => !dismissedAnnouncements.includes(announcement.id)
-  );
-
-  const visibleBanners = bannerAnnouncements.filter(
-    banner => !dismissedAnnouncements.includes(banner.id)
-  );
-
-  const visibleEvents = eventAnnouncements.filter(
-    event => !dismissedAnnouncements.includes(event.id)
-  );
-
-  if (visibleAnnouncements.length === 0 && visibleBanners.length === 0 && visibleEvents.length === 0) {
+  if (announcements.length === 0 && bannerAnnouncements.length === 0 && eventAnnouncements.length === 0) {
     return null;
   }
 
   return (
     <div className="space-y-6">
       {/* Banner Announcements */}
-      {visibleBanners.length > 0 && (
+      {bannerAnnouncements.length > 0 && (
         <div className="space-y-4">
-          {visibleBanners.map((banner) => (
-            <div key={banner.id} className="relative bg-gradient-to-r from-purple-600 to-blue-600 text-white py-8 px-6 rounded-lg shadow-lg">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute top-2 left-2 h-6 w-6 p-0 text-white/70 hover:text-white hover:bg-white/20"
-                onClick={() => dismissAnnouncement(banner.id)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-              
+          {bannerAnnouncements.map((banner) => (
+            <div key={banner.id} className="bg-gradient-to-r from-purple-600 to-blue-600 text-white py-8 px-6 rounded-lg shadow-lg">
               <div className="container mx-auto">
                 {banner.video_url ? (
                   <div className="flex flex-col lg:flex-row items-center gap-6">
@@ -208,7 +174,7 @@ const AnnouncementBanner = () => {
       )}
 
       {/* Event Announcements */}
-      {visibleEvents.length > 0 && (
+      {eventAnnouncements.length > 0 && (
         <div className="bg-gradient-to-r from-orange-50 to-amber-50 py-8">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center mb-6">
@@ -217,17 +183,8 @@ const AnnouncementBanner = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {visibleEvents.map((event) => (
-                <Card key={event.id} className="relative bg-white shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-2 left-2 h-6 w-6 p-0 text-gray-500 hover:text-gray-700 z-10"
-                    onClick={() => dismissAnnouncement(event.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                  
+              {eventAnnouncements.map((event) => (
+                <Card key={event.id} className="bg-white shadow-lg hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-0">
                     {event.video_url && (
                       <div className="relative">
@@ -242,7 +199,7 @@ const AnnouncementBanner = () => {
                       </div>
                     )}
                     
-                    <div className="p-6 pt-4">
+                    <div className="p-6">
                       <div className="flex items-center justify-between mb-3">
                         <Badge className="bg-orange-100 text-orange-800 font-arabic">
                           {getTypeLabel(event.type)}
@@ -279,7 +236,7 @@ const AnnouncementBanner = () => {
       )}
 
       {/* Regular Announcements */}
-      {visibleAnnouncements.length > 0 && (
+      {announcements.length > 0 && (
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-8">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-center mb-6">
@@ -288,18 +245,9 @@ const AnnouncementBanner = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {visibleAnnouncements.map((announcement) => (
-                <Card key={announcement.id} className={`relative ${getAnnouncementColor(announcement.type)} transition-all duration-300 hover:shadow-lg`}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-2 left-2 h-6 w-6 p-0 text-gray-500 hover:text-gray-700"
-                    onClick={() => dismissAnnouncement(announcement.id)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                  
-                  <CardContent className="p-4 pt-8">
+              {announcements.map((announcement) => (
+                <Card key={announcement.id} className={`${getAnnouncementColor(announcement.type)} transition-all duration-300 hover:shadow-lg`}>
+                  <CardContent className="p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
                         {getAnnouncementIcon(announcement.type)}
