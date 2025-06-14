@@ -8,9 +8,6 @@ import { FavoritesSheet } from "./FavoritesSheet";
 import NotificationSubscription from "./NotificationSubscription";
 
 const Navbar = () => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
-
   return (
     <nav className="bg-white shadow-sm border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,21 +34,9 @@ const Navbar = () => {
               <Search className="h-5 w-5" />
             </Button>
             
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setIsFavoritesOpen(true)}
-            >
-              <Heart className="h-5 w-5" />
-            </Button>
+            <FavoritesSheet />
             
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
+            <CartSheet />
             
             <Button variant="ghost" size="sm">
               <User className="h-5 w-5" />
@@ -79,9 +64,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      <CartSheet isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <FavoritesSheet isOpen={isFavoritesOpen} onClose={() => setIsFavoritesOpen(false)} />
     </nav>
   );
 };
