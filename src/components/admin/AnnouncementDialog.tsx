@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -117,21 +119,6 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
     setFormData(prev => ({ ...prev, video_url: videoUrl || "" }));
   };
 
-  const sendNotificationForNewAnnouncement = async (title: string) => {
-    try {
-      await supabase.functions.invoke('send-push-notification', {
-        body: {
-          title: 'إعلان جديد!',
-          body: title,
-          type: 'announcement',
-          related_id: null
-        }
-      });
-    } catch (error) {
-      console.error('Error sending notification:', error);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -189,9 +176,6 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
         if (error) throw error;
 
         toast({ title: "تم الإضافة", description: "تم إضافة الإعلان بنجاح" });
-        
-        // إرسال إشعار للإعلان الجديد
-        await sendNotificationForNewAnnouncement(formData.title);
       }
 
       onSuccess();
@@ -214,6 +198,9 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
           <DialogTitle className="text-right font-arabic text-blue-800">
             {announcement ? "تعديل إعلان" : "إضافة إعلان جديد"}
           </DialogTitle>
+          <DialogDescription className="text-right font-arabic text-gray-600">
+            {announcement ? "قم بتعديل بيانات الإعلان أدناه" : "أدخل بيانات الإعلان الجديد"}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
