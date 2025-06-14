@@ -45,12 +45,12 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <div className="container mx-auto p-6 max-w-7xl">
         <AdminHeader onLogout={onLogout} />
         <AdminStatsCards stats={stats} />
 
-        <Card className="bg-white border border-gray-200">
+        <Card className="bg-white border-2 border-gray-300">
           <CardContent className="p-0">
             <Tabs defaultValue="products" className="w-full">
               <AdminNavTabs />

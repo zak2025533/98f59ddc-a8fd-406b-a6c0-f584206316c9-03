@@ -54,9 +54,9 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
 
   if (loading) {
     return (
-      <Card>
+      <Card className="bg-white border-2 border-gray-300">
         <CardHeader>
-          <CardTitle className="font-arabic text-right">إدارة المنتجات</CardTitle>
+          <CardTitle className="font-arabic text-right text-gray-800">إدارة المنتجات</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center py-8">
@@ -69,14 +69,14 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
 
   return (
     <>
-      <Card>
+      <Card className="bg-white border-2 border-gray-300">
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle className="font-arabic text-right flex items-center gap-2">
+            <CardTitle className="font-arabic text-right flex items-center gap-2 text-gray-800">
               <Package className="h-5 w-5" />
               إدارة المنتجات ({products.length})
             </CardTitle>
-            <Button onClick={openNewDialog} className="font-arabic w-full sm:w-auto">
+            <Button onClick={openNewDialog} className="font-arabic w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="h-4 w-4 ml-2" />
               إضافة منتج جديد
             </Button>
@@ -85,30 +85,30 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
         <CardContent>
           <div className="mb-6">
             <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 h-4 w-4" />
               <Input
                 placeholder="البحث في المنتجات..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10 font-arabic text-right"
+                className="pr-10 font-arabic text-right border-2 border-gray-300 focus:border-blue-500 text-gray-800"
               />
             </div>
           </div>
 
           {filteredProducts.length === 0 ? (
             <div className="text-center py-8">
-              <Package className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500 font-arabic">
+              <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-600 font-arabic">
                 {searchTerm ? "لا توجد منتجات تطابق البحث" : "لا توجد منتجات حتى الآن"}
               </p>
-              <Button onClick={openNewDialog} className="mt-4 font-arabic">
+              <Button onClick={openNewDialog} className="mt-4 font-arabic bg-blue-600 hover:bg-blue-700 text-white">
                 إضافة أول منتج
               </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="border rounded-lg p-4 space-y-3">
+                <div key={product.id} className="border-2 border-gray-300 rounded-lg p-4 space-y-3 bg-white">
                   {product.image_url && (
                     <img
                       src={product.image_url}
@@ -117,11 +117,11 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                     />
                   )}
                   <div>
-                    <h3 className="font-semibold font-arabic text-right">{product.name}</h3>
+                    <h3 className="font-semibold font-arabic text-right text-gray-800">{product.name}</h3>
                     <p className="text-sm text-gray-600 font-arabic text-right">
                       {product.categories?.name}
                     </p>
-                    <p className="text-lg font-bold text-blue-600 font-arabic text-right">
+                    <p className="text-lg font-bold text-blue-700 font-arabic text-right">
                       {product.price} ريال يمني
                     </p>
                   </div>
@@ -130,15 +130,14 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                       variant="outline"
                       size="sm"
                       onClick={() => openEditDialog(product)}
-                      className="font-arabic flex-1"
+                      className="font-arabic flex-1 border-blue-300 text-blue-700 hover:bg-blue-50"
                     >
                       تعديل
                     </Button>
                     <Button
-                      variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(product.id)}
-                      className="font-arabic flex-1"
+                      className="font-arabic flex-1 bg-red-600 hover:bg-red-700 text-white"
                     >
                       حذف
                     </Button>
