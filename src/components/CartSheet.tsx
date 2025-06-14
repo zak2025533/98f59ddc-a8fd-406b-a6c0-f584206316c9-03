@@ -1,4 +1,3 @@
-
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
@@ -87,7 +86,6 @@ export const CartSheet = () => {
     try {
       const sessionId = localStorage.getItem('session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
       
-      // حفظ الطلب الرئيسي
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -104,7 +102,6 @@ export const CartSheet = () => {
 
       if (orderError) throw orderError;
 
-      // حفظ عناصر الطلب
       const orderItems = cartItems.map(item => ({
         order_id: order.id,
         product_id: item.product_id,
@@ -139,11 +136,7 @@ export const CartSheet = () => {
 
   const handleOrderWithDeliveryInfo = async (deliveryInfo: DeliveryInfo) => {
     const message = generateInvoiceMessage(deliveryInfo);
-    
-    // حفظ الطلب في قاعدة البيانات أولاً
     await saveOrderToDatabase(message, deliveryInfo);
-    
-    // فتح واتساب
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/967715833246?text=${encodedMessage}`, '_blank');
   };
@@ -156,63 +149,68 @@ export const CartSheet = () => {
     <>
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="sm" className="relative h-12 px-4 hover:bg-blue-50 text-blue-700 font-arabic">
+          <Button variant="ghost" size="sm" className="relative text-white hover:bg-white/20 px-3 h-10 font-arabic">
             <ShoppingCart className="h-5 w-5 ml-2" />
-            سلة التسوق
+            السلة
             {cartCount > 0 && (
-              <Badge variant="destructive" className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs">
+              <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-red-500 hover:bg-red-600">
                 {cartCount}
               </Badge>
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-[400px] sm:w-[540px]">
-          <SheetHeader>
-            <SheetTitle className="text-right font-arabic">سلة التسوق ({cartCount} منتج)</SheetTitle>
+        <SheetContent className="w-[400px] sm:w-[540px] bg-white">
+          <SheetHeader className="border-b pb-4">
+            <SheetTitle className="text-right font-arabic text-blue-800 text-xl">
+              سلة التسوق ({cartCount} منتج)
+            </SheetTitle>
           </SheetHeader>
           <div className="mt-6 flex flex-col h-full">
             {cartItems.length === 0 ? (
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                   <ShoppingCart className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-                  <p className="text-gray-500 font-arabic">سلة التسوق فارغة</p>
+                  <p className="text-gray-500 font-arabic text-lg">سلة التسوق فارغة</p>
+                  <p className="text-gray-400 font-arabic text-sm mt-2">ابدأ بإضافة منتجاتك المفضلة</p>
                 </div>
               </div>
             ) : (
               <>
                 <div className="flex-1 overflow-y-auto space-y-4">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
+                    <div key={item.id} className="flex items-center gap-4 p-4 border border-blue-100 rounded-xl bg-blue-50/30 hover:bg-blue-50/50 transition-colors">
                       <img
                         src={item.product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=100&q=80"}
                         alt={item.product.name}
-                        className="w-16 h-16 object-cover rounded"
+                        className="w-16 h-16 object-cover rounded-lg border-2 border-blue-200"
                       />
                       <div className="flex-1">
-                        <h3 className="font-semibold text-right font-arabic">{item.product.name}</h3>
-                        <p className="text-blue-800 font-bold font-arabic">{item.product.price} ريال يمني</p>
+                        <h3 className="font-semibold text-right font-arabic text-blue-800 mb-1">{item.product.name}</h3>
+                        <p className="text-blue-600 font-bold font-arabic">{item.product.price} ريال يمني</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          className="h-8 w-8 p-0 border-blue-300 hover:bg-blue-50"
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus className="h-4 w-4 text-blue-600" />
                         </Button>
-                        <span className="w-8 text-center font-arabic">{item.quantity}</span>
+                        <span className="w-8 text-center font-arabic font-semibold text-blue-800">{item.quantity}</span>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="h-8 w-8 p-0 border-blue-300 hover:bg-blue-50"
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus className="h-4 w-4 text-blue-600" />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => removeFromCart(item.id)}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0 ml-2"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -220,15 +218,22 @@ export const CartSheet = () => {
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-4 space-y-4">
+                <div className="border-t border-blue-100 pt-4 space-y-4 bg-blue-50/20 -mx-6 px-6 pb-6">
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span className="font-arabic">المجموع: {total.toFixed(2)} ريال يمني</span>
+                    <span className="font-arabic text-blue-800">المجموع: {total.toFixed(2)} ريال يمني</span>
                   </div>
-                  <div className="space-y-2">
-                    <Button onClick={handleOrder} className="w-full bg-blue-800 hover:bg-blue-900 font-arabic">
+                  <div className="space-y-3">
+                    <Button 
+                      onClick={handleOrder} 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-arabic h-12 text-lg shadow-lg"
+                    >
                       إتمام الطلب عبر واتساب
                     </Button>
-                    <Button variant="outline" className="w-full font-arabic" onClick={clearCart}>
+                    <Button 
+                      variant="outline" 
+                      className="w-full font-arabic border-blue-300 text-blue-600 hover:bg-blue-50" 
+                      onClick={clearCart}
+                    >
                       مسح السلة
                     </Button>
                   </div>

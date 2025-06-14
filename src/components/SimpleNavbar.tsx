@@ -45,8 +45,8 @@ const SimpleNavbar = () => {
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-4 space-x-reverse">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
+          <div className="flex items-center space-x-3 space-x-reverse">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2 h-10 w-10">
               <Search className="h-5 w-5" />
             </Button>
             
@@ -57,7 +57,7 @@ const SimpleNavbar = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2 h-10 w-10">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
