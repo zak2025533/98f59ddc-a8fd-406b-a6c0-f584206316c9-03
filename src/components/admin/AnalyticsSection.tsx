@@ -6,23 +6,15 @@ import { TrendingUp, TrendingDown, DollarSign, ShoppingBag, Users, Star } from "
 import { supabase } from "@/integrations/supabase/client";
 
 interface AnalyticsData {
-  todayRevenue: number;
-  weeklyRevenue: number;
-  monthlyRevenue: number;
-  popularProducts: Array<{
-    id: string;
-    name: string;
-    sales: number;
-    revenue: number;
-  }>;
-  recentCustomers: number;
-  averageOrderValue: number;
   totalProducts: number;
   totalCategories: number;
   totalAnnouncements: number;
   featuredProducts: number;
   inStockProducts: number;
   outOfStockProducts: number;
+  totalOrders: number;
+  totalOrderValue: number;
+  averageOrderValue: number;
 }
 
 interface AnalyticsSectionProps {
@@ -31,18 +23,15 @@ interface AnalyticsSectionProps {
 
 const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
   const [analytics, setAnalytics] = useState<AnalyticsData>({
-    todayRevenue: 0,
-    weeklyRevenue: 0,
-    monthlyRevenue: 0,
-    popularProducts: [],
-    recentCustomers: 0,
-    averageOrderValue: 0,
     totalProducts: 0,
     totalCategories: 0,
     totalAnnouncements: 0,
     featuredProducts: 0,
     inStockProducts: 0,
     outOfStockProducts: 0,
+    totalOrders: 0,
+    totalOrderValue: 0,
+    averageOrderValue: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -85,22 +74,13 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
         return;
       }
 
-      // جلب عدد عناصر السلة (كمؤشر على النشاط)
-      const { data: cartItems, error: cartError } = await supabase
-        .from('cart_items')
-        .select('*');
+      // جلب إحصائيات الطلبات
+      const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select('total_amount');
 
-      if (cartError) {
-        console.error('Error fetching cart items:', cartError);
-      }
-
-      // جلب المفضلة (كمؤشر على اهتمام العملاء)
-      const { data: favorites, error: favoritesError } = await supabase
-        .from('favorites')
-        .select('*');
-
-      if (favoritesError) {
-        console.error('Error fetching favorites:', favoritesError);
+      if (ordersError) {
+        console.error('Error fetching orders:', ordersError);
       }
 
       // حساب الإحصائيات الحقيقية
@@ -110,26 +90,10 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
       const featuredProducts = products?.filter(p => p.is_featured)?.length || 0;
       const inStockProducts = products?.filter(p => p.in_stock)?.length || 0;
       const outOfStockProducts = products?.filter(p => !p.in_stock)?.length || 0;
-
-      // حساب متوسط الأسعار والإيرادات المتوقعة
-      const totalProductValue = products?.reduce((sum, product) => sum + (Number(product.price) || 0), 0) || 0;
-      const averageProductPrice = totalProducts > 0 ? totalProductValue / totalProducts : 0;
-
-      // حساب الإيرادات المتوقعة بناءً على نشاط السلة والمفضلة
-      const cartActivity = cartItems?.length || 0;
-      const favoriteActivity = favorites?.length || 0;
-      const activityMultiplier = Math.max(1, (cartActivity + favoriteActivity) / 10);
-
-      // المنتجات الأكثر شعبية (بناءً على كونها مميزة أو في المفضلة)
-      const popularProducts = products
-        ?.filter(p => p.is_featured || p.in_stock)
-        ?.slice(0, 4)
-        ?.map((product, index) => ({
-          id: product.id,
-          name: product.name,
-          sales: Math.floor(Math.random() * 50) + (featuredProducts > index ? 20 : 5),
-          revenue: Number(product.price) * (Math.floor(Math.random() * 50) + (featuredProducts > index ? 20 : 5))
-        })) || [];
+      
+      const totalOrders = orders?.length || 0;
+      const totalOrderValue = orders?.reduce((sum, order) => sum + (Number(order.total_amount) || 0), 0) || 0;
+      const averageOrderValue = totalOrders > 0 ? totalOrderValue / totalOrders : 0;
 
       const realAnalytics: AnalyticsData = {
         totalProducts,
@@ -138,12 +102,9 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
         featuredProducts,
         inStockProducts,
         outOfStockProducts,
-        todayRevenue: averageProductPrice * activityMultiplier * 2,
-        weeklyRevenue: averageProductPrice * activityMultiplier * 8,
-        monthlyRevenue: averageProductPrice * activityMultiplier * 25,
-        popularProducts,
-        recentCustomers: cartActivity + favoriteActivity + Math.floor(Math.random() * 20),
-        averageOrderValue: averageProductPrice * 1.5,
+        totalOrders,
+        totalOrderValue,
+        averageOrderValue,
       };
       
       setAnalytics(realAnalytics);
@@ -156,11 +117,11 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {[...Array(6)].map((_, i) => (
           <Card key={i} className="animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-20 bg-gray-200 rounded"></div>
+            <CardContent className="p-4 sm:p-6">
+              <div className="h-16 sm:h-20 bg-gray-200 rounded"></div>
             </CardContent>
           </Card>
         ))}
@@ -168,88 +129,34 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
     );
   }
 
-  const revenueCards = [
-    {
-      title: "مبيعات اليوم",
-      value: analytics.todayRevenue,
-      icon: DollarSign,
-      trend: "+12.5%",
-      trendUp: true,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200"
-    },
-    {
-      title: "مبيعات الأسبوع",
-      value: analytics.weeklyRevenue,
-      icon: TrendingUp,
-      trend: "+8.2%",
-      trendUp: true,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200"
-    },
-    {
-      title: "مبيعات الشهر",
-      value: analytics.monthlyRevenue,
-      icon: ShoppingBag,
-      trend: "+15.3%",
-      trendUp: true,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200"
-    },
-    {
-      title: "العملاء النشطين",
-      value: analytics.recentCustomers,
-      icon: Users,
-      trend: "+22.1%",
-      trendUp: true,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-      borderColor: "border-orange-200",
-      isCount: true
-    },
-    {
-      title: "متوسط قيمة الطلب",
-      value: analytics.averageOrderValue,
-      icon: Star,
-      trend: "+5.7%",
-      trendUp: true,
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50",
-      borderColor: "border-yellow-200"
-    }
-  ];
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* إحصائيات المنتجات والأقسام */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-white">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-600 font-arabic">
+            <CardTitle className="text-xs sm:text-sm font-medium text-blue-600 font-arabic">
               إجمالي المنتجات
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-800 font-arabic">
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-blue-800 font-arabic">
               {analytics.totalProducts}
             </div>
             <p className="text-xs text-blue-500 font-arabic">
-              المتوفر: {analytics.inStockProducts} | غير متوفر: {analytics.outOfStockProducts}
+              متوفر: {analytics.inStockProducts} | غير متوفر: {analytics.outOfStockProducts}
             </p>
           </CardContent>
         </Card>
 
         <Card className="border-green-200 bg-gradient-to-br from-green-50 to-white">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-600 font-arabic">
+            <CardTitle className="text-xs sm:text-sm font-medium text-green-600 font-arabic">
               المنتجات المميزة
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-800 font-arabic">
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-green-800 font-arabic">
               {analytics.featuredProducts}
             </div>
             <p className="text-xs text-green-500 font-arabic">
@@ -260,12 +167,12 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
 
         <Card className="border-yellow-200 bg-gradient-to-br from-yellow-50 to-white">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-yellow-600 font-arabic">
+            <CardTitle className="text-xs sm:text-sm font-medium text-yellow-600 font-arabic">
               إجمالي الأقسام
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-700 font-arabic">
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-yellow-700 font-arabic">
               {analytics.totalCategories}
             </div>
             <p className="text-xs text-yellow-500 font-arabic">قسم رئيسي</p>
@@ -274,12 +181,12 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
 
         <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-white">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-purple-600 font-arabic">
+            <CardTitle className="text-xs sm:text-sm font-medium text-purple-600 font-arabic">
               الإعلانات النشطة
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-700 font-arabic">
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-purple-700 font-arabic">
               {analytics.totalAnnouncements}
             </div>
             <p className="text-xs text-purple-500 font-arabic">إعلان نشط</p>
@@ -287,88 +194,76 @@ const AnalyticsSection = ({ onStatsUpdate }: AnalyticsSectionProps) => {
         </Card>
       </div>
 
-      {/* بطاقات الإحصائيات الرئيسية */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {revenueCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <Card key={index} className={`${card.borderColor} ${card.bgColor} hover:shadow-lg transition-all duration-300`}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-gray-600 font-arabic">
-                      {card.title}
-                    </p>
-                    <p className={`text-2xl font-bold ${card.color} font-arabic`}>
-                      {card.isCount 
-                        ? card.value.toLocaleString() 
-                        : `${card.value.toLocaleString()} ريال`
-                      }
-                    </p>
-                    <div className="flex items-center gap-1">
-                      {card.trendUp ? (
-                        <TrendingUp className="h-3 w-3 text-green-500" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 text-red-500" />
-                      )}
-                      <span className={`text-xs font-medium ${card.trendUp ? 'text-green-500' : 'text-red-500'}`}>
-                        {card.trend}
-                      </span>
-                    </div>
-                  </div>
-                  <div className={`p-3 rounded-full ${card.color.replace('text-', 'bg-').replace('600', '100')}`}>
-                    <Icon className={`h-6 w-6 ${card.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* إحصائيات الطلبات والمبيعات */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-white">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium text-blue-600 font-arabic flex items-center gap-2">
+              <ShoppingBag className="h-4 w-4" />
+              إجمالي الطلبات
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-blue-800 font-arabic">
+              {analytics.totalOrders}
+            </div>
+            <p className="text-xs text-blue-500 font-arabic">طلب</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-green-200 bg-gradient-to-br from-green-50 to-white">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium text-green-600 font-arabic flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              إجمالي المبيعات
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-green-800 font-arabic">
+              {analytics.totalOrderValue.toLocaleString()} ريال يمني
+            </div>
+            <p className="text-xs text-green-500 font-arabic">مبيعات إجمالية</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-white">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium text-purple-600 font-arabic flex items-center gap-2">
+              <Star className="h-4 w-4" />
+              متوسط قيمة الطلب
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 sm:p-4 pt-0">
+            <div className="text-xl sm:text-2xl font-bold text-purple-700 font-arabic">
+              {analytics.averageOrderValue.toLocaleString()} ريال يمني
+            </div>
+            <p className="text-xs text-purple-500 font-arabic">متوسط الطلب</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* المنتجات الأكثر مبيعاً */}
-      <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-white">
-        <CardHeader>
-          <CardTitle className="text-right font-arabic text-blue-800 flex items-center gap-2">
-            <Star className="h-5 w-5" />
-            المنتجات الأكثر شعبية
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {analytics.popularProducts.length > 0 ? (
+      {/* رسالة إرشادية إذا لم توجد بيانات */}
+      {analytics.totalProducts === 0 && analytics.totalOrders === 0 && (
+        <Card className="border-gray-200 bg-gradient-to-br from-gray-50 to-white">
+          <CardContent className="p-6 text-center">
             <div className="space-y-4">
-              {analytics.popularProducts.map((product, index) => (
-                <div key={product.id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-blue-100 hover:shadow-md transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <Badge variant="secondary" className="font-arabic">
-                      #{index + 1}
-                    </Badge>
-                    <div>
-                      <h3 className="font-semibold text-blue-800 font-arabic">{product.name}</h3>
-                      <p className="text-sm text-gray-600 font-arabic">
-                        {product.sales} مبيعة متوقعة
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-blue-800 font-arabic">
-                      {product.revenue.toLocaleString()} ريال
-                    </p>
-                    <p className="text-sm text-gray-600 font-arabic">
-                      إيرادات متوقعة
-                    </p>
-                  </div>
-                </div>
-              ))}
+              <div className="text-4xl">📊</div>
+              <h3 className="text-lg font-semibold text-gray-700 font-arabic">
+                مرحباً بك في لوحة التحليلات
+              </h3>
+              <p className="text-gray-600 font-arabic">
+                ستظهر هنا التحليلات التفصيلية عند إضافة منتجات وتلقي طلبات
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 text-sm text-gray-500 font-arabic">
+                <span>• أضف منتجات</span>
+                <span>• أنشئ إعلانات</span>
+                <span>• تلقى طلبات</span>
+                <span>• راقب النمو</span>
+              </div>
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500 font-arabic">لا توجد منتجات للعرض</p>
-              <p className="text-sm text-gray-400 font-arabic">قم بإضافة منتجات أولاً لرؤية التحليلات</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

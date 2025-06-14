@@ -71,12 +71,12 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
     <>
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <CardTitle className="font-arabic text-right flex items-center gap-2">
               <Package className="h-5 w-5" />
               إدارة المنتجات ({products.length})
             </CardTitle>
-            <Button onClick={openNewDialog} className="font-arabic">
+            <Button onClick={openNewDialog} className="font-arabic w-full sm:w-auto">
               <Plus className="h-4 w-4 ml-2" />
               إضافة منتج جديد
             </Button>
@@ -106,7 +106,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredProducts.map((product) => (
                 <div key={product.id} className="border rounded-lg p-4 space-y-3">
                   {product.image_url && (
@@ -122,7 +122,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                       {product.categories?.name}
                     </p>
                     <p className="text-lg font-bold text-blue-600 font-arabic text-right">
-                      {product.price} ر.س
+                      {product.price} ريال يمني
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -130,7 +130,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                       variant="outline"
                       size="sm"
                       onClick={() => openEditDialog(product)}
-                      className="font-arabic"
+                      className="font-arabic flex-1"
                     >
                       تعديل
                     </Button>
@@ -138,7 +138,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDelete(product.id)}
-                      className="font-arabic"
+                      className="font-arabic flex-1"
                     >
                       حذف
                     </Button>
