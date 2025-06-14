@@ -34,8 +34,8 @@ export const CartSheet = () => {
       message += `🔸 *المنتج رقم ${index + 1}:*\n`;
       message += `   📦 الصنف: *${item.product.name}*\n`;
       message += `   🔢 الكمية: *${item.quantity}* قطعة\n`;
-      message += `   💰 السعر للوحدة: *${item.product.price.toFixed(2)}* ريال\n`;
-      message += `   📊 المبلغ الجزئي: *${(item.product.price * item.quantity).toFixed(2)}* ريال\n`;
+      message += `   💰 السعر للوحدة: *${item.product.price.toFixed(2)}* ريال يمني\n`;
+      message += `   📊 المبلغ الجزئي: *${(item.product.price * item.quantity).toFixed(2)}* ريال يمني\n`;
       message += "   ━━━━━━━━━━━━━━━━━━━━━━━\n";
     });
 
@@ -43,7 +43,7 @@ export const CartSheet = () => {
     message += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
     message += `🛒 عدد الأصناف: *${cartItems.length}* صنف\n`;
     message += `📦 إجمالي القطع: *${cartItems.reduce((sum, item) => sum + item.quantity, 0)}* قطعة\n`;
-    message += `💵 *المبلغ الإجمالي: ${total.toFixed(2)} ريال*\n\n`;
+    message += `💵 *المبلغ الإجمالي: ${total.toFixed(2)} ريال يمني*\n\n`;
 
     message += "📍 *معلومات التوصيل:*\n";
     message += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
@@ -190,7 +190,7 @@ export const CartSheet = () => {
                       />
                       <div className="flex-1">
                         <h3 className="font-semibold text-right font-arabic">{item.product.name}</h3>
-                        <p className="text-blue-800 font-bold font-arabic">{item.product.price} ريال</p>
+                        <p className="text-blue-800 font-bold font-arabic">{item.product.price} ريال يمني</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
@@ -222,7 +222,7 @@ export const CartSheet = () => {
                 </div>
                 <div className="border-t pt-4 space-y-4">
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span className="font-arabic">المجموع: {total.toFixed(2)} ريال</span>
+                    <span className="font-arabic">المجموع: {total.toFixed(2)} ريال يمني</span>
                   </div>
                   <div className="space-y-2">
                     <Button onClick={handleOrder} className="w-full bg-blue-800 hover:bg-blue-900 font-arabic">

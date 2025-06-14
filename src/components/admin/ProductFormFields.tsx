@@ -40,7 +40,7 @@ const ProductFormFields = ({ formData, onFormDataChange }: ProductFormFieldsProp
       </div>
 
       <div>
-        <Label htmlFor="price" className="font-arabic">السعر (ر.س) *</Label>
+        <Label htmlFor="price" className="font-arabic">السعر (ريال يمني) *</Label>
         <Input
           id="price"
           type="number"

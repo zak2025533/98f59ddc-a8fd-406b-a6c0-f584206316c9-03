@@ -254,7 +254,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                         {order.items.slice(0, 2).map((item, index) => (
                           <div key={index} className="text-sm font-arabic">
                             {item.product_name} × {item.quantity}
-                            <span className="text-blue-600 mr-2">({item.price} ريال)</span>
+                            <span className="text-blue-600 mr-2">({item.price} ريال يمني)</span>
                           </div>
                         ))}
                         {order.items.length > 2 && (
@@ -265,7 +265,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                       </div>
                     </TableCell>
                     <TableCell className="font-bold text-blue-800 font-arabic">
-                      {order.total_amount} ريال
+                      {order.total_amount} ريال يمني
                     </TableCell>
                     <TableCell>
                       {getStatusBadge(order.status)}
@@ -369,18 +369,18 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                       <div>
                         <span className="font-arabic font-medium">{item.product_name}</span>
                         <div className="text-sm text-gray-600 font-arabic">
-                          الكمية: {item.quantity} × السعر: {item.price} ريال
+                          الكمية: {item.quantity} × السعر: {item.price} ريال يمني
                         </div>
                       </div>
                       <div className="text-sm font-bold text-blue-600">
-                        <span className="font-arabic">{(item.quantity * item.price).toFixed(2)} ريال</span>
+                        <span className="font-arabic">{(item.quantity * item.price).toFixed(2)} ريال يمني</span>
                       </div>
                     </div>
                   ))}
                   <div className="border-t pt-3 font-bold bg-blue-50 p-3 rounded">
                     <div className="flex justify-between">
                       <span className="font-arabic">المجموع الكلي:</span>
-                      <span className="font-arabic text-blue-800">{selectedOrder.total_amount} ريال</span>
+                      <span className="font-arabic text-blue-800">{selectedOrder.total_amount} ريال يمني</span>
                     </div>
                   </div>
                 </div>

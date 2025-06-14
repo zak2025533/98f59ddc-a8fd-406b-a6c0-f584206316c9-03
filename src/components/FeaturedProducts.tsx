@@ -123,7 +123,7 @@ const FeaturedProducts = () => {
                   <div className="flex justify-between items-center">
                     <div className="flex items-center">
                       <span className="text-2xl font-bold text-blue-800 font-arabic">{product.price}</span>
-                      <span className="text-sm text-muted-foreground mr-1">ريال</span>
+                      <span className="text-sm text-muted-foreground mr-1">ريال يمني</span>
                     </div>
                     <Button 
                       size="sm" 
