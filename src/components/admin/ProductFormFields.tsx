@@ -16,50 +16,52 @@ interface ProductFormFieldsProps {
 
 const ProductFormFields = ({ formData, onFormDataChange }: ProductFormFieldsProps) => {
   return (
-    <>
-      <div>
-        <Label htmlFor="name" className="font-arabic">اسم المنتج *</Label>
+    <div className="space-y-4">
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <Label htmlFor="name" className="font-arabic text-blue-800 font-semibold">اسم المنتج *</Label>
         <Input
           id="name"
           value={formData.name}
           onChange={(e) => onFormDataChange({ name: e.target.value })}
-          className="font-arabic text-right"
+          className="font-arabic text-right mt-2 bg-white border-blue-300 focus:border-blue-500"
           required
         />
       </div>
 
-      <div>
-        <Label htmlFor="description" className="font-arabic">الوصف</Label>
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+        <Label htmlFor="description" className="font-arabic text-gray-800 font-semibold">الوصف</Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => onFormDataChange({ description: e.target.value })}
-          className="font-arabic text-right"
+          className="font-arabic text-right mt-2 bg-white border-gray-300 focus:border-gray-500"
           rows={3}
         />
       </div>
 
-      <div>
-        <Label htmlFor="price" className="font-arabic">السعر (ريال يمني) *</Label>
+      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+        <Label htmlFor="price" className="font-arabic text-green-800 font-semibold">السعر (ريال يمني) *</Label>
         <Input
           id="price"
           type="number"
           step="0.01"
           value={formData.price}
           onChange={(e) => onFormDataChange({ price: e.target.value })}
-          className="font-arabic text-right"
+          className="font-arabic text-right mt-2 bg-white border-green-300 focus:border-green-500"
           required
         />
       </div>
 
-      <div>
-        <Label className="font-arabic">صورة المنتج</Label>
-        <ImageUpload
-          currentImageUrl={formData.image_url}
-          onImageChange={(url) => onFormDataChange({ image_url: url || "" })}
-        />
+      <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+        <Label className="font-arabic text-purple-800 font-semibold">صورة المنتج</Label>
+        <div className="mt-2">
+          <ImageUpload
+            currentImageUrl={formData.image_url}
+            onImageChange={(url) => onFormDataChange({ image_url: url || "" })}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -97,21 +96,21 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
   };
 
   return (
-    <div className="space-y-4">
-      <Label className="text-right font-arabic">{label}</Label>
+    <div className="space-y-4 bg-white p-4 rounded-lg border border-gray-300">
+      <Label className="text-right font-arabic text-gray-800 font-semibold">{label}</Label>
       
       {currentImageUrl && (
         <div className="relative inline-block">
           <img 
             src={currentImageUrl} 
             alt="Preview" 
-            className="w-32 h-32 object-cover rounded-lg border"
+            className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300"
           />
           <Button
             type="button"
             size="sm"
             variant="destructive"
-            className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
+            className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full bg-red-600 hover:bg-red-700"
             onClick={handleRemoveImage}
           >
             <X className="h-3 w-3" />
@@ -131,12 +130,12 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
           />
           <Label
             htmlFor="image-upload"
-            className={`flex items-center justify-center p-3 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors ${
+            className={`flex items-center justify-center p-3 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors bg-white ${
               isUploading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            <Upload className="h-4 w-4 ml-2" />
-            <span className="font-arabic">
+            <Upload className="h-4 w-4 ml-2 text-blue-600" />
+            <span className="font-arabic text-blue-700">
               {isUploading ? "جاري الرفع..." : "رفع صورة"}
             </span>
           </Label>
@@ -146,7 +145,7 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
           type="button"
           variant="outline"
           onClick={() => setShowUrlInput(!showUrlInput)}
-          className="font-arabic"
+          className="font-arabic border-2 border-green-300 text-green-700 hover:bg-green-50"
         >
           <Link className="h-4 w-4 ml-1" />
           رابط
@@ -154,19 +153,19 @@ const ImageUpload = ({ currentImageUrl, onImageChange, label = "الصورة" }:
       </div>
 
       {showUrlInput && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
           <Input
             placeholder="أدخل رابط الصورة"
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
-            className="text-right"
+            className="text-right bg-white border-gray-300"
             dir="ltr"
           />
           <Button
             type="button"
             onClick={handleUrlSubmit}
             disabled={!urlInput.trim()}
-            className="font-arabic"
+            className="font-arabic bg-blue-600 hover:bg-blue-700 text-white"
           >
             حفظ
           </Button>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -123,17 +122,17 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-right font-arabic text-blue-800">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white border-2 border-green-300">
+        <DialogHeader className="bg-green-50 -mx-6 -mt-6 px-6 py-4 border-b border-green-200">
+          <DialogTitle className="text-right font-arabic text-green-800 text-xl">
             {announcement ? "تعديل إعلان" : "إضافة إعلان جديد"}
           </DialogTitle>
-          <DialogDescription className="text-right font-arabic text-gray-600">
+          <DialogDescription className="text-right font-arabic text-green-600">
             {announcement ? "قم بتعديل بيانات الإعلان أدناه" : "أدخل بيانات الإعلان الجديد"}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <AnnouncementFormFields formData={formData} setFormData={setFormData} />
           <AnnouncementFormActions 
             isLoading={isLoading} 
