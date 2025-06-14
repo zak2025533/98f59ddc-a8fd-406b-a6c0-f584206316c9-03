@@ -35,6 +35,22 @@ const AnnouncementFormFields = ({ formData, setFormData }: AnnouncementFormField
     setFormData(prev => ({ ...prev, video_url: videoUrl || "" }));
   };
 
+  const handleDiscountPercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData(prev => ({ 
+      ...prev, 
+      discount_percentage: value ? Number(value) : null 
+    }));
+  };
+
+  const handleDiscountAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData(prev => ({ 
+      ...prev, 
+      discount_amount: value ? Number(value) : null 
+    }));
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,7 +106,7 @@ const AnnouncementFormFields = ({ formData, setFormData }: AnnouncementFormField
               max="100"
               step="0.01"
               value={formData.discount_percentage || ""}
-              onChange={(e) => setFormData(prev => ({ ...prev, discount_percentage: Number(e.target.value) }))}
+              onChange={handleDiscountPercentageChange}
               placeholder="أدخل نسبة الخصم"
               className="text-right"
             />
@@ -104,7 +120,7 @@ const AnnouncementFormFields = ({ formData, setFormData }: AnnouncementFormField
               min="0"
               step="0.01"
               value={formData.discount_amount || ""}
-              onChange={(e) => setFormData(prev => ({ ...prev, discount_amount: Number(e.target.value) }))}
+              onChange={handleDiscountAmountChange}
               placeholder="أدخل قيمة الخصم"
               className="text-right"
             />
@@ -137,7 +153,7 @@ const AnnouncementFormFields = ({ formData, setFormData }: AnnouncementFormField
                 mode="single"
                 locale={ar}
                 selected={formData.start_date}
-                onSelect={(date) => setFormData(prev => ({ ...prev, start_date: date }))}
+                onSelect={(date) => setFormData(prev => ({ ...prev, start_date: date || null }))}
                 disabled={formData.end_date ? { after: formData.end_date } : undefined}
                 initialFocus
               />
@@ -169,7 +185,7 @@ const AnnouncementFormFields = ({ formData, setFormData }: AnnouncementFormField
                 mode="single"
                 locale={ar}
                 selected={formData.end_date}
-                onSelect={(date) => setFormData(prev => ({ ...prev, end_date: date }))}
+                onSelect={(date) => setFormData(prev => ({ ...prev, end_date: date || null }))}
                 disabled={formData.start_date ? { before: formData.start_date } : undefined}
                 initialFocus
               />

@@ -40,16 +40,14 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
     }
   }, [isOpen, announcement]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const validateForm = (): boolean => {
     if (!formData.title.trim()) {
       toast({
         title: "خطأ",
         description: "يرجى إدخال عنوان الإعلان",
         variant: "destructive",
       });
-      return;
+      return false;
     }
 
     if (formData.type === 'discount' && !formData.discount_percentage && !formData.discount_amount) {
@@ -58,6 +56,16 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
         description: "يرجى إدخال قيمة الخصم",
         variant: "destructive",
       });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
       return;
     }
 
@@ -102,6 +110,7 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
       onSuccess();
       onClose();
     } catch (error: any) {
+      console.error('Error saving announcement:', error);
       toast({
         title: "خطأ",
         description: error.message || "تعذر حفظ الإعلان",
