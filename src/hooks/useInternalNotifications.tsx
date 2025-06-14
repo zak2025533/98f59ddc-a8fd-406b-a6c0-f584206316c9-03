@@ -57,6 +57,8 @@ export const useInternalNotifications = () => {
   };
 
   const sendGlobalNotification = (title: string, description: string, type: string = 'general') => {
+    console.log('Sending global notification:', { title, description, type });
+    
     // إرسال إشعار عبر CustomEvent للمكون الجديد
     const event = new CustomEvent('newNotification', {
       detail: { title, description, type }
@@ -148,6 +150,8 @@ export const useInternalNotifications = () => {
   };
 
   const sendNotificationForAnnouncement = (announcement: any) => {
+    console.log('Sending notification for announcement:', announcement);
+    
     // إرسال الإشعار دائماً بدون التحقق من التفعيل
     playNotificationSound('info');
     
@@ -170,6 +174,13 @@ export const useInternalNotifications = () => {
   };
 
   const sendNotificationForProduct = (product: any) => {
+    console.log('Sending notification for product:', product);
+    
+    if (!product || !product.name) {
+      console.error('Invalid product data for notification:', product);
+      return;
+    }
+    
     // إرسال الإشعار دائماً بدون التحقق من التفعيل
     playNotificationSound('success');
     

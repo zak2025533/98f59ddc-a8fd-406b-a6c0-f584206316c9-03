@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,12 +25,14 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
   );
 
   const handleDialogSuccess = (newProduct?: any) => {
+    console.log("Product dialog success called with:", newProduct);
     onStatsUpdate();
     setDialogOpen(false);
     setEditingProduct(null);
 
-    // إرسال إشعار للمنتج الجديد فقط
+    // إرسال إشعار للمنتج الجديد فقط (وليس عند التعديل)
     if (newProduct && !editingProduct) {
+      console.log("Sending notification for new product:", newProduct);
       sendNotificationForProduct(newProduct);
     }
   };
@@ -75,7 +78,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
               <Package className="h-5 w-5" />
               إدارة المنتجات ({products.length})
             </CardTitle>
-            <Button onClick={() => setDialogOpen(true)} className="font-arabic">
+            <Button onClick={openNewDialog} className="font-arabic">
               <Plus className="h-4 w-4 ml-2" />
               إضافة منتج جديد
             </Button>
@@ -100,7 +103,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
               <p className="text-gray-500 font-arabic">
                 {searchTerm ? "لا توجد منتجات تطابق البحث" : "لا توجد منتجات حتى الآن"}
               </p>
-              <Button onClick={() => setDialogOpen(true)} className="mt-4 font-arabic">
+              <Button onClick={openNewDialog} className="mt-4 font-arabic">
                 إضافة أول منتج
               </Button>
             </div>
@@ -128,10 +131,7 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setEditingProduct(product);
-                        setDialogOpen(true);
-                      }}
+                      onClick={() => openEditDialog(product)}
                       className="font-arabic"
                     >
                       تعديل

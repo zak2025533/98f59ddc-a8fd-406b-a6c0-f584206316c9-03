@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -48,7 +49,7 @@ interface ProductDialogProps {
   isOpen: boolean;
   onClose: () => void;
   product?: Product | null;
-  onSuccess: () => void;
+  onSuccess: (newProduct?: any) => void;
 }
 
 const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogProps) => {
@@ -188,7 +189,7 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
       };
 
       if (product) {
-        // تحديث
+        // تحديث منتج موجود
         const { error } = await supabase
           .from('products')
           .update(productData)
@@ -197,23 +198,35 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
         if (error) throw error;
 
         toast({ title: "تم التحديث", description: "تم تحديث المنتج بنجاح" });
+        console.log("Product updated successfully");
+        onSuccess(); // لا نرسل إشعار عند التحديث
       } else {
-        // إضافة جديدة
-        const { error } = await supabase
+        // إضافة منتج جديد
+        const { data: newProduct, error } = await supabase
           .from('products')
-          .insert([productData]);
+          .insert([productData])
+          .select()
+          .single();
 
         if (error) throw error;
 
+        console.log("New product created:", newProduct);
         toast({ title: "تم الإضافة", description: "تم إضافة المنتج بنجاح" });
         
-        // إرسال إشعار للمنتج الجديد
+        // إرسال إشعار push للمنتج الجديد
         await sendNotificationForNewProduct(formData.name);
+        
+        // تمرير بيانات المنتج الجديد للإشعارات الداخلية
+        onSuccess({
+          id: newProduct.id,
+          name: newProduct.name,
+          price: newProduct.price
+        });
       }
 
-      onSuccess();
       onClose();
     } catch (error: any) {
+      console.error("Error saving product:", error);
       toast({
         title: "خطأ",
         description: error.message || "تعذر حفظ المنتج. حاول مرة أخرى.",
