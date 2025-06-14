@@ -22,6 +22,14 @@ export const useInternalNotifications = () => {
     }
   }, []);
 
+  const sendGlobalNotification = (title: string, description: string, type: string = 'general') => {
+    // إرسال إشعار عبر CustomEvent للمكون الجديد
+    const event = new CustomEvent('newNotification', {
+      detail: { title, description, type }
+    });
+    window.dispatchEvent(event);
+  };
+
   const enableInternalNotifications = () => {
     setLoading(true);
     try {
@@ -38,6 +46,12 @@ export const useInternalNotifications = () => {
         description: "ستتلقى إشعارات داخل التطبيق عند إضافة منتجات أو إعلانات جديدة",
         duration: 4000,
       });
+
+      sendGlobalNotification(
+        "تم تفعيل الإشعارات",
+        "ستتلقى إشعارات عند إضافة منتجات أو إعلانات جديدة",
+        "general"
+      );
     } catch (error) {
       console.error('Error enabling internal notifications:', error);
       shadcnToast({
@@ -73,15 +87,6 @@ export const useInternalNotifications = () => {
   };
 
   const sendTestNotification = () => {
-    if (!isEnabled) {
-      shadcnToast({
-        title: "الإشعارات معطلة",
-        description: "يرجى تفعيل الإشعارات الداخلية أولاً",
-        variant: "destructive",
-      });
-      return;
-    }
-
     // إرسال إشعار تجريبي
     toast.info("إشعار تجريبي", {
       description: "هذا إشعار تجريبي للتأكد من عمل النظام الداخلي",
@@ -91,6 +96,12 @@ export const useInternalNotifications = () => {
         onClick: () => console.log("Test notification acknowledged"),
       },
     });
+
+    sendGlobalNotification(
+      "إشعار تجريبي",
+      "هذا إشعار تجريبي للتأكد من عمل النظام",
+      "general"
+    );
 
     shadcnToast({
       title: "تم الإرسال",
@@ -110,6 +121,12 @@ export const useInternalNotifications = () => {
         },
       },
     });
+
+    sendGlobalNotification(
+      "إعلان جديد!",
+      announcement.title,
+      "announcement"
+    );
   };
 
   const sendNotificationForProduct = (product: any) => {
@@ -124,6 +141,12 @@ export const useInternalNotifications = () => {
         },
       },
     });
+
+    sendGlobalNotification(
+      "منتج جديد!",
+      `تم إضافة منتج جديد: ${product.name}`,
+      "product"
+    );
   };
 
   return {
@@ -134,5 +157,6 @@ export const useInternalNotifications = () => {
     sendTestNotification,
     sendNotificationForAnnouncement,
     sendNotificationForProduct,
+    sendGlobalNotification,
   };
 };

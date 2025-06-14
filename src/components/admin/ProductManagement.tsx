@@ -1,227 +1,167 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Edit, Trash2, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { Package, Search, Plus } from "lucide-react";
+import { useProducts } from "@/hooks/useProducts";
 import { useInternalNotifications } from "@/hooks/useInternalNotifications";
 import ProductDialog from "./ProductDialog";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image_url: string;
-  subcategory_id: string;
-  category_id?: string;
-  is_featured: boolean;
-  in_stock: boolean;
-  categories?: { name: string };
-  subcategories?: { name: string };
-}
 
 interface ProductManagementProps {
   onStatsUpdate: () => void;
 }
 
 const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [productDialog, setProductDialog] = useState<{
-    isOpen: boolean;
-    product?: Product | null;
-  }>({ isOpen: false });
-
-  const { toast } = useToast();
+  const { products, loading, deleteProduct } = useProducts();
   const { sendNotificationForProduct } = useInternalNotifications();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.categories?.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select(`
-          id,
-          name,
-          description,
-          price,
-          image_url,
-          category_id,
-          subcategory_id,
-          is_featured,
-          in_stock,
-          categories!products_category_id_fkey (name),
-          subcategories!products_subcategory_id_fkey (name)
-        `)
-        .order('name');
-
-      if (error) throw error;
-      setProducts(data || []);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      toast({
-        title: "خطأ",
-        description: "تعذر جلب المنتجات",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDeleteProduct = async (productId: string) => {
-    if (!confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
-
-    try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', productId);
-
-      if (error) throw error;
-
-      toast({ title: "تم الحذف", description: "تم حذف المنتج بنجاح" });
-      fetchProducts();
-      onStatsUpdate();
-    } catch (error: any) {
-      toast({
-        title: "خطأ",
-        description: error.message || "تعذر حذف المنتج",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleProductDialogSuccess = (newProduct?: any) => {
-    fetchProducts();
+  const handleDialogSuccess = (newProduct?: any) => {
     onStatsUpdate();
-    
-    // إرسال إشعار داخلي للمنتج الجديد فقط
-    if (newProduct && !productDialog.product) {
+    setDialogOpen(false);
+    setEditingProduct(null);
+
+    // إرسال إشعار للمنتج الجديد فقط
+    if (newProduct && !editingProduct) {
       sendNotificationForProduct(newProduct);
     }
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleDelete = async (id: string) => {
+    const success = await deleteProduct(id);
+    if (success) {
+      onStatsUpdate();
+    }
+  };
+
+  const openEditDialog = (product: any) => {
+    setEditingProduct(product);
+    setDialogOpen(true);
+  };
+
+  const openNewDialog = () => {
+    setEditingProduct(null);
+    setDialogOpen(true);
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-arabic text-right">إدارة المنتجات</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-2xl font-arabic text-blue-800">إدارة المنتجات</CardTitle>
-          <Button 
-            onClick={() => setProductDialog({ isOpen: true })}
-            className="bg-blue-600 hover:bg-blue-700 font-arabic"
-          >
-            <Plus className="h-4 w-4 ml-2" />
-            إضافة منتج جديد
-          </Button>
-        </div>
-      </CardHeader>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="font-arabic text-right flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              إدارة المنتجات ({products.length})
+            </CardTitle>
+            <Button onClick={() => setDialogOpen(true)} className="font-arabic">
+              <Plus className="h-4 w-4 ml-2" />
+              إضافة منتج جديد
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="البحث في المنتجات..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pr-10 font-arabic text-right"
+              />
+            </div>
+          </div>
 
-      <CardContent className="space-y-6">
-        <div className="flex gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="البحث في المنتجات..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 font-arabic"
-            />
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div className="text-center py-8">
-            <div className="animate-pulse text-muted-foreground font-arabic">جاري التحميل...</div>
-          </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-muted-foreground text-lg font-arabic">لا توجد منتجات</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <Card key={product.id} className="border-blue-100 overflow-hidden">
-                <div className="relative h-48">
-                  <img
-                    src={product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 right-2 flex gap-2">
-                    {product.is_featured && (
-                      <Badge className="bg-yellow-500 text-yellow-900">
-                        <Star className="h-3 w-3 ml-1" />
-                        مميز
-                      </Badge>
-                    )}
-                    <Badge variant={product.in_stock ? "secondary" : "destructive"}>
-                      {product.in_stock ? "متوفر" : "غير متوفر"}
-                    </Badge>
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-8">
+              <Package className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+              <p className="text-gray-500 font-arabic">
+                {searchTerm ? "لا توجد منتجات تطابق البحث" : "لا توجد منتجات حتى الآن"}
+              </p>
+              <Button onClick={() => setDialogOpen(true)} className="mt-4 font-arabic">
+                إضافة أول منتج
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="border rounded-lg p-4 space-y-3">
+                  {product.image_url && (
+                    <img
+                      src={product.image_url}
+                      alt={product.name}
+                      className="w-full h-32 object-cover rounded-md"
+                    />
+                  )}
+                  <div>
+                    <h3 className="font-semibold font-arabic text-right">{product.name}</h3>
+                    <p className="text-sm text-gray-600 font-arabic text-right">
+                      {product.categories?.name}
+                    </p>
+                    <p className="text-lg font-bold text-blue-600 font-arabic text-right">
+                      {product.price} ر.س
+                    </p>
                   </div>
-                </div>
-
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-bold text-blue-800 mb-2 font-arabic">{product.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2 font-arabic">
-                    {product.description}
-                  </p>
-                  
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-xl font-bold text-blue-800 font-arabic">{product.price} ريال</span>
-                    <div className="text-sm text-muted-foreground">
-                      <div className="font-arabic">{product.categories?.name}</div>
-                      {product.subcategories && (
-                        <div className="text-xs font-arabic">{product.subcategories.name}</div>
-                      )}
-                    </div>
-                  </div>
-
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
-                      onClick={() => setProductDialog({ isOpen: true, product })}
-                      className="flex-1 font-arabic"
+                      size="sm"
+                      onClick={() => {
+                        setEditingProduct(product);
+                        setDialogOpen(true);
+                      }}
+                      className="font-arabic"
                     >
-                      <Edit className="h-4 w-4 ml-1" />
                       تعديل
                     </Button>
                     <Button
-                      size="sm"
                       variant="destructive"
-                      onClick={() => handleDeleteProduct(product.id)}
+                      size="sm"
+                      onClick={() => handleDelete(product.id)}
+                      className="font-arabic"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      حذف
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </CardContent>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <ProductDialog
-        isOpen={productDialog.isOpen}
-        onClose={() => setProductDialog({ isOpen: false })}
-        product={productDialog.product}
-        onSuccess={handleProductDialogSuccess}
+        isOpen={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setEditingProduct(null);
+        }}
+        product={editingProduct}
+        onSuccess={handleDialogSuccess}
       />
-    </Card>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import { Menu, X, ShoppingCart, Heart, User, Home, Grid3X3, Phone } from "lucide
 import { Link } from "react-router-dom";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
+import NotificationIcon from "./NotificationIcon";
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -60,6 +61,9 @@ const Navbar = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-4">
+            {/* Notifications */}
+            <NotificationIcon />
+
             {/* Favorites - Hidden on very small screens */}
             <div className="hidden sm:block">
               <FavoritesSheet />
