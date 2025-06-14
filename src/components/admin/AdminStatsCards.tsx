@@ -17,50 +17,58 @@ const AdminStatsCards = ({ stats }: AdminStatsCardsProps) => {
   return (
     <div className="mb-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-xl hover:shadow-2xl transition-shadow border-0">
+        <Card className="bg-white border-l-4 border-l-blue-500 shadow-lg hover:shadow-xl transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="text-right">
-                <p className="text-blue-100 text-sm font-arabic font-medium">المنتجات</p>
-                <p className="text-4xl font-bold text-white">{stats.products}</p>
+                <p className="text-gray-600 text-sm font-arabic font-medium">المنتجات</p>
+                <p className="text-3xl font-bold text-blue-600">{stats.products}</p>
               </div>
-              <Package className="h-12 w-12 text-blue-100" />
+              <div className="bg-blue-100 p-3 rounded-full">
+                <Package className="h-8 w-8 text-blue-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white shadow-xl hover:shadow-2xl transition-shadow border-0">
+        <Card className="bg-white border-l-4 border-l-green-500 shadow-lg hover:shadow-xl transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="text-right">
-                <p className="text-emerald-100 text-sm font-arabic font-medium">الإعلانات</p>
-                <p className="text-4xl font-bold text-white">{stats.announcements}</p>
+                <p className="text-gray-600 text-sm font-arabic font-medium">الإعلانات</p>
+                <p className="text-3xl font-bold text-green-600">{stats.announcements}</p>
               </div>
-              <Megaphone className="h-12 w-12 text-emerald-100" />
+              <div className="bg-green-100 p-3 rounded-full">
+                <Megaphone className="h-8 w-8 text-green-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-amber-600 to-amber-700 text-white shadow-xl hover:shadow-2xl transition-shadow border-0">
+        <Card className="bg-white border-l-4 border-l-orange-500 shadow-lg hover:shadow-xl transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="text-right">
-                <p className="text-amber-100 text-sm font-arabic font-medium">الأقسام</p>
-                <p className="text-4xl font-bold text-white">{stats.categories}</p>
+                <p className="text-gray-600 text-sm font-arabic font-medium">الأقسام</p>
+                <p className="text-3xl font-bold text-orange-600">{stats.categories}</p>
               </div>
-              <Users className="h-12 w-12 text-amber-100" />
+              <div className="bg-orange-100 p-3 rounded-full">
+                <Users className="h-8 w-8 text-orange-600" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-xl hover:shadow-2xl transition-shadow border-0">
+        <Card className="bg-white border-l-4 border-l-purple-500 shadow-lg hover:shadow-xl transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="text-right">
-                <p className="text-purple-100 text-sm font-arabic font-medium">الطلبات</p>
-                <p className="text-4xl font-bold text-white">{stats.orders}</p>
+                <p className="text-gray-600 text-sm font-arabic font-medium">الطلبات</p>
+                <p className="text-3xl font-bold text-purple-600">{stats.orders}</p>
               </div>
-              <ShoppingCart className="h-12 w-12 text-purple-100" />
+              <div className="bg-purple-100 p-3 rounded-full">
+                <ShoppingCart className="h-8 w-8 text-purple-600" />
+              </div>
             </div>
           </CardContent>
         </Card>

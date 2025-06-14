@@ -36,7 +36,7 @@ const CategoryCard = ({
   onDeleteSubcategory 
 }: CategoryCardProps) => {
   return (
-    <Card className="border-2 border-blue-200 shadow-lg hover:shadow-xl transition-shadow bg-white">
+    <Card className="bg-white border shadow-md hover:shadow-lg transition-shadow border-gray-200">
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
@@ -44,12 +44,12 @@ const CategoryCard = ({
               <img
                 src={category.image_url}
                 alt={category.name}
-                className="w-16 h-16 object-cover rounded-lg border-2 border-blue-100"
+                className="w-16 h-16 object-cover rounded-lg border-2 border-gray-100"
               />
             )}
             <div>
-              <h3 className="text-xl font-bold text-blue-900 font-arabic">{category.name}</h3>
-              <p className="text-sm text-blue-600 font-medium">{category.slug}</p>
+              <h3 className="text-xl font-bold text-gray-800 font-arabic">{category.name}</h3>
+              <p className="text-sm text-gray-500 font-medium">{category.slug}</p>
             </div>
           </div>
           <div className="flex gap-2">
@@ -64,18 +64,18 @@ const CategoryCard = ({
             </Button>
             <Button
               size="sm"
-              variant="destructive"
+              variant="outline"
               onClick={() => onDelete(category.id)}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="border-red-300 text-red-700 hover:bg-red-50 hover:border-red-400"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        <div className="border-t-2 border-blue-100 pt-4">
+        <div className="border-t border-gray-200 pt-4">
           <div className="flex justify-between items-center mb-3">
-            <h4 className="font-semibold text-blue-800 font-arabic text-lg">الأقسام الفرعية</h4>
+            <h4 className="font-semibold text-gray-700 font-arabic text-lg">الأقسام الفرعية</h4>
             <Button
               size="sm"
               variant="outline"
@@ -92,15 +92,15 @@ const CategoryCard = ({
               {category.subcategories.map((subcategory) => (
                 <div
                   key={subcategory.id}
-                  className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200"
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
                 >
-                  <span className="font-medium text-blue-900 font-arabic">{subcategory.name}</span>
+                  <span className="font-medium text-gray-800 font-arabic">{subcategory.name}</span>
                   <div className="flex gap-1">
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => onEditSubcategory(subcategory, category.id)}
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-100 p-1"
                     >
                       <Edit className="h-3 w-3" />
                     </Button>
@@ -108,7 +108,7 @@ const CategoryCard = ({
                       size="sm"
                       variant="ghost"
                       onClick={() => onDeleteSubcategory(subcategory.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-100"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-100 p-1"
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>
@@ -117,7 +117,7 @@ const CategoryCard = ({
               ))}
             </div>
           ) : (
-            <p className="text-gray-600 text-sm font-arabic bg-gray-50 p-3 rounded-lg border border-gray-200">لا توجد أقسام فرعية</p>
+            <p className="text-gray-500 text-sm font-arabic bg-gray-50 p-3 rounded-lg border border-gray-200">لا توجد أقسام فرعية</p>
           )}
         </div>
       </CardContent>
