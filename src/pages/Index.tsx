@@ -1,10 +1,10 @@
 
-import Navbar from "@/components/Navbar";
-import HeroBanner from "@/components/HeroBanner";
+import SimpleNavbar from "@/components/SimpleNavbar";
+import SimpleHeroBanner from "@/components/SimpleHeroBanner";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
-import CategorySection from "@/components/CategorySection";
+import SimpleCategorySection from "@/components/SimpleCategorySection";
 import FeaturedProducts from "@/components/FeaturedProducts";
-import Footer from "@/components/Footer";
+import SimpleFooter from "@/components/SimpleFooter";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const Index = () => {
@@ -12,13 +12,13 @@ const Index = () => {
   useVisitorTracking();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      <HeroBanner />
+    <div className="min-h-screen bg-gray-50">
+      <SimpleNavbar />
+      <SimpleHeroBanner />
       <AnnouncementBanner />
-      <CategorySection />
+      <SimpleCategorySection />
       <FeaturedProducts />
-      <Footer />
+      <SimpleFooter />
     </div>
   );
 };
