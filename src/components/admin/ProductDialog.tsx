@@ -260,8 +260,8 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           <div>
             <Label className="font-arabic">صورة المنتج</Label>
             <ImageUpload
-              currentImage={formData.image_url}
-              onImageUploaded={(url) => setFormData({ ...formData, image_url: url })}
+              currentImageUrl={formData.image_url}
+              onImageChange={(url) => setFormData({ ...formData, image_url: url || "" })}
             />
           </div>
 
