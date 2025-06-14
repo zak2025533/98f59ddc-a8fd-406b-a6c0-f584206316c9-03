@@ -154,6 +154,42 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_visitor_stats: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          total_downloads: number | null
+          total_installs: number | null
+          total_pwa_installs: number | null
+          total_visits: number | null
+          unique_visitors: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          total_downloads?: number | null
+          total_installs?: number | null
+          total_pwa_installs?: number | null
+          total_visits?: number | null
+          unique_visitors?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          total_downloads?: number | null
+          total_installs?: number | null
+          total_pwa_installs?: number | null
+          total_visits?: number | null
+          unique_visitors?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -412,6 +448,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      visitor_analytics: {
+        Row: {
+          created_at: string
+          device_info: Json | null
+          id: string
+          ip_address: string | null
+          location_info: Json | null
+          page_url: string | null
+          referrer: string | null
+          session_id: string
+          user_agent: string | null
+          visitor_type: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: string | null
+          location_info?: Json | null
+          page_url?: string | null
+          referrer?: string | null
+          session_id: string
+          user_agent?: string | null
+          visitor_type: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: string | null
+          location_info?: Json | null
+          page_url?: string | null
+          referrer?: string | null
+          session_id?: string
+          user_agent?: string | null
+          visitor_type?: string
+        }
+        Relationships: []
       }
     }
     Views: {

@@ -9,13 +9,15 @@ import {
   ShoppingCart, 
   Users, 
   LogOut,
-  BarChart3
+  BarChart3,
+  Eye
 } from "lucide-react";
 import ProductManagement from "./ProductManagement";
 import AnnouncementsManagement from "./AnnouncementsManagement";
 import CategoryManagement from "./CategoryManagement";
 import OrdersManagement from "./OrdersManagement";
 import AnalyticsSection from "./AnalyticsSection";
+import VisitorAnalytics from "./VisitorAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 
 interface AdminDashboardProps {
@@ -135,7 +137,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 bg-white shadow-sm">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-white shadow-sm">
             <TabsTrigger value="products" className="font-arabic">
               <Package className="h-4 w-4 ml-2" />
               المنتجات
@@ -155,6 +157,10 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
             <TabsTrigger value="analytics" className="font-arabic">
               <BarChart3 className="h-4 w-4 ml-2" />
               التحليلات
+            </TabsTrigger>
+            <TabsTrigger value="visitors" className="font-arabic">
+              <Eye className="h-4 w-4 ml-2" />
+              إحصائيات الزوار
             </TabsTrigger>
           </TabsList>
 
@@ -176,6 +182,10 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
           <TabsContent value="analytics">
             <AnalyticsSection onStatsUpdate={updateStats} />
+          </TabsContent>
+
+          <TabsContent value="visitors">
+            <VisitorAnalytics />
           </TabsContent>
         </Tabs>
       </div>
