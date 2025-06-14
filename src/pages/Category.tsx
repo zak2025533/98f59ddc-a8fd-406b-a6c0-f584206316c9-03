@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SimpleNavbar from "@/components/SimpleNavbar";
+import SimpleFooter from "@/components/SimpleFooter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -80,11 +79,11 @@ const Category = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        <SimpleNavbar />
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="animate-pulse text-xl text-blue-600 font-arabic">جاري التحميل...</div>
         </div>
-        <Footer />
+        <SimpleFooter />
       </div>
     );
   }
@@ -92,7 +91,7 @@ const Category = () => {
   if (!category) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+        <SimpleNavbar />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-red-600 font-arabic">القسم غير موجود</h1>
           <Button onClick={() => window.history.back()} className="mt-4 font-arabic bg-blue-600 hover:bg-blue-700">
@@ -100,14 +99,14 @@ const Category = () => {
             العودة
           </Button>
         </div>
-        <Footer />
+        <SimpleFooter />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
+      <SimpleNavbar />
       
       {/* Category Header */}
       <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
@@ -198,7 +197,7 @@ const Category = () => {
         </div>
       </section>
 
-      <Footer />
+      <SimpleFooter />
     </div>
   );
 };

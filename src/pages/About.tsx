@@ -1,6 +1,5 @@
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SimpleNavbar from "@/components/SimpleNavbar";
+import SimpleFooter from "@/components/SimpleFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Target, Award, Heart, Clock, MapPin } from "lucide-react";
@@ -31,7 +30,7 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
+      <SimpleNavbar />
       
       {/* Hero Section */}
       <section className="py-16 px-4">
@@ -148,7 +147,7 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
+      <SimpleFooter />
     </div>
   );
 };

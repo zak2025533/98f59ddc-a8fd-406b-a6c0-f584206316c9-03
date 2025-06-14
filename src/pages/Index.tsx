@@ -1,24 +1,23 @@
 
-import Navbar from "@/components/Navbar";
-import HeroBanner from "@/components/HeroBanner";
+import SimpleNavbar from "@/components/SimpleNavbar";
+import SimpleHeroBanner from "@/components/SimpleHeroBanner";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
-import CategorySection from "@/components/CategorySection";
+import SimpleCategorySection from "@/components/SimpleCategorySection";
 import FeaturedProducts from "@/components/FeaturedProducts";
-import Footer from "@/components/Footer";
+import SimpleFooter from "@/components/SimpleFooter";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 
 const Index = () => {
-  // تتبع الزوار تلقائياً عند تحميل الصفحة الرئيسية
   useVisitorTracking();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      <HeroBanner />
+      <SimpleNavbar />
+      <SimpleHeroBanner />
       <AnnouncementBanner />
-      <CategorySection />
+      <SimpleCategorySection />
       <FeaturedProducts />
-      <Footer />
+      <SimpleFooter />
     </div>
   );
 };
