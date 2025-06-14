@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,10 @@ interface Announcement {
   discount_percentage: number | null;
   discount_amount: number | null;
   image_url: string | null;
+  video_url: string | null;
+  banner_text: string | null;
   is_active: boolean;
+  is_banner: boolean | null;
   start_date: string | null;
   end_date: string | null;
 }
@@ -52,7 +56,10 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
     discount_percentage: "",
     discount_amount: "",
     image_url: "",
+    video_url: "",
+    banner_text: "",
     is_active: true,
+    is_banner: false,
     start_date: null as Date | null,
     end_date: null as Date | null,
   });
@@ -71,7 +78,10 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
           discount_percentage: announcement.discount_percentage?.toString() || "",
           discount_amount: announcement.discount_amount?.toString() || "",
           image_url: announcement.image_url || "",
+          video_url: announcement.video_url || "",
+          banner_text: announcement.banner_text || "",
           is_active: announcement.is_active,
+          is_banner: announcement.is_banner || false,
           start_date: announcement.start_date ? new Date(announcement.start_date) : null,
           end_date: announcement.end_date ? new Date(announcement.end_date) : null,
         });
@@ -84,7 +94,10 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
           discount_percentage: "",
           discount_amount: "",
           image_url: "",
+          video_url: "",
+          banner_text: "",
           is_active: true,
+          is_banner: false,
           start_date: null,
           end_date: null,
         });
@@ -119,7 +132,10 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
         discount_percentage: formData.discount_percentage ? parseInt(formData.discount_percentage) : null,
         discount_amount: formData.discount_amount ? parseFloat(formData.discount_amount) : null,
         image_url: formData.image_url || null,
+        video_url: formData.video_url || null,
+        banner_text: formData.banner_text || null,
         is_active: formData.is_active,
+        is_banner: formData.is_banner,
         start_date: formData.start_date?.toISOString() || null,
         end_date: formData.end_date?.toISOString() || null,
       };
@@ -221,6 +237,44 @@ const AnnouncementDialog = ({ announcement, onSave, trigger }: AnnouncementDialo
               className="text-right font-arabic"
               rows={3}
             />
+          </div>
+
+          {/* Banner Settings */}
+          <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="flex items-center space-x-2 space-x-reverse mb-4">
+              <Switch
+                id="is_banner"
+                checked={formData.is_banner}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_banner: checked })}
+              />
+              <Label htmlFor="is_banner" className="font-arabic font-semibold">عرض كبانر رئيسي</Label>
+            </div>
+
+            {formData.is_banner && (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="banner_text" className="font-arabic">نص البانر الرئيسي</Label>
+                  <Input
+                    id="banner_text"
+                    value={formData.banner_text}
+                    onChange={(e) => setFormData({ ...formData, banner_text: e.target.value })}
+                    className="text-right font-arabic"
+                    placeholder="نص إضافي للبانر الرئيسي"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="video_url" className="font-arabic">رابط الفيديو</Label>
+                  <Input
+                    id="video_url"
+                    value={formData.video_url}
+                    onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                    className="text-right font-arabic"
+                    placeholder="https://example.com/video.mp4"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {formData.type === 'discount' && (

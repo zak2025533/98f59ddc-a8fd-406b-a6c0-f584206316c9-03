@@ -32,6 +32,7 @@ export type Database = {
       }
       announcements: {
         Row: {
+          banner_text: string | null
           created_at: string
           description: string | null
           discount_amount: number | null
@@ -40,13 +41,16 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean
+          is_banner: boolean | null
           product_id: string | null
           start_date: string | null
           title: string
           type: string
           updated_at: string
+          video_url: string | null
         }
         Insert: {
+          banner_text?: string | null
           created_at?: string
           description?: string | null
           discount_amount?: number | null
@@ -55,13 +59,16 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_banner?: boolean | null
           product_id?: string | null
           start_date?: string | null
           title: string
           type?: string
           updated_at?: string
+          video_url?: string | null
         }
         Update: {
+          banner_text?: string | null
           created_at?: string
           description?: string | null
           discount_amount?: number | null
@@ -70,11 +77,13 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          is_banner?: boolean | null
           product_id?: string | null
           start_date?: string | null
           title?: string
           type?: string
           updated_at?: string
+          video_url?: string | null
         }
         Relationships: [
           {

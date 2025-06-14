@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, Eye, EyeOff, Megaphone, Calendar, Tag } from "lucide-react";
+import { Edit, Trash2, Eye, EyeOff, Megaphone, Calendar, Tag, Video, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -21,7 +21,10 @@ interface Announcement {
   discount_percentage: number | null;
   discount_amount: number | null;
   image_url: string | null;
+  video_url: string | null;
+  banner_text: string | null;
   is_active: boolean;
+  is_banner: boolean | null;
   start_date: string | null;
   end_date: string | null;
   created_at: string;
@@ -188,6 +191,7 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
                 <TableRow>
                   <TableHead className="text-right font-arabic">العنوان</TableHead>
                   <TableHead className="text-right font-arabic">النوع</TableHead>
+                  <TableHead className="text-right font-arabic">التصنيف</TableHead>
                   <TableHead className="text-right font-arabic">المنتج</TableHead>
                   <TableHead className="text-right font-arabic">التخفيض</TableHead>
                   <TableHead className="text-right font-arabic">الحالة</TableHead>
@@ -206,12 +210,38 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
                             {announcement.description}
                           </div>
                         )}
+                        {announcement.banner_text && (
+                          <div className="text-xs text-purple-600 mt-1 font-semibold">
+                            بانر: {announcement.banner_text}
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <Badge className={`font-arabic ${getTypeBadgeColor(announcement.type)}`}>
                         {getTypeLabel(announcement.type)}
                       </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex flex-col gap-1">
+                        {announcement.is_banner && (
+                          <Badge className="bg-purple-100 text-purple-800 font-arabic text-xs">
+                            بانر رئيسي
+                          </Badge>
+                        )}
+                        {announcement.video_url && (
+                          <Badge className="bg-green-100 text-green-800 font-arabic text-xs flex items-center gap-1">
+                            <Video className="h-3 w-3" />
+                            فيديو
+                          </Badge>
+                        )}
+                        {announcement.image_url && (
+                          <Badge className="bg-blue-100 text-blue-800 font-arabic text-xs flex items-center gap-1">
+                            <FileText className="h-3 w-3" />
+                            صورة
+                          </Badge>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell className="font-arabic text-right">
                       {announcement.products?.name || '-'}
