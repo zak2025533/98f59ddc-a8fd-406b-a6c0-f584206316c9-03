@@ -1,11 +1,15 @@
+
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/hooks/useCart";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export const CartSheet = () => {
   const { cartItems, cartCount, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { toast } = useToast();
 
   const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
@@ -26,12 +30,69 @@ export const CartSheet = () => {
     message += `\n📞 للتواصل والاستفسار عبر واتساب: https://wa.me/967715833246\n`;
     message += "\n🙏 *شكراً لتسوقكم معنا*\n*متجر بلا حدود للحلويات* 💝";
 
-    return encodeURIComponent(message);
+    return message;
   };
 
-  const handleOrder = () => {
+  const saveOrderToDatabase = async (whatsappMessage: string) => {
+    try {
+      const sessionId = localStorage.getItem('session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
+      
+      // حفظ الطلب الرئيسي
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          session_id: sessionId,
+          total_amount: total,
+          status: 'pending',
+          whatsapp_message: whatsappMessage
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // حفظ عناصر الطلب
+      const orderItems = cartItems.map(item => ({
+        order_id: order.id,
+        product_id: item.product_id,
+        product_name: item.product.name,
+        quantity: item.quantity,
+        price: item.product.price
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      console.log('تم حفظ الطلب بنجاح:', order.id);
+      
+      toast({
+        title: "تم حفظ الطلب",
+        description: "تم حفظ طلبك بنجاح في النظام",
+      });
+
+      return order.id;
+    } catch (error) {
+      console.error('خطأ في حفظ الطلب:', error);
+      toast({
+        title: "خطأ",
+        description: "فشل في حفظ الطلب",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleOrder = async () => {
     const message = generateInvoiceMessage();
-    window.open(`https://wa.me/967715833246?text=${message}`, '_blank');
+    
+    // حفظ الطلب في قاعدة البيانات أولاً
+    await saveOrderToDatabase(message);
+    
+    // فتح واتساب
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/967715833246?text=${encodedMessage}`, '_blank');
   };
 
   return (

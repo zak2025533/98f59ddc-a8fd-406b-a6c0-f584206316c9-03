@@ -4,17 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, Package, Truck, CheckCircle, Clock, User, MapPin, Phone } from "lucide-react";
+import { Eye, Package, Truck, CheckCircle, Clock, User, MapPin, Phone, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Order {
   id: string;
-  customer_name: string;
-  customer_phone: string;
-  customer_address: string;
+  customer_name: string | null;
+  customer_phone: string | null;
+  customer_address: string | null;
   total_amount: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  whatsapp_message: string | null;
   created_at: string;
   items: OrderItem[];
 }
@@ -42,37 +43,52 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
 
   const fetchOrders = async () => {
     try {
-      // مؤقتاً سنقوم بإنشاء بيانات وهمية للطلبات
-      const mockOrders: Order[] = [
-        {
-          id: '1',
-          customer_name: 'أحمد محمد',
-          customer_phone: '0512345678',
-          customer_address: 'الرياض، حي النرجس',
-          total_amount: 150.00,
-          status: 'pending',
-          created_at: new Date().toISOString(),
-          items: [
-            { id: '1', product_name: 'كيك الشوكولاته', quantity: 2, price: 75.00 }
-          ]
-        },
-        {
-          id: '2',
-          customer_name: 'فاطمة علي',
-          customer_phone: '0523456789',
-          customer_address: 'جدة، حي الحمراء',
-          total_amount: 89.50,
-          status: 'processing',
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-          items: [
-            { id: '2', product_name: 'مشروب منعش', quantity: 3, price: 29.83 }
-          ]
-        }
-      ];
+      setLoading(true);
       
-      setOrders(mockOrders);
+      // جلب الطلبات مع عناصرها
+      const { data: ordersData, error: ordersError } = await supabase
+        .from('orders')
+        .select(`
+          id,
+          customer_name,
+          customer_phone,
+          customer_address,
+          total_amount,
+          status,
+          whatsapp_message,
+          created_at,
+          order_items (
+            id,
+            product_name,
+            quantity,
+            price
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (ordersError) throw ordersError;
+
+      const formattedOrders: Order[] = (ordersData || []).map(order => ({
+        id: order.id,
+        customer_name: order.customer_name,
+        customer_phone: order.customer_phone,
+        customer_address: order.customer_address,
+        total_amount: order.total_amount,
+        status: order.status as Order['status'],
+        whatsapp_message: order.whatsapp_message,
+        created_at: order.created_at,
+        items: order.order_items || []
+      }));
+      
+      setOrders(formattedOrders);
+      onStatsUpdate();
     } catch (error) {
       console.error('Error fetching orders:', error);
+      toast({
+        title: "خطأ",
+        description: "فشل في جلب الطلبات",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -80,7 +96,13 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
 
   const updateOrderStatus = async (orderId: string, newStatus: Order['status']) => {
     try {
-      // هنا سيتم تحديث حالة الطلب في قاعدة البيانات
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
+
+      if (error) throw error;
+      
       setOrders(prev => 
         prev.map(order => 
           order.id === orderId 
@@ -88,6 +110,10 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
             : order
         )
       );
+      
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder({ ...selectedOrder, status: newStatus });
+      }
       
       toast({
         title: "تم تحديث الطلب",
@@ -125,6 +151,13 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
     );
   };
 
+  const openWhatsApp = (order: Order) => {
+    if (order.whatsapp_message) {
+      const encodedMessage = encodeURIComponent(order.whatsapp_message);
+      window.open(`https://wa.me/967715833246?text=${encodedMessage}`, '_blank');
+    }
+  };
+
   if (loading) {
     return (
       <Card>
@@ -139,7 +172,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-right font-arabic text-blue-800">إدارة الطلبات</CardTitle>
+          <CardTitle className="text-right font-arabic text-blue-800">إدارة الطلبات ({orders.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -147,7 +180,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right font-arabic">رقم الطلب</TableHead>
-                  <TableHead className="text-right font-arabic">العميل</TableHead>
+                  <TableHead className="text-right font-arabic">العناصر</TableHead>
                   <TableHead className="text-right font-arabic">المبلغ الإجمالي</TableHead>
                   <TableHead className="text-right font-arabic">الحالة</TableHead>
                   <TableHead className="text-right font-arabic">التاريخ</TableHead>
@@ -157,17 +190,19 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
               <TableBody>
                 {orders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="font-medium font-arabic">#{order.id}</TableCell>
+                    <TableCell className="font-medium font-arabic">#{order.id.slice(0, 8)}</TableCell>
                     <TableCell>
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-blue-600" />
-                          <span className="font-arabic">{order.customer_name}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Phone className="h-3 w-3" />
-                          <span className="font-arabic">{order.customer_phone}</span>
-                        </div>
+                        {order.items.slice(0, 2).map((item, index) => (
+                          <div key={index} className="text-sm font-arabic">
+                            {item.product_name} × {item.quantity}
+                          </div>
+                        ))}
+                        {order.items.length > 2 && (
+                          <div className="text-xs text-gray-500 font-arabic">
+                            +{order.items.length - 2} منتج آخر
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="font-bold text-blue-800 font-arabic">
@@ -190,6 +225,17 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                           <Eye className="h-4 w-4 ml-2" />
                           عرض
                         </Button>
+                        {order.whatsapp_message && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openWhatsApp(order)}
+                            className="font-arabic"
+                          >
+                            <ExternalLink className="h-4 w-4 ml-2" />
+                            واتساب
+                          </Button>
+                        )}
                         {order.status === 'pending' && (
                           <Button
                             size="sm"
@@ -203,6 +249,13 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {orders.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      <div className="text-gray-500 font-arabic">لا توجد طلبات حتى الآن</div>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
@@ -213,44 +266,57 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
         <Card>
           <CardHeader>
             <CardTitle className="text-right font-arabic text-blue-800">
-              تفاصيل الطلب #{selectedOrder.id}
+              تفاصيل الطلب #{selectedOrder.id.slice(0, 8)}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <h3 className="font-semibold text-lg font-arabic text-blue-700">معلومات العميل</h3>
+                <h3 className="font-semibold text-lg font-arabic text-blue-700">تفاصيل الطلب</h3>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-blue-600" />
-                    <span className="font-arabic">{selectedOrder.customer_name}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-blue-600" />
-                    <span className="font-arabic">{selectedOrder.customer_phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-blue-600" />
-                    <span className="font-arabic">{selectedOrder.customer_address}</span>
+                  {selectedOrder.items.map((item, index) => (
+                    <div key={index} className="flex justify-between p-2 bg-gray-50 rounded">
+                      <span className="font-arabic">{item.product_name}</span>
+                      <div className="text-sm">
+                        <span className="font-arabic">{item.quantity} × {item.price} ريال</span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="border-t pt-2 font-bold">
+                    <div className="flex justify-between">
+                      <span className="font-arabic">المجموع الكلي:</span>
+                      <span className="font-arabic">{selectedOrder.total_amount} ريال</span>
+                    </div>
                   </div>
                 </div>
               </div>
               
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg font-arabic text-blue-700">تحديث الحالة</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   {(['pending', 'processing', 'shipped', 'delivered'] as const).map((status) => (
                     <Button
                       key={status}
                       size="sm"
                       variant={selectedOrder.status === status ? "default" : "outline"}
                       onClick={() => updateOrderStatus(selectedOrder.id, status)}
-                      className="font-arabic"
+                      className="font-arabic text-xs"
                     >
                       {getStatusBadge(status)}
                     </Button>
                   ))}
                 </div>
+                
+                {selectedOrder.whatsapp_message && (
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-sm font-arabic text-blue-700 mb-2">رسالة واتساب:</h4>
+                    <div className="bg-gray-50 p-3 rounded text-sm max-h-32 overflow-y-auto">
+                      <pre className="whitespace-pre-wrap font-arabic text-xs">
+                        {selectedOrder.whatsapp_message}
+                      </pre>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>

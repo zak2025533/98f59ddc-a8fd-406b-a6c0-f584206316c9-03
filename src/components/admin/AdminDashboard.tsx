@@ -32,17 +32,18 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
   const updateStats = async () => {
     try {
-      const [productsResult, announcementsResult, categoriesResult] = await Promise.all([
+      const [productsResult, announcementsResult, categoriesResult, ordersResult] = await Promise.all([
         supabase.from('products').select('id', { count: 'exact', head: true }),
         supabase.from('announcements').select('id', { count: 'exact', head: true }),
         supabase.from('categories').select('id', { count: 'exact', head: true }),
+        supabase.from('orders').select('id', { count: 'exact', head: true }),
       ]);
 
       setStats({
         products: productsResult.count || 0,
         announcements: announcementsResult.count || 0,
         categories: categoriesResult.count || 0,
-        orders: 0,
+        orders: ordersResult.count || 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
