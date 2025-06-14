@@ -1,12 +1,6 @@
 
 import { useEffect, useState } from 'react';
 
-// Fallback for web mode when Capacitor is not available
-const getCapacitorMock = () => ({
-  isNativePlatform: () => false,
-  getPlatform: () => 'web'
-});
-
 export const useNativeApp = () => {
   const [isNative, setIsNative] = useState(false);
   const [platform, setPlatform] = useState<string>('web');
@@ -24,9 +18,8 @@ export const useNativeApp = () => {
       } catch (error) {
         // Fallback to web mode if Capacitor is not available
         console.log('Capacitor not available, running in web mode');
-        const mockCapacitor = getCapacitorMock();
-        setIsNative(mockCapacitor.isNativePlatform());
-        setPlatform(mockCapacitor.getPlatform());
+        setIsNative(false);
+        setPlatform('web');
       }
     };
 
