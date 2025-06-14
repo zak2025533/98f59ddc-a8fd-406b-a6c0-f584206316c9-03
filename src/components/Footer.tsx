@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   Facebook, 
@@ -20,10 +19,10 @@ const Footer = () => {
   ];
 
   const categories = [
-    { name: "الكيك والتورت", href: "/category/cakes" },
-    { name: "الحلويات الشرقية", href: "/category/eastern-sweets" },
-    { name: "المشروبات", href: "/category/drinks" },
-    { name: "الآيس كريم", href: "/category/ice-cream" }
+    { name: "كيكات", href: "/category/cakes" },
+    { name: "ويفرات وشوكولاته", href: "/category/wafers-and-chocolate" },
+    { name: "مشروبات وعصائر", href: "/category/drinks-and-juices" },
+    { name: "حلوى ومليمات", href: "/category/candies" }
   ];
 
   const socialLinks = [
