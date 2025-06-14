@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell, BellOff } from "lucide-react";
+import { Bell, CheckCircle } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -20,17 +20,30 @@ const InternalNotificationManager = () => {
     <Card>
       <CardHeader>
         <CardTitle className="text-right font-arabic text-blue-800 flex items-center gap-2">
-          {isEnabled ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
+          <Bell className="h-5 w-5" />
           إدارة الإشعارات الداخلية
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* مفتاح التفعيل */}
+        {/* رسالة تأكيدية */}
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+          <CheckCircle className="h-5 w-5 text-green-600" />
+          <div>
+            <p className="text-green-800 font-arabic font-semibold">
+              الإشعارات الداخلية مفعلة تلقائياً
+            </p>
+            <p className="text-sm text-green-700 font-arabic">
+              جميع المستخدمين سيتلقون إشعارات داخل التطبيق عند إضافة منتجات أو إعلانات جديدة
+            </p>
+          </div>
+        </div>
+
+        {/* مفتاح التحكم الاختياري */}
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <Label className="font-arabic">تفعيل الإشعارات الداخلية</Label>
+            <Label className="font-arabic">تحكم في الإشعارات الداخلية</Label>
             <p className="text-sm text-muted-foreground font-arabic">
-              ستتلقى إشعارات داخل التطبيق عند إضافة منتجات أو إعلانات جديدة
+              يمكنك إيقاف أو تفعيل الإشعارات حسب الحاجة
             </p>
           </div>
           <Switch
@@ -41,29 +54,29 @@ const InternalNotificationManager = () => {
         </div>
 
         {/* زر الإشعار التجريبي */}
-        {isEnabled && (
-          <div className="flex gap-2">
-            <Button
-              onClick={sendTestNotification}
-              variant="outline"
-              className="font-arabic"
-            >
-              <Send className="h-4 w-4 ml-2" />
-              إرسال إشعار تجريبي
-            </Button>
-          </div>
-        )}
-
-        {/* معلومات الحالة */}
-        <div className="text-sm text-muted-foreground font-arabic">
-          <p><strong>حالة الإشعارات:</strong> {isEnabled ? 'مُفعّلة' : 'معطلة'}</p>
-          <p><strong>النوع:</strong> إشعارات داخلية</p>
+        <div className="flex gap-2">
+          <Button
+            onClick={sendTestNotification}
+            variant="outline"
+            className="font-arabic"
+          >
+            <Send className="h-4 w-4 ml-2" />
+            إرسال إشعار تجريبي
+          </Button>
         </div>
 
-        {/* رسالة توضيحية */}
+        {/* معلومات الحالة */}
+        <div className="text-sm text-muted-foreground font-arabic space-y-2">
+          <p><strong>حالة النظام:</strong> مفعل ويعمل تلقائياً</p>
+          <p><strong>النوع:</strong> إشعارات داخلية بدون أذونات</p>
+          <p><strong>التغطية:</strong> جميع المستخدمين</p>
+        </div>
+
+        {/* رسالة توضيحية محدثة */}
         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-700 font-arabic">
-            الإشعارات الداخلية تظهر داخل التطبيق فقط ولا تحتاج لأذونات خاصة من المتصفح.
+            الإشعارات الداخلية تعمل الآن تلقائياً لجميع المستخدمين ولا تحتاج لأذونات من المتصفح. 
+            سيتم إرسال إشعارات فورية داخل التطبيق عند إضافة منتجات أو إعلانات جديدة.
           </p>
         </div>
       </CardContent>

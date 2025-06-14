@@ -5,14 +5,21 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useInternalNotifications = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  // تفعيل الإشعارات افتراضياً لجميع المستخدمين
+  const [isEnabled, setIsEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const { toast: shadcnToast } = useToast();
 
   useEffect(() => {
-    // التحقق من حالة الإشعارات الداخلية المحفوظة
+    // تفعيل الإشعارات تلقائياً عند تحميل التطبيق
     const savedState = localStorage.getItem('internal_notifications_enabled');
-    setIsEnabled(savedState === 'true');
+    if (savedState === null) {
+      // إذا لم يتم تعيين حالة من قبل، فعّل الإشعارات تلقائياً
+      localStorage.setItem('internal_notifications_enabled', 'true');
+      setIsEnabled(true);
+    } else {
+      setIsEnabled(savedState === 'true');
+    }
   }, []);
 
   const enableInternalNotifications = () => {
@@ -92,19 +99,13 @@ export const useInternalNotifications = () => {
   };
 
   const sendNotificationForAnnouncement = (announcement: any) => {
-    if (!isEnabled) {
-      console.log('Internal notifications are disabled');
-      return;
-    }
-
-    // إرسال إشعار للإعلان الجديد
+    // إرسال الإشعار دائماً بدون التحقق من التفعيل
     toast.success("إعلان جديد!", {
       description: announcement.title,
       duration: 6000,
       action: {
         label: "عرض",
         onClick: () => {
-          // يمكن إضافة منطق للانتقال إلى الإعلان
           console.log("Viewing announcement:", announcement.id);
         },
       },
@@ -112,19 +113,13 @@ export const useInternalNotifications = () => {
   };
 
   const sendNotificationForProduct = (product: any) => {
-    if (!isEnabled) {
-      console.log('Internal notifications are disabled');
-      return;
-    }
-
-    // إرسال إشعار للمنتج الجديد
+    // إرسال الإشعار دائماً بدون التحقق من التفعيل
     toast.success("منتج جديد!", {
       description: `تم إضافة منتج جديد: ${product.name}`,
       duration: 6000,
       action: {
         label: "عرض",
         onClick: () => {
-          // يمكن إضافة منطق للانتقال إلى المنتج
           console.log("Viewing product:", product.id);
         },
       },
