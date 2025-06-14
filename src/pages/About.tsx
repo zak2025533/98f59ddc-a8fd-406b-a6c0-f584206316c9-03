@@ -1,0 +1,179 @@
+
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Users, Target, Award, Heart, Clock, MapPin } from "lucide-react";
+
+const About = () => {
+  const features = [
+    {
+      icon: Heart,
+      title: "جودة عالية",
+      description: "نستخدم أفضل المكونات لضمان طعم لا يُنسى"
+    },
+    {
+      icon: Clock,
+      title: "طازج دائماً",
+      description: "منتجاتنا محضرة يومياً بأيدي خبراء"
+    },
+    {
+      icon: Award,
+      title: "خبرة طويلة",
+      description: "أكثر من 10 سنوات في صناعة الحلويات"
+    },
+    {
+      icon: Users,
+      title: "خدمة عملاء ممتازة",
+      description: "فريق محترف لخدمتكم على مدار الساعة"
+    }
+  ];
+
+  const stats = [
+    { number: "10,000+", label: "عميل سعيد" },
+    { number: "500+", label: "منتج متنوع" },
+    { number: "15", label: "فرع في المملكة" },
+    { number: "24/7", label: "خدمة العملاء" }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <Badge variant="secondary" className="mb-4 font-arabic">
+            من نحن
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold text-blue-800 mb-6 font-arabic">
+            بلا حدود للحلويات
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 font-arabic max-w-3xl mx-auto">
+            متجر متخصص في صناعة أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي.
+            نسعى لتقديم تجربة مميزة لعملائنا الكرام في جميع أنحاء المملكة العربية السعودية.
+          </p>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+            {stats.map((stat, index) => (
+              <Card key={index} className="border-blue-200 bg-white/70 backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className="text-3xl font-bold text-blue-800 mb-2 font-arabic">
+                    {stat.number}
+                  </div>
+                  <div className="text-gray-600 font-arabic">
+                    {stat.label}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="py-16 px-4 bg-white/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12">
+            <Card className="border-blue-200 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-blue-800 font-arabic text-right">
+                  <Target className="h-6 w-6" />
+                  رؤيتنا
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 font-arabic text-right leading-relaxed">
+                  أن نكون الخيار الأول لمحبي الحلويات في المملكة العربية السعودية، ونساهم في نشر 
+                  ثقافة الحلويات العربية الأصيلة مع لمسة عصرية مبتكرة تواكب أذواق جميع الأجيال.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-orange-200 shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3 text-orange-800 font-arabic text-right">
+                  <Award className="h-6 w-6" />
+                  مهمتنا
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-700 font-arabic text-right leading-relaxed">
+                  تقديم حلويات ومشروبات عالية الجودة باستخدام أفضل المكونات الطبيعية، مع الحفاظ على 
+                  التراث العربي وإضافة الابتكار والإبداع لتلبية احتياجات وتطلعات عملائنا.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-blue-800 mb-4 font-arabic">
+              لماذا تختارنا؟
+            </h2>
+            <p className="text-gray-600 font-arabic">
+              نتميز بالعديد من المزايا التي تجعلنا الخيار الأمثل لك
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <Card key={index} className="border-purple-200 hover:shadow-lg transition-all duration-300 group">
+                  <CardContent className="p-6 text-center">
+                    <div className="mb-4 mx-auto w-16 h-16 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Icon className="h-8 w-8 text-purple-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2 font-arabic">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 font-arabic text-sm">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Info */}
+      <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-6 font-arabic">
+            تواصل معنا
+          </h2>
+          <p className="text-lg mb-8 font-arabic opacity-90">
+            نحن هنا لخدمتكم والإجابة على جميع استفساراتكم
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="flex items-center gap-3 justify-center">
+              <MapPin className="h-5 w-5" />
+              <span className="font-arabic">الرياض، المملكة العربية السعودية</span>
+            </div>
+            <div className="flex items-center gap-3 justify-center">
+              <Clock className="h-5 w-5" />
+              <span className="font-arabic">24/7 خدمة العملاء</span>
+            </div>
+            <div className="flex items-center gap-3 justify-center">
+              <Users className="h-5 w-5" />
+              <span className="font-arabic">فريق محترف ومتخصص</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default About;

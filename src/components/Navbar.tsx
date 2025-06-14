@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Menu, X, ShoppingCart, Heart, User, Home, Grid3X3, Phone } from "lucide-react";
+import { Menu, X, ShoppingCart, Heart, User, Home, Grid3X3, Phone, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
@@ -19,7 +19,8 @@ const Navbar = () => {
   const navItems = [
     { icon: Home, label: "الرئيسية", href: "/" },
     { icon: Grid3X3, label: "الأقسام", href: "#categories" },
-    { icon: Phone, label: "اتصل بنا", href: "#contact" },
+    { icon: Users, label: "من نحن", href: "/about" },
+    { icon: Phone, label: "اتصل بنا", href: "/contact" },
   ];
 
   return (
