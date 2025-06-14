@@ -1,20 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bell, CheckCircle } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { useInternalNotifications } from "@/hooks/useInternalNotifications";
 
 const InternalNotificationManager = () => {
-  const {
-    isEnabled,
-    loading,
-    enableInternalNotifications,
-    disableInternalNotifications,
-    sendTestNotification,
-  } = useInternalNotifications();
+  const { sendTestNotification } = useInternalNotifications();
 
   return (
     <Card>
@@ -36,21 +28,6 @@ const InternalNotificationManager = () => {
               جميع المستخدمين سيتلقون إشعارات داخل التطبيق عند إضافة منتجات أو إعلانات جديدة
             </p>
           </div>
-        </div>
-
-        {/* مفتاح التحكم الاختياري */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <Label className="font-arabic">تحكم في الإشعارات الداخلية</Label>
-            <p className="text-sm text-muted-foreground font-arabic">
-              يمكنك إيقاف أو تفعيل الإشعارات حسب الحاجة
-            </p>
-          </div>
-          <Switch
-            checked={isEnabled}
-            onCheckedChange={isEnabled ? disableInternalNotifications : enableInternalNotifications}
-            disabled={loading}
-          />
         </div>
 
         {/* زر الإشعار التجريبي */}

@@ -2,18 +2,15 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Package, 
   Megaphone, 
   ShoppingCart, 
   Users, 
-  TrendingUp, 
   LogOut,
   Bell,
-  BarChart3,
-  Settings
+  BarChart3
 } from "lucide-react";
 import ProductManagement from "./ProductManagement";
 import AnnouncementsManagement from "./AnnouncementsManagement";
@@ -21,7 +18,6 @@ import CategoryManagement from "./CategoryManagement";
 import OrdersManagement from "./OrdersManagement";
 import AnalyticsSection from "./AnalyticsSection";
 import InternalNotificationManager from "./InternalNotificationManager";
-import NotificationTester from "./NotificationTester";
 import { supabase } from "@/integrations/supabase/client";
 
 interface AdminDashboardProps {
@@ -48,7 +44,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
         products: productsResult.count || 0,
         announcements: announcementsResult.count || 0,
         categories: categoriesResult.count || 0,
-        orders: 0, // سيتم تحديثه عند إضافة جدول الطلبات
+        orders: 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -140,7 +136,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="products" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-7 bg-white shadow-sm">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-white shadow-sm">
             <TabsTrigger value="products" className="font-arabic">
               <Package className="h-4 w-4 ml-2" />
               المنتجات
@@ -164,10 +160,6 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
             <TabsTrigger value="notifications" className="font-arabic">
               <Bell className="h-4 w-4 ml-2" />
               الإشعارات
-            </TabsTrigger>
-            <TabsTrigger value="testing" className="font-arabic">
-              <Settings className="h-4 w-4 ml-2" />
-              الاختبارات
             </TabsTrigger>
           </TabsList>
 
@@ -193,10 +185,6 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
           <TabsContent value="notifications">
             <InternalNotificationManager />
-          </TabsContent>
-
-          <TabsContent value="testing">
-            <NotificationTester />
           </TabsContent>
         </Tabs>
       </div>
