@@ -80,37 +80,60 @@ const NotificationManager = () => {
 
     try {
       // تسجيل service worker
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      let registration;
+      try {
+        registration = await navigator.serviceWorker.register('/sw.js', {
+          scope: '/'
+        });
+        console.log('Service Worker registered successfully:', registration);
+      } catch (swError) {
+        console.error('Service Worker registration failed:', swError);
+        throw new Error('فشل في تسجيل Service Worker');
+      }
       
       // انتظار تحميل service worker
-      await new Promise((resolve) => {
-        if (registration.installing) {
+      if (registration.installing) {
+        await new Promise((resolve) => {
           registration.installing.addEventListener('statechange', function() {
             if (this.state === 'activated') {
               resolve(void 0);
             }
           });
-        } else {
-          resolve(void 0);
-        }
-      });
+        });
+      }
 
-      // إنشاء اشتراك push
+      // التحقق من وجود service worker نشط
+      if (!registration.active) {
+        throw new Error('Service Worker ليس نشطًا');
+      }
+
+      // إنشاء اشتراك push مع مفتاح VAPID صالح
+      const vapidKey = 'BEl62iUYgUivxIkv69yViEuiBIa40HI_8U8-L5YMOFYZzkfRGh4NPSe_oBuYJKcOgGYF7I1a7dCt7g_m1l2XXZE';
+      
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: 'BEl62iUYgUivxIkv69yViEuiBIa40HI_8U8-L5YMOFYZzkfRGh4NPSe_oBuYJKcOgGYF7I1a7dCt7g_m1l2XXZE'
+        applicationServerKey: vapidKey
       });
 
+      console.log('Push subscription created:', subscription);
+
       // حفظ الاشتراك في قاعدة البيانات
+      const subscriptionData = {
+        endpoint: subscription.endpoint,
+        keys: subscription.toJSON().keys,
+        user_agent: navigator.userAgent
+      };
+
+      console.log('Saving subscription to database:', subscriptionData);
+
       const { error } = await supabase
         .from('push_subscriptions')
-        .insert({
-          endpoint: subscription.endpoint,
-          keys: subscription.toJSON().keys,
-          user_agent: navigator.userAgent
-        });
+        .insert(subscriptionData);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
 
       setIsSubscribed(true);
       toast({
@@ -122,7 +145,7 @@ const NotificationManager = () => {
       console.error('Error subscribing to notifications:', error);
       toast({
         title: "خطأ في الاشتراك",
-        description: "تعذر الاشتراك في الإشعارات",
+        description: error.message || "تعذر الاشتراك في الإشعارات",
         variant: "destructive",
       });
     } finally {
@@ -171,6 +194,7 @@ const NotificationManager = () => {
 
   const sendTestNotification = async () => {
     try {
+      console.log('Sending test notification...');
       const { error } = await supabase.functions.invoke('send-push-notification', {
         body: {
           title: 'إشعار تجريبي',
@@ -179,7 +203,10 @@ const NotificationManager = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Test notification error:', error);
+        throw error;
+      }
 
       toast({
         title: "تم الإرسال",

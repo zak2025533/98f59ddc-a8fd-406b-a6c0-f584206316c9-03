@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -126,11 +125,38 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
     }
   };
 
-  const handleDialogSuccess = () => {
+  const sendNotificationForAnnouncement = async (announcement: any) => {
+    try {
+      console.log('Sending notification for announcement:', announcement);
+      const { error } = await supabase.functions.invoke('send-push-notification', {
+        body: {
+          title: 'إعلان جديد!',
+          body: announcement.title,
+          type: 'announcement',
+          related_id: announcement.id
+        }
+      });
+
+      if (error) {
+        console.error('Error sending notification:', error);
+      } else {
+        console.log('Notification sent successfully');
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
+  const handleDialogSuccess = async (newAnnouncement?: any) => {
     fetchAnnouncements();
     onStatsUpdate();
     setDialogOpen(false);
     setEditingAnnouncement(null);
+
+    // إرسال إشعار للإعلان الجديد فقط
+    if (newAnnouncement && !editingAnnouncement) {
+      await sendNotificationForAnnouncement(newAnnouncement);
+    }
   };
 
   const openEditDialog = (announcement: Announcement) => {
