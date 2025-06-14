@@ -1,18 +1,33 @@
 
 import { useEffect, useState } from 'react';
-import { Capacitor } from '@capacitor/core';
+
+// Fallback for web mode when Capacitor is not available
+const getCapacitorMock = () => ({
+  isNativePlatform: () => false,
+  getPlatform: () => 'web'
+});
 
 export const useNativeApp = () => {
   const [isNative, setIsNative] = useState(false);
   const [platform, setPlatform] = useState<string>('web');
 
   useEffect(() => {
-    const checkPlatform = () => {
-      const isNativeApp = Capacitor.isNativePlatform();
-      const currentPlatform = Capacitor.getPlatform();
-      
-      setIsNative(isNativeApp);
-      setPlatform(currentPlatform);
+    const checkPlatform = async () => {
+      try {
+        // Try to dynamically import Capacitor
+        const { Capacitor } = await import('@capacitor/core');
+        const isNativeApp = Capacitor.isNativePlatform();
+        const currentPlatform = Capacitor.getPlatform();
+        
+        setIsNative(isNativeApp);
+        setPlatform(currentPlatform);
+      } catch (error) {
+        // Fallback to web mode if Capacitor is not available
+        console.log('Capacitor not available, running in web mode');
+        const mockCapacitor = getCapacitorMock();
+        setIsNative(mockCapacitor.isNativePlatform());
+        setPlatform(mockCapacitor.getPlatform());
+      }
     };
 
     checkPlatform();
