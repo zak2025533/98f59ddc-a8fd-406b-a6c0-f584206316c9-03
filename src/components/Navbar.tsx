@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Menu, Search, ShoppingCart, Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import CartSheet from "./CartSheet";
-import FavoritesSheet from "./FavoritesSheet";
+import { CartSheet } from "./CartSheet";
+import { FavoritesSheet } from "./FavoritesSheet";
 import NotificationSubscription from "./NotificationSubscription";
 
 const Navbar = () => {
