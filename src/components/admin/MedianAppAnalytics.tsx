@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +21,13 @@ interface MedianAppStats {
   todayDownloads: number;
   weeklyDownloads: number;
   monthlyDownloads: number;
+}
+
+// Type for device_info JSON structure
+interface DeviceInfo {
+  median_action?: string;
+  platform?: string;
+  [key: string]: any;
 }
 
 const MedianAppAnalytics = () => {
@@ -57,49 +63,57 @@ const MedianAppAnalytics = () => {
       }
 
       // حساب الإحصائيات
-      const totalDownloads = analytics?.filter(a => 
-        a.device_info?.median_action === 'download_click'
-      ).length || 0;
+      const totalDownloads = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.median_action === 'download_click';
+      }).length || 0;
 
-      const totalInstalls = analytics?.filter(a => 
-        a.device_info?.median_action === 'install_attempt'
-      ).length || 0;
+      const totalInstalls = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.median_action === 'install_attempt';
+      }).length || 0;
 
       // حساب المنصات
-      const androidUsers = analytics?.filter(a => 
-        a.device_info?.platform === 'android'
-      ).length || 0;
+      const androidUsers = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.platform === 'android';
+      }).length || 0;
 
-      const iosUsers = analytics?.filter(a => 
-        a.device_info?.platform === 'ios'
-      ).length || 0;
+      const iosUsers = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.platform === 'ios';
+      }).length || 0;
 
-      const webUsers = analytics?.filter(a => 
-        a.device_info?.platform === 'web'
-      ).length || 0;
+      const webUsers = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.platform === 'web';
+      }).length || 0;
 
       // حساب تحميلات اليوم
       const today = new Date().toISOString().split('T')[0];
-      const todayDownloads = analytics?.filter(a => 
-        a.device_info?.median_action === 'download_click' && 
-        a.created_at.startsWith(today)
-      ).length || 0;
+      const todayDownloads = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.median_action === 'download_click' && 
+               a.created_at.startsWith(today);
+      }).length || 0;
 
       // حساب تحميلات الأسبوع
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
-      const weeklyDownloads = analytics?.filter(a => 
-        a.device_info?.median_action === 'download_click' && 
-        new Date(a.created_at) >= weekAgo
-      ).length || 0;
+      const weeklyDownloads = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.median_action === 'download_click' && 
+               new Date(a.created_at) >= weekAgo;
+      }).length || 0;
 
       // حساب تحميلات الشهر
       const monthAgo = new Date();
       monthAgo.setDate(monthAgo.getDate() - 30);
-      const monthlyDownloads = analytics?.filter(a => 
-        a.device_info?.median_action === 'download_click' && 
-        new Date(a.created_at) >= monthAgo
-      ).length || 0;
+      const monthlyDownloads = analytics?.filter(a => {
+        const deviceInfo = a.device_info as DeviceInfo;
+        return deviceInfo?.median_action === 'download_click' && 
+               new Date(a.created_at) >= monthAgo;
+      }).length || 0;
 
       setStats({
         totalDownloads,
