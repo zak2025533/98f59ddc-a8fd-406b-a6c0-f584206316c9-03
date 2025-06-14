@@ -10,7 +10,8 @@ import {
   Users, 
   LogOut,
   BarChart3,
-  Eye
+  Eye,
+  Smartphone
 } from "lucide-react";
 import ProductManagement from "./ProductManagement";
 import AnnouncementsManagement from "./AnnouncementsManagement";
@@ -18,6 +19,7 @@ import CategoryManagement from "./CategoryManagement";
 import OrdersManagement from "./OrdersManagement";
 import AnalyticsSection from "./AnalyticsSection";
 import VisitorAnalytics from "./VisitorAnalytics";
+import MedianAppAnalytics from "./MedianAppAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 
 interface AdminDashboardProps {
@@ -137,7 +139,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
         {/* Main Content Tabs - محسّن للموبايل */}
         <Tabs defaultValue="products" className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 bg-white shadow-sm text-xs sm:text-sm">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 bg-white shadow-sm text-xs sm:text-sm">
             <TabsTrigger value="products" className="font-arabic flex flex-col sm:flex-row items-center p-2">
               <Package className="h-3 w-3 sm:h-4 sm:w-4 mb-1 sm:mb-0 sm:ml-2" />
               <span className="hidden sm:inline">المنتجات</span>
@@ -168,6 +170,11 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
               <span className="hidden sm:inline">إحصائيات الزوار</span>
               <span className="sm:hidden">زوار</span>
             </TabsTrigger>
+            <TabsTrigger value="median-app" className="font-arabic flex flex-col sm:flex-row items-center p-2">
+              <Smartphone className="h-3 w-3 sm:h-4 sm:w-4 mb-1 sm:mb-0 sm:ml-2" />
+              <span className="hidden sm:inline">تطبيق Median</span>
+              <span className="sm:hidden">تطبيق</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="products">
@@ -192,6 +199,10 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
           <TabsContent value="visitors">
             <VisitorAnalytics />
+          </TabsContent>
+
+          <TabsContent value="median-app">
+            <MedianAppAnalytics />
           </TabsContent>
         </Tabs>
       </div>
