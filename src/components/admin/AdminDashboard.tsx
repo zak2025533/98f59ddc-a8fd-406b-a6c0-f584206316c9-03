@@ -89,7 +89,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
           </TabsContent>
 
           <TabsContent value="orders">
-            <OrdersManagement />
+            <OrdersManagement onStatsUpdate={handleStatsUpdate} />
           </TabsContent>
 
           <TabsContent value="notifications">

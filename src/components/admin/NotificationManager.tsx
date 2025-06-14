@@ -31,9 +31,11 @@ const NotificationManager = () => {
     if (!('serviceWorker' in navigator)) return;
 
     try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      setIsSubscribed(!!subscription);
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        const subscription = await registration.pushManager.getSubscription();
+        setIsSubscribed(!!subscription);
+      }
     } catch (error) {
       console.error('Error checking subscription:', error);
     }
@@ -79,7 +81,19 @@ const NotificationManager = () => {
     try {
       // تسجيل service worker
       const registration = await navigator.serviceWorker.register('/sw.js');
-      await registration.ready;
+      
+      // انتظار تحميل service worker
+      await new Promise((resolve) => {
+        if (registration.installing) {
+          registration.installing.addEventListener('statechange', function() {
+            if (this.state === 'activated') {
+              resolve(void 0);
+            }
+          });
+        } else {
+          resolve(void 0);
+        }
+      });
 
       // إنشاء اشتراك push
       const subscription = await registration.pushManager.subscribe({
@@ -120,19 +134,21 @@ const NotificationManager = () => {
     setLoading(true);
 
     try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (registration) {
+        const subscription = await registration.pushManager.getSubscription();
 
-      if (subscription) {
-        await subscription.unsubscribe();
+        if (subscription) {
+          await subscription.unsubscribe();
 
-        // إلغاء تفعيل الاشتراك في قاعدة البيانات
-        const { error } = await supabase
-          .from('push_subscriptions')
-          .update({ is_active: false })
-          .eq('endpoint', subscription.endpoint);
+          // إلغاء تفعيل الاشتراك في قاعدة البيانات
+          const { error } = await supabase
+            .from('push_subscriptions')
+            .update({ is_active: false })
+            .eq('endpoint', subscription.endpoint);
 
-        if (error) throw error;
+          if (error) throw error;
+        }
       }
 
       setIsSubscribed(false);
