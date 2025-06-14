@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { 
   Facebook, 
@@ -32,9 +33,9 @@ const Footer = () => {
   ];
 
   const contactInfo = [
-    { icon: Phone, text: "+966 11 234 5678" },
-    { icon: Mail, text: "info@unlimited-sweets.com" },
-    { icon: MapPin, text: "الرياض - حي النرجس" },
+    { icon: Phone, text: "770006120" },
+    { icon: Mail, text: "motahr4742@gmail.com" },
+    { icon: MapPin, text: "اليمن - محافظة إب" },
     { icon: Clock, text: "السبت - الخميس: 8 ص - 12 م" }
   ];
 
@@ -145,13 +146,11 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-blue-200 text-sm font-arabic text-center md:text-right">
-              © 2024 بلا حدود للحلويات. جميع الحقوق محفوظة.
+              بلا حدود للحلويات
             </div>
             
-            <div className="flex items-center space-x-1 text-blue-200 text-sm">
-              <span className="font-arabic">صُنع بـ</span>
-              <Heart className="h-4 w-4 text-red-400 fill-current" />
-              <span className="font-arabic">في المملكة العربية السعودية</span>
+            <div className="text-blue-200 text-sm font-arabic text-center">
+              تصميم وتطوير المهندس: زكريا نبيل الحاج
             </div>
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,19 +60,19 @@ const Contact = () => {
     {
       icon: Phone,
       title: "رقم الهاتف",
-      details: ["+966 11 234 5678", "+966 50 123 4567"],
+      details: ["770006120"],
       color: "text-green-600 bg-green-50"
     },
     {
       icon: Mail,
       title: "البريد الإلكتروني",
-      details: ["info@unlimited-sweets.com", "orders@unlimited-sweets.com"],
+      details: ["motahr4742@gmail.com"],
       color: "text-blue-600 bg-blue-50"
     },
     {
       icon: MapPin,
       title: "العنوان",
-      details: ["الرياض - حي النرجس", "شارع الأمير سلطان"],
+      details: ["اليمن - محافظة إب"],
       color: "text-purple-600 bg-purple-50"
     },
     {
@@ -214,7 +213,7 @@ const Contact = () => {
                     <div className="text-center">
                       <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                       <p className="text-gray-600 font-arabic">خريطة الموقع</p>
-                      <p className="text-sm text-gray-500 font-arabic">الرياض - حي النرجس</p>
+                      <p className="text-sm text-gray-500 font-arabic">اليمن - محافظة إب</p>
                     </div>
                   </div>
                 </CardContent>
