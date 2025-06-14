@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
-import NotificationSubscription from "./NotificationSubscription";
 
 const Navbar = () => {
   return (
@@ -28,8 +27,6 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4 space-x-reverse">
-            <NotificationSubscription />
-            
             <Button variant="ghost" size="sm">
               <Search className="h-5 w-5" />
             </Button>
