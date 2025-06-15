@@ -18,7 +18,7 @@ const navItems = [
 const Navbar = () => {
   const { isNative } = useNativeApp();
 
-  const mobileMenuItemClasses = "flex w-full items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-lg py-3 px-4 rounded-lg font-semibold transition-colors justify-start h-auto";
+  const mobileMenuItemClasses = "flex w-full items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-base py-3 px-4 rounded-lg font-semibold transition-colors justify-start h-auto";
   const mobileMenuIconClasses = "h-6 w-6 text-blue-600 !ml-0";
 
   return (
@@ -73,7 +73,7 @@ const Navbar = () => {
                         <a 
                           key={item.name}
                           href={item.href} 
-                          className="flex items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-lg py-3 px-4 rounded-lg font-semibold transition-colors"
+                          className="flex items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-base py-3 px-4 rounded-lg font-semibold transition-colors"
                         >
                           <Icon className="h-6 w-6 text-blue-600" />
                           <span>{item.name}</span>
