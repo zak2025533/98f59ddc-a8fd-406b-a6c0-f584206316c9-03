@@ -18,7 +18,8 @@ export const generateOrderText = (cartItems: any[], total: number) => {
 };
 
 export const openWhatsApp = (orderText: string) => {
-  const whatsappNumber = "967777777777"; // Replace with actual number
+  // رقم الواتساب الصحيح لإكمال الطلبات
+  const whatsappNumber = "967770006120"; // تم إرجاع الرقم الصحيح بدل الوهمي
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderText)}`;
   window.open(whatsappUrl, '_blank');
 };
