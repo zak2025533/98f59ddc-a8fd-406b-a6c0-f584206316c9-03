@@ -1,10 +1,10 @@
-
 import { Menu, Search, ShoppingCart, Heart, Home, LayoutGrid, Info, MessageCircle, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
 import { useNativeApp } from "@/hooks/useNativeApp";
+import SearchDialog from "./SearchDialog";
 
 const navItems = [
     { name: "الرئيسية", href: "/", icon: Home },
@@ -46,9 +46,7 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
-            <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/20">
-              <Search className="h-5 w-5" />
-            </Button>
+            <SearchDialog />
             
             <FavoritesSheet />
             

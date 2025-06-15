@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +10,7 @@ import CategoryLoading from "@/components/category/CategoryLoading";
 import CategoryNotFound from "@/components/category/CategoryNotFound";
 import CategoryHeader from "@/components/category/CategoryHeader";
 import ProductsGrid from "@/components/category/ProductsGrid";
+import AllCategories from "@/components/category/AllCategories";
 
 interface Product {
   id: string;
@@ -39,6 +39,8 @@ const CategoryPage = () => {
   useEffect(() => {
     if (categorySlug) {
       fetchCategoryAndProducts();
+    } else {
+      setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categorySlug]);
@@ -88,6 +90,16 @@ const CategoryPage = () => {
       addToFavorites(productId);
     }
   };
+
+  if (!categorySlug) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <SimpleNavbar />
+        <AllCategories />
+        <SimpleFooter />
+      </div>
+    );
+  }
 
   if (loading) {
     return <CategoryLoading />;
