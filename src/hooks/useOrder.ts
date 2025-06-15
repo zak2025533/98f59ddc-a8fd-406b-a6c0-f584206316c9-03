@@ -1,3 +1,4 @@
+
 import { useCart } from "@/hooks/useCart";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,13 +15,14 @@ export const useOrder = () => {
 
   const generateInvoiceMessage = (
     deliveryInfo?: DeliveryInfo,
-    orderDetails?: { createdAt: string }
+    orderDetails?: { invoiceNumber: number; createdAt: string }
   ) => {
     let message = "═══════════════════════════\n";
     message += "🍬 *بـــلا حــدود للحــلــويــات* 🍬\n";
     message += "═══════════════════════════\n\n";
     
     if (orderDetails) {
+      message += `🧾 *فاتورة رقم: #${orderDetails.invoiceNumber}*\n`;
       message += `🗓️ *التاريخ: ${new Date(orderDetails.createdAt).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short'})}*\n\n`;
     }
 
@@ -163,6 +165,7 @@ export const useOrder = () => {
     }
 
     const message = generateInvoiceMessage(deliveryInfo, {
+        invoiceNumber: order.invoice_number,
         createdAt: order.created_at,
     });
     
