@@ -1,3 +1,4 @@
+
 import { Menu, Search, ShoppingCart, Heart, Home, LayoutGrid, Info, MessageCircle, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -17,6 +18,9 @@ const navItems = [
 const Navbar = () => {
   const { isNative } = useNativeApp();
 
+  const mobileMenuItemClasses = "flex w-full items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-lg py-3 px-4 rounded-lg font-semibold transition-colors justify-start h-auto";
+  const mobileMenuIconClasses = "h-6 w-6 text-blue-600 !ml-0";
+
   return (
     <nav className={`bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +28,7 @@ const Navbar = () => {
           {/* Logo */}
           <a href="/" className="flex-shrink-0 flex items-center space-x-2 rtl:space-x-reverse">
             <img src="/lovable-uploads/420dd569-71cd-4e6b-9d6a-946abecbc0e9.png" alt="بلا حدود للحلويات" className="h-10 w-10 hidden sm:block" />
-            <h1 className="text-2xl font-bold text-white font-arabic">بلا حدود للحلويات</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-white font-arabic">بلا حدود للحلويات</h1>
           </a>
 
           {/* Desktop Navigation */}
@@ -48,9 +52,10 @@ const Navbar = () => {
           <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
             <SearchDialog />
             
-            <FavoritesSheet />
-            
-            <CartSheet />
+            <div className="hidden md:flex items-center space-x-2 space-x-reverse">
+              <FavoritesSheet />
+              <CartSheet />
+            </div>
 
             {/* Mobile menu button */}
             <div className="md:hidden">
@@ -75,6 +80,9 @@ const Navbar = () => {
                         </a>
                       );
                     })}
+                    <div className="border-t my-2 -mx-6" />
+                    <FavoritesSheet triggerClassName={mobileMenuItemClasses} iconClassName={mobileMenuIconClasses} />
+                    <CartSheet triggerClassName={mobileMenuItemClasses} iconClassName={mobileMenuIconClasses} />
                   </nav>
                 </SheetContent>
               </Sheet>

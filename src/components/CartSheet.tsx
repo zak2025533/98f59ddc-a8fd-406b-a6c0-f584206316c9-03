@@ -11,8 +11,14 @@ import { CartHeader } from "./cart/CartHeader";
 import { EmptyCart } from "./cart/EmptyCart";
 import { CartItemCard } from "./cart/CartItemCard";
 import { CartSummary } from "./cart/CartSummary";
+import { cn } from "@/lib/utils";
 
-export const CartSheet = () => {
+interface CartSheetProps {
+  triggerClassName?: string;
+  iconClassName?: string;
+}
+
+export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) => {
   const { cartItems, cartCount, total, updateQuantity, removeFromCart, clearCart } = useCart();
   const { handleOrderWithDeliveryInfo } = useOrder();
   const [showDeliveryDialog, setShowDeliveryDialog] = useState(false);
@@ -27,8 +33,8 @@ export const CartSheet = () => {
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="sm" className="relative h-12 px-4 text-white hover:bg-white/20 font-arabic">
-            <ShoppingCart className="h-5 w-5 ml-2" />
+          <Button variant="ghost" size="sm" className={cn("relative h-12 px-4 text-white hover:bg-white/20 font-arabic", triggerClassName)}>
+            <ShoppingCart className={cn("h-5 w-5 ml-2", iconClassName)} />
             سلة التسوق
             {cartCount > 0 && (
               <Badge className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-yellow-400 text-blue-900 font-bold">

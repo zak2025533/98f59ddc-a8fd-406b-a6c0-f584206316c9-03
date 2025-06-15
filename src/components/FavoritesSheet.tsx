@@ -5,16 +5,22 @@ import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useCart } from "@/hooks/useCart";
+import { cn } from "@/lib/utils";
 
-export const FavoritesSheet = () => {
+interface FavoritesSheetProps {
+  triggerClassName?: string;
+  iconClassName?: string;
+}
+
+export const FavoritesSheet = ({ triggerClassName, iconClassName }: FavoritesSheetProps) => {
   const { favorites, favoriteCount, removeFromFavorites } = useFavorites();
   const { addToCart } = useCart();
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="sm" className="relative h-12 px-4 text-white hover:bg-white/20 font-arabic">
-          <Heart className="h-5 w-5 ml-2" />
+        <Button variant="ghost" size="sm" className={cn("relative h-12 px-4 text-white hover:bg-white/20 font-arabic", triggerClassName)}>
+          <Heart className={cn("h-5 w-5 ml-2", iconClassName)} />
           المفضلة
           {favoriteCount > 0 && (
             <Badge className="absolute -top-1 -right-1 h-6 w-6 rounded-full p-0 flex items-center justify-center text-xs bg-yellow-400 text-blue-900 font-bold">
