@@ -10,14 +10,22 @@ export interface DeliveryInfo {
 }
 
 export const useOrder = () => {
-  const { cartItems, total } = useCart();
+  const { cartItems, total, clearCart } = useCart();
   const { toast } = useToast();
 
-  const generateInvoiceMessage = (deliveryInfo?: DeliveryInfo) => {
+  const generateInvoiceMessage = (
+    deliveryInfo?: DeliveryInfo,
+    orderDetails?: { invoiceNumber: number; createdAt: string }
+  ) => {
     let message = "═══════════════════════════\n";
     message += "🍬 *بـــلا حــدود للحــلــويــات* 🍬\n";
     message += "═══════════════════════════\n\n";
     
+    if (orderDetails) {
+      message += `🧾 *فاتورة رقم: #${orderDetails.invoiceNumber}*\n`;
+      message += `🗓️ *التاريخ: ${new Date(orderDetails.createdAt).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short'})}*\n\n`;
+    }
+
     message += "📋 *تفاصيل طلبكم الكريم*\n";
     message += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n\n";
 
@@ -39,7 +47,7 @@ export const useOrder = () => {
     message += "📍 *معلومات التوصيل:*\n";
     message += "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n";
     
-    if (deliveryInfo) {
+    if (deliveryInfo && (deliveryInfo.fullAddress || deliveryInfo.phoneNumber || deliveryInfo.recipientName)) {
       message += `🏠 العنوان الكامل: *${deliveryInfo.fullAddress || '_لم يتم تحديده_'}*\n`;
       message += `📱 رقم الهاتف: *${deliveryInfo.phoneNumber || '_لم يتم تحديده_'}*\n`;
       message += `👤 اسم المستلم: *${deliveryInfo.recipientName || '_لم يتم تحديده_'}*\n\n`;
@@ -74,18 +82,16 @@ export const useOrder = () => {
     return message;
   };
 
-  const saveOrderToDatabase = async (whatsappMessage: string, deliveryInfo?: DeliveryInfo) => {
+  const saveOrderToDatabase = async (deliveryInfo?: DeliveryInfo) => {
     try {
       const sessionId = localStorage.getItem('session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
       
-      // حفظ الطلب الرئيسي
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
           session_id: sessionId,
           total_amount: total,
           status: 'pending',
-          whatsapp_message: whatsappMessage,
           customer_name: deliveryInfo?.recipientName || null,
           customer_phone: deliveryInfo?.phoneNumber || null,
           customer_address: deliveryInfo?.fullAddress || null
@@ -95,7 +101,6 @@ export const useOrder = () => {
 
       if (orderError) throw orderError;
 
-      // حفظ عناصر الطلب
       const orderItems = cartItems.map(item => ({
         order_id: order.id,
         product_id: item.product_id,
@@ -113,11 +118,11 @@ export const useOrder = () => {
       console.log('تم حفظ الطلب بنجاح:', order.id);
       
       toast({
-        title: "تم حفظ الطلب",
-        description: "تم حفظ طلبك بنجاح في النظام",
+        title: "تم إنشاء الطلب",
+        description: "تم إنشاء طلبك بنجاح وجاري إعداد الفاتورة",
       });
 
-      return order.id;
+      return order;
     } catch (error) {
       console.error('خطأ في حفظ الطلب:', error);
       toast({
@@ -125,16 +130,49 @@ export const useOrder = () => {
         description: "فشل في حفظ الطلب",
         variant: "destructive",
       });
+      return null;
+    }
+  };
+
+  const updateOrderWithMessage = async (orderId: string, message: string) => {
+    try {
+        const { error } = await supabase
+            .from('orders')
+            .update({ whatsapp_message: message })
+            .eq('id', orderId);
+
+        if (error) throw error;
+    } catch (error) {
+        console.error('خطأ في تحديث الطلب بالرسالة:', error);
+        toast({
+            title: "خطأ",
+            description: "فشل في تحديث رسالة الطلب",
+            variant: "destructive",
+        });
     }
   };
 
   const handleOrderWithDeliveryInfo = async (deliveryInfo: DeliveryInfo) => {
-    const message = generateInvoiceMessage(deliveryInfo);
+    const order = await saveOrderToDatabase(deliveryInfo);
+
+    if (!order) {
+      toast({
+        title: "خطأ في الطلب",
+        description: "لم نتمكن من إنشاء طلبك. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const message = generateInvoiceMessage(deliveryInfo, {
+        invoiceNumber: order.invoice_number,
+        createdAt: order.created_at,
+    });
     
-    // حفظ الطلب في قاعدة البيانات أولاً
-    await saveOrderToDatabase(message, deliveryInfo);
+    await updateOrderWithMessage(order.id, message);
     
-    // فتح واتساب
+    await clearCart();
+    
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/967715833246?text=${encodedMessage}`, '_blank');
   };
