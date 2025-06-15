@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,6 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface Order {
   id: string;
-  invoice_number: number;
   customer_name: string | null;
   customer_phone: string | null;
   customer_address: string | null;
@@ -51,7 +49,6 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
         .from('orders')
         .select(`
           id,
-          invoice_number,
           customer_name,
           customer_phone,
           customer_address,
@@ -72,7 +69,6 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
 
       const formattedOrders: Order[] = (ordersData || []).map(order => ({
         id: order.id,
-        invoice_number: order.invoice_number,
         customer_name: order.customer_name,
         customer_phone: order.customer_phone,
         customer_address: order.customer_address,
@@ -213,7 +209,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-right font-arabic">رقم الفاتورة</TableHead>
+                  <TableHead className="text-right font-arabic">رقم الطلب</TableHead>
                   <TableHead className="text-right font-arabic">بيانات العميل</TableHead>
                   <TableHead className="text-right font-arabic">العناصر</TableHead>
                   <TableHead className="text-right font-arabic">المبلغ الإجمالي</TableHead>
@@ -225,7 +221,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
               <TableBody>
                 {orders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="font-medium font-arabic">#{order.invoice_number}</TableCell>
+                    <TableCell className="font-medium font-arabic">#{order.id.substring(0, 8)}</TableCell>
                     <TableCell>
                       <div className="space-y-1 text-sm">
                         {order.customer_name && (
@@ -323,7 +319,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
                                 تأكيد حذف الطلب
                               </AlertDialogTitle>
                               <AlertDialogDescription className="text-right font-arabic">
-                                هل أنت متأكد من حذف الطلب #{order.invoice_number}؟ لا يمكن التراجع عن هذا الإجراء.
+                                هل أنت متأكد من حذف الطلب #{order.id.substring(0, 8)}؟ لا يمكن التراجع عن هذا الإجراء.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -358,7 +354,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
         <Card>
           <CardHeader>
             <CardTitle className="text-right font-arabic text-blue-800">
-              تفاصيل الطلب #{selectedOrder.invoice_number}
+              تفاصيل الطلب #{selectedOrder.id.substring(0, 8)}
             </CardTitle>
           </CardHeader>
           <CardContent>
