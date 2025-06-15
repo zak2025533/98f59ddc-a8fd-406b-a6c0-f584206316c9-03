@@ -75,10 +75,10 @@ const AnnouncementBanner = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 py-2">
       {/* Banner Announcements */}
       {bannerAnnouncements.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-2 px-4">
           {bannerAnnouncements.map((banner) => (
             <BannerAnnouncement key={banner.id} banner={banner} />
           ))}
@@ -87,14 +87,14 @@ const AnnouncementBanner = () => {
 
       {/* Event Announcements */}
       {eventAnnouncements.length > 0 && (
-        <div className="bg-gradient-to-r from-orange-50 to-amber-50 py-8">
+        <div className="bg-gradient-to-r from-orange-50 to-amber-50 py-4">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center mb-6">
-              <Calendar className="h-6 w-6 text-orange-600 ml-2" />
-              <h2 className="text-2xl font-bold text-orange-800 font-arabic">إعلانات المناسبات</h2>
+            <div className="flex items-center justify-center mb-3">
+              <Calendar className="h-5 w-5 text-orange-600 ml-2" />
+              <h2 className="text-lg md:text-xl font-bold text-orange-800 font-arabic">إعلانات المناسبات</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {eventAnnouncements.map((event) => (
                 <EventAnnouncementCard
                   key={event.id}
@@ -110,14 +110,14 @@ const AnnouncementBanner = () => {
 
       {/* Regular Announcements */}
       {announcements.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-8">
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-4">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center mb-6">
-              <Megaphone className="h-6 w-6 text-purple-600 ml-2" />
-              <h2 className="text-2xl font-bold text-purple-800 font-arabic">الإعلانات</h2>
+            <div className="flex items-center justify-center mb-3">
+              <Megaphone className="h-5 w-5 text-purple-600 ml-2" />
+              <h2 className="text-lg md:text-xl font-bold text-purple-800 font-arabic">الإعلانات</h2>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {announcements.map((announcement) => (
                 <AnnouncementCard
                   key={announcement.id}
