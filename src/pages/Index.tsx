@@ -17,7 +17,7 @@ const Index = () => {
     return (
       <MobileLayout>
         <MobileHeader title="بلا حدود للحلويات" />
-        <div className="space-y-4">
+        <div className="space-y-0">
           <HeroBanner />
           <AnnouncementBanner />
           <FeaturedProducts />
@@ -27,13 +27,15 @@ const Index = () => {
     );
   }
 
-  // Desktop version - removed SimpleCategorySection to reduce page length
+  // Desktop version
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <HeroBanner />
-      <AnnouncementBanner />
-      <FeaturedProducts />
+      <div className="space-y-0">
+        <HeroBanner />
+        <AnnouncementBanner />
+        <FeaturedProducts />
+      </div>
       <SimpleFooter />
     </div>
   );
