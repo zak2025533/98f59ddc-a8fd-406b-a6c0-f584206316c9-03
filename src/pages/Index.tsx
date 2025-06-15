@@ -11,7 +11,7 @@ const Index = () => {
   useVisitorTracking();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <SimpleNavbar />
       <SimpleHeroBanner />
       <AnnouncementBanner />
