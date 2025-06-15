@@ -67,7 +67,7 @@ const FeaturedProducts = () => {
 
   if (loading) {
     return (
-      <section className={`${isMobile ? 'py-6 px-4' : 'py-16 px-4'}`}>
+      <section className={`${isMobile ? 'py-4 px-4' : 'py-8 px-4'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(isMobile ? 4 : 8)].map((_, i) => (
@@ -84,18 +84,18 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className={`bg-white ${isMobile ? 'py-6 px-4' : 'py-16 px-4'}`}>
+    <section className={`bg-white ${isMobile ? 'py-4 px-4' : 'py-8 px-4'}`}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Star className="h-8 w-8 text-yellow-500 fill-yellow-500 ml-2" />
-            <h2 className={`${isMobile ? 'text-2xl' : 'text-4xl'} font-bold text-gray-900 font-arabic`}>
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center mb-3">
+            <Star className="h-6 w-6 text-yellow-500 fill-yellow-500 ml-2" />
+            <h2 className={`${isMobile ? 'text-xl' : 'text-3xl'} font-bold text-gray-900 font-arabic`}>
               المنتجات المميزة
             </h2>
-            <Star className="h-8 w-8 text-yellow-500 fill-yellow-500 mr-2" />
+            <Star className="h-6 w-6 text-yellow-500 fill-yellow-500 mr-2" />
           </div>
-          <p className={`${isMobile ? 'text-base' : 'text-lg'} text-gray-600 font-arabic`}>
+          <p className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-600 font-arabic`}>
             اكتشف أفضل منتجاتنا الأكثر طلباً
           </p>
         </div>
@@ -125,7 +125,7 @@ const FeaturedProducts = () => {
 
         {/* View All Button */}
         {products.length > 0 && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-6">
             <a
               href="/category"
               className={`inline-flex items-center space-x-2 space-x-reverse bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-arabic ${isMobile ? 'text-sm' : 'text-base'}`}
