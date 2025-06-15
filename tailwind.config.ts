@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,7 +62,6 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Sweet shop custom colors
 				'sweet-orange': 'hsl(var(--sweet-orange))',
 				'sweet-gold': 'hsl(var(--sweet-gold))',
 				'sweet-cream': 'hsl(var(--sweet-cream))',
@@ -79,6 +77,12 @@ export default {
 			},
 			fontFamily: {
 				'arabic': ['Cairo', 'Arial', 'sans-serif'],
+			},
+			spacing: {
+				'safe-top': 'var(--safe-area-inset-top)',
+				'safe-bottom': 'var(--safe-area-inset-bottom)',
+				'safe-left': 'var(--safe-area-inset-left)',
+				'safe-right': 'var(--safe-area-inset-right)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -122,13 +126,24 @@ export default {
 						transform: 'translateY(0)',
 						opacity: '1'
 					}
+				},
+				'mobile-fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(20px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'bounce-in': 'bounce-in 0.6s ease-out',
-				'slide-up': 'slide-up 0.5s ease-out'
+				'slide-up': 'slide-up 0.5s ease-out',
+				'mobile-fade-in': 'mobile-fade-in 0.4s ease-out'
 			}
 		}
 	},
