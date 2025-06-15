@@ -23,6 +23,7 @@ interface CartContextType {
   removeFromCart: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
+  handleOrder: () => void;
   loading: boolean;
 }
 
@@ -177,6 +178,27 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const handleOrder = () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "السلة فارغة",
+        description: "يرجى إضافة منتجات إلى السلة أولاً",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    let orderText = "مرحباً، أود طلب:\n\n";
+    cartItems.forEach(item => {
+      orderText += `• ${item.product.name} - الكمية: ${item.quantity} - ${item.product.price * item.quantity} ريال يمني\n`;
+    });
+    orderText += `\nالمجموع الكلي: ${total.toFixed(2)} ريال يمني`;
+
+    const whatsappNumber = "967777777777"; // Replace with actual number
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderText)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   useEffect(() => {
     fetchCartItems();
   }, []);
@@ -193,6 +215,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       removeFromCart,
       updateQuantity,
       clearCart,
+      handleOrder,
       loading
     }}>
       {children}

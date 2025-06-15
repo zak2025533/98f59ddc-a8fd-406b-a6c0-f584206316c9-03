@@ -23,7 +23,7 @@ const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-  const { favorites, toggleFavorite } = useFavorites();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -58,14 +58,12 @@ const FeaturedProducts = () => {
 
   const handleToggleFavorite = (productId: string) => {
     toggleFavorite(productId);
-    const isNowFavorite = !favorites.includes(productId);
+    const isNowFavorite = !isFavorite(productId);
     toast({
       title: isNowFavorite ? "تمت الإضافة للمفضلة" : "تمت الإزالة من المفضلة",
       description: isNowFavorite ? "تم إضافة المنتج للمفضلة" : "تم إزالة المنتج من المفضلة",
     });
   };
-
-  const isFavorite = (productId: string) => favorites.includes(productId);
 
   if (loading) {
     return (
