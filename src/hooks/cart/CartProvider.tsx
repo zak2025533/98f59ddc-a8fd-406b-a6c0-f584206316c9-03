@@ -1,3 +1,4 @@
+
 import { useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { CartContext, CartItem } from './CartContext';
@@ -7,7 +8,8 @@ import {
   updateCartItemQuantity, 
   removeCartItem, 
   clearAllCartItems,
-  createOrderWithItems // تم الاستيراد الجديد
+  createOrderWithItems,
+  updateOrderWhatsappMessage // 👈 ADD THIS!
 } from './cartService';
 import { generateOrderText, openWhatsApp } from './cartUtils';
 
