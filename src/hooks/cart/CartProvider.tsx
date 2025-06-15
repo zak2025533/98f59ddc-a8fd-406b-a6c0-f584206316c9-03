@@ -1,4 +1,3 @@
-
 import { useState, useEffect, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { CartContext, CartItem } from './CartContext';
@@ -7,7 +6,8 @@ import {
   addCartItem, 
   updateCartItemQuantity, 
   removeCartItem, 
-  clearAllCartItems 
+  clearAllCartItems,
+  createOrderWithItems // تم الاستيراد الجديد
 } from './cartService';
 import { generateOrderText, openWhatsApp } from './cartUtils';
 
@@ -143,7 +143,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }
   };
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (cartItems.length === 0) {
       toast({
         title: "السلة فارغة",
@@ -153,17 +153,42 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       return;
     }
 
+    setLoading(true);
     try {
       console.log('Processing order...');
       const orderText = generateOrderText(cartItems, total);
+
+      // الخطوة الجديدة: حفظ الطلب وعناصره ونص الرسالة في قاعدة البيانات
+      const { orderId, invoiceNumber } = await createOrderWithItems(
+        cartItems,
+        total,
+        orderText,
+        undefined, // إذا رغبت لاحقاً بإضافة بيانات العميل من النموذج، مررها هنا
+        undefined,
+        undefined
+      );
+
+      // بعد النجاح، أفرغ السلة وبلّغ المستخدم
+      await clearAllCartItems();
+      setCartItems([]);
+
+      toast({
+        title: "تم إنشاء الطلب بنجاح",
+        description: `رقم الفاتورة: #${invoiceNumber}. يمكنك متابعة الطلب من لوحة الإدارة.`,
+      });
+
+      // الخطوة النهائية: فتح واتساب بنفس نص الرسالة
       openWhatsApp(orderText);
-    } catch (error) {
+
+    } catch (error: any) {
       console.error('Error processing order:', error);
       toast({
         title: "خطأ",
         description: "فشل في معالجة الطلب",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
