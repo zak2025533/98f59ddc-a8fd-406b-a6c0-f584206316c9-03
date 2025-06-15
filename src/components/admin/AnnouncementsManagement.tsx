@@ -88,8 +88,8 @@ const AnnouncementsManagement = ({ onStatsUpdate }: AnnouncementsManagementProps
         <CardContent>
           {announcements.length === 0 ? (
             <div className="text-center py-8">
-              <Megaphone className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500 font-arabic">لا توجد إعلانات حتى الآن</p>
+              <Megaphone className="h-16 w-16 mx-auto text-blue-300 mb-4" />
+              <p className="text-blue-500 font-arabic">لا توجد إعلانات حتى الآن</p>
               <div className="flex gap-2 justify-center mt-4">
                 <Button onClick={openNewDialog} className="font-arabic">
                   إضافة أول إعلان

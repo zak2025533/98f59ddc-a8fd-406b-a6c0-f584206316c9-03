@@ -71,9 +71,15 @@ const AnnouncementTableRow = ({
          announcement.discount_amount ? `${announcement.discount_amount} ريال` : '-'}
       </TableCell>
       <TableCell className="text-right">
-        <Badge variant={announcement.is_active ? "default" : "secondary"} className="font-arabic">
-          {announcement.is_active ? "نشط" : "غير نشط"}
-        </Badge>
+        {announcement.is_active ? (
+          <Badge className="font-arabic bg-green-100 text-green-800">
+            نشط
+          </Badge>
+        ) : (
+          <Badge className="font-arabic bg-orange-100 text-orange-800">
+            غير نشط
+          </Badge>
+        )}
       </TableCell>
       <TableCell className="font-arabic text-right text-sm">
         <div>
