@@ -58,30 +58,26 @@ const SimpleFooter = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-amber-800 to-orange-900 text-white">
+    <footer className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Company Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <img
-              src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png"
+              src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png"
               alt="بلا حدود للحلويات"
               className="h-16 w-16 rounded-full shadow-xl border-4 border-white/20"
-              style={{ 
-                backgroundColor: 'transparent',
-                mixBlendMode: 'multiply'
-              }}
             />
             <div>
-              <h3 className="text-2xl font-bold font-arabic text-amber-200">
+              <h3 className="text-2xl font-bold font-arabic text-yellow-300">
                 بلا حدود للحلويات
               </h3>
-              <p className="text-amber-300 text-sm">Unlimited Sweets</p>
+              <p className="text-blue-200 text-sm">Unlimited Sweets</p>
             </div>
           </div>
           
-          <p className="text-amber-100 font-arabic max-w-2xl mx-auto">
+          <p className="text-blue-100 font-arabic max-w-2xl mx-auto">
             متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي
           </p>
         </div>
@@ -89,7 +85,7 @@ const SimpleFooter = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-amber-200">
+            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
               روابط سريعة
             </h4>
             <div className="space-y-3">
@@ -99,7 +95,7 @@ const SimpleFooter = () => {
                   <Link
                     key={index}
                     to={link.href}
-                    className="flex items-center space-x-3 space-x-reverse text-amber-100 hover:text-white transition-colors group"
+                    className="flex items-center space-x-3 space-x-reverse text-blue-100 hover:text-white transition-colors group"
                   >
                     <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     <span className="font-arabic">{link.name}</span>
@@ -111,7 +107,7 @@ const SimpleFooter = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-amber-200">
+            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
               معلومات التواصل
             </h4>
             <div className="space-y-3">
@@ -121,7 +117,7 @@ const SimpleFooter = () => {
                   <a 
                     key={index} 
                     href={info.href}
-                    className="flex items-center space-x-3 space-x-reverse text-amber-100 hover:text-white transition-colors group"
+                    className="flex items-center space-x-3 space-x-reverse text-blue-100 hover:text-white transition-colors group"
                   >
                     <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     <span className="font-arabic text-sm">{info.text}</span>
@@ -133,7 +129,7 @@ const SimpleFooter = () => {
 
           {/* Social Media */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-amber-200">
+            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
               تابعونا على
             </h4>
             <div className="flex space-x-4 space-x-reverse">
@@ -161,11 +157,11 @@ const SimpleFooter = () => {
       <div className="border-t border-white/10 bg-black/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-amber-200 text-sm font-arabic">
+            <div className="text-blue-200 text-sm font-arabic">
               بلا حدود للحلويات - جميع الحقوق محفوظة
             </div>
             
-            <div className="text-amber-200 text-sm font-arabic text-center">
+            <div className="text-blue-200 text-sm font-arabic text-center">
               <div className="mb-2">
                 تصميم وتطوير المهندس: زكريا نبيل الحاج
               </div>

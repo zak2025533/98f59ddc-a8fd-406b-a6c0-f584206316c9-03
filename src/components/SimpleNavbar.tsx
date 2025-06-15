@@ -19,21 +19,12 @@ const SimpleNavbar = () => {
   ];
 
   return (
-    <nav className={`bg-gradient-to-r from-amber-600 via-yellow-600 to-orange-600 shadow-lg ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
+    <nav className={`bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <img 
-              src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png" 
-              alt="بلا حدود للحلويات" 
-              className="h-12 w-12 rounded-full mr-3 shadow-lg"
-              style={{ 
-                backgroundColor: 'transparent',
-                mixBlendMode: 'multiply'
-              }}
-            />
-            <h1 className="text-2xl font-bold text-white font-arabic drop-shadow-lg">بلا حدود للحلويات</h1>
+          <div className="flex-shrink-0">
+            <h1 className="text-2xl font-bold text-white font-arabic">بلا حدود للحلويات</h1>
           </div>
 
           {/* Desktop Navigation */}
@@ -44,7 +35,7 @@ const SimpleNavbar = () => {
                 <a 
                   key={item.name}
                   href={item.href} 
-                  className="flex items-center space-x-2 space-x-reverse text-white hover:text-amber-200 transition-colors duration-200 font-semibold group"
+                  className="flex items-center space-x-2 space-x-reverse text-white hover:text-yellow-300 transition-colors duration-200 font-semibold group"
                 >
                   <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   <span className="font-arabic">{item.name}</span>
@@ -54,8 +45,8 @@ const SimpleNavbar = () => {
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-3 space-x-reverse">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2 h-10 w-10">
+          <div className="flex items-center space-x-4 space-x-reverse">
+            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
               <Search className="h-5 w-5" />
             </Button>
             
@@ -66,11 +57,11 @@ const SimpleNavbar = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2 h-10 w-10">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] bg-gradient-to-br from-amber-50 to-orange-50">
+                <SheetContent side="right" className="w-[300px] bg-white">
                   <nav className="flex flex-col space-y-4 mt-6">
                     {navItems.map((item) => {
                       const Icon = item.icon;
@@ -78,7 +69,7 @@ const SimpleNavbar = () => {
                         <a 
                           key={item.name}
                           href={item.href} 
-                          className="flex items-center space-x-3 space-x-reverse text-amber-800 hover:text-orange-600 font-arabic text-lg py-3 px-2 rounded-lg hover:bg-amber-100 transition-all duration-200"
+                          className="flex items-center space-x-3 space-x-reverse text-blue-800 hover:text-purple-600 font-arabic text-lg py-3 px-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
                         >
                           <Icon className="h-6 w-6" />
                           <span>{item.name}</span>
