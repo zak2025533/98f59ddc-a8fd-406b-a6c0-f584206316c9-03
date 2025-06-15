@@ -23,7 +23,7 @@ const HeroBanner = () => {
         <div className="max-w-4xl mx-auto">
           <div className="animate-bounce-in flex items-center justify-center mb-8">
             <img 
-              src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png" 
+              src="/lovable-uploads/420dd569-71cd-4e6b-9d6a-946abecbc0e9.png" 
               alt="بلا حدود للحلويات" 
               className="h-32 w-32 mb-4"
             />

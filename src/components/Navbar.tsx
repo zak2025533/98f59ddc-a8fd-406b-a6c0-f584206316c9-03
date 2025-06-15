@@ -11,7 +11,7 @@ const Navbar = () => {
   const { isNative } = useNativeApp();
 
   return (
-    <nav className={`bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
+    <nav className={`bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -48,11 +48,11 @@ const Navbar = () => {
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-white">
                   <nav className="flex flex-col space-y-4 mt-6">
-                    <a href="/" className="text-blue-800 hover:text-purple-600 font-arabic text-lg py-2 font-semibold transition-colors">الرئيسية</a>
-                    <a href="/category" className="text-blue-800 hover:text-purple-600 font-arabic text-lg py-2 font-semibold transition-colors">الفئات</a>
-                    <a href="/about" className="text-blue-800 hover:text-purple-600 font-arabic text-lg py-2 font-semibold transition-colors">من نحن</a>
-                    <a href="/contact" className="text-blue-800 hover:text-purple-600 font-arabic text-lg py-2 font-semibold transition-colors">اتصل بنا</a>
-                    <a href="/admin" className="text-blue-800 hover:text-purple-600 font-arabic text-lg py-2 font-semibold transition-colors">الإدارة</a>
+                    <a href="/" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الرئيسية</a>
+                    <a href="/category" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الفئات</a>
+                    <a href="/about" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">من نحن</a>
+                    <a href="/contact" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">اتصل بنا</a>
+                    <a href="/admin" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الإدارة</a>
                   </nav>
                 </SheetContent>
               </Sheet>
