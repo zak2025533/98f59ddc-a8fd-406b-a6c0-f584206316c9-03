@@ -6,7 +6,6 @@ import CategoryManagement from "./CategoryManagement";
 import OrdersManagement from "./OrdersManagement";
 import AnalyticsSection from "./AnalyticsSection";
 import VisitorAnalytics from "./VisitorAnalytics";
-import MedianAppAnalytics from "./MedianAppAnalytics";
 
 interface AdminTabsContentProps {
   onStatsUpdate: () => void;
@@ -37,10 +36,6 @@ const AdminTabsContent = ({ onStatsUpdate }: AdminTabsContentProps) => {
 
       <TabsContent value="visitors" className="m-0">
         <VisitorAnalytics />
-      </TabsContent>
-
-      <TabsContent value="median-app" className="m-0">
-        <MedianAppAnalytics />
       </TabsContent>
     </div>
   );

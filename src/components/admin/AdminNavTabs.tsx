@@ -7,7 +7,6 @@ import {
   ShoppingCart, 
   BarChart3,
   Eye,
-  Smartphone
 } from "lucide-react";
 
 const AdminNavTabs = () => {
@@ -56,13 +55,6 @@ const AdminNavTabs = () => {
           >
             <Eye className="h-5 w-5" />
             الزوار
-          </TabsTrigger>
-          <TabsTrigger 
-            value="median-app" 
-            className="font-arabic flex items-center gap-2 px-6 py-4 text-gray-700 hover:text-teal-700 hover:bg-teal-50 data-[state=active]:bg-white data-[state=active]:text-teal-700 data-[state=active]:border-b-4 data-[state=active]:border-teal-600"
-          >
-            <Smartphone className="h-5 w-5" />
-            التطبيق
           </TabsTrigger>
         </div>
       </TabsList>
