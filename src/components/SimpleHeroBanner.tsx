@@ -18,6 +18,19 @@ const SimpleHeroBanner = () => {
       </div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
+        {/* Logo Section */}
+        <div className="mb-6">
+          <img 
+            src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png" 
+            alt="بلا حدود للحلويات" 
+            className="h-24 w-24 mx-auto rounded-full shadow-xl border-4 border-white/20"
+            style={{ 
+              backgroundColor: 'transparent',
+              mixBlendMode: 'multiply'
+            }}
+          />
+        </div>
+
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-arabic leading-tight">
           مرحباً بك في
           <span className="block text-yellow-300">بلا حدود للحلويات</span>

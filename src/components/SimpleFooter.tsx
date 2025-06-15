@@ -65,9 +65,13 @@ const SimpleFooter = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <img
-              src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png"
+              src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png"
               alt="بلا حدود للحلويات"
               className="h-16 w-16 rounded-full shadow-xl border-4 border-white/20"
+              style={{ 
+                backgroundColor: 'transparent',
+                mixBlendMode: 'multiply'
+              }}
             />
             <div>
               <h3 className="text-2xl font-bold font-arabic text-yellow-300">

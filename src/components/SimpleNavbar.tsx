@@ -23,7 +23,16 @@ const SimpleNavbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex items-center">
+            <img 
+              src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png" 
+              alt="بلا حدود للحلويات" 
+              className="h-12 w-12 rounded-full mr-3"
+              style={{ 
+                backgroundColor: 'transparent',
+                mixBlendMode: 'multiply'
+              }}
+            />
             <h1 className="text-2xl font-bold text-white font-arabic">بلا حدود للحلويات</h1>
           </div>
 
