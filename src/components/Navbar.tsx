@@ -6,6 +6,7 @@ import SearchDialog from "./SearchDialog";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
 import CategoriesDialog from "./CategoriesDialog";
+import AdminDialog from "./AdminDialog";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,6 +46,7 @@ const Navbar = () => {
             <SearchDialog />
             <FavoritesSheet />
             <CartSheet />
+            <AdminDialog />
             
             {/* Mobile Menu Button */}
             <Button
