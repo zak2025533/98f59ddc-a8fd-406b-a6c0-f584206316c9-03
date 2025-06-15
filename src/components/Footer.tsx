@@ -29,7 +29,7 @@ const Footer = () => {
 
   const categories = [
     { name: "كيكات", href: "/category/cakes" },
-    { name: "ويفرات وشوكолاته", href: "/category/wafers-and-chocolate" },
+    { name: "ويفرات وشوكولاته", href: "/category/wafers-and-chocolate" },
     { name: "مشروبات وعصائر", href: "/category/drinks-and-juices" },
     { name: "حلوى ومليمات", href: "/category/candies" }
   ];
@@ -87,7 +87,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
+    <footer className="bg-gradient-to-br from-blue-800 via-blue-900 to-blue-950 text-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <FooterHeader />
         <FooterNav quickLinks={quickLinks} />
