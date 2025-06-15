@@ -1,3 +1,4 @@
+
 import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import HeroBanner from "@/components/HeroBanner";
@@ -26,7 +27,7 @@ const Index = () => {
     );
   }
 
-  // Desktop version (keep existing layout but remove SimpleCategorySection)
+  // Desktop version - removed SimpleCategorySection to reduce page length
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
