@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,32 +58,32 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4">
-            <Lock className="h-8 w-8 text-primary-foreground" />
+    <div className="flex items-center justify-center p-4 min-h-[400px]">
+      <Card className="w-full max-w-sm shadow-lg">
+        <CardHeader className="text-center pb-4">
+          <div className="mx-auto w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-3">
+            <Lock className="h-6 w-6 text-white" />
           </div>
-          <CardTitle className="text-2xl">
+          <CardTitle className="text-xl font-arabic text-blue-800">
             دخول المشرف
           </CardTitle>
-          <p className="text-muted-foreground">
-            بلا حدود للحلويات - لوحة التحكم
+          <p className="text-sm text-gray-600 font-arabic">
+            بلا حدود للحلويات
           </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">اسم المستخدم</Label>
+              <Label htmlFor="username" className="font-arabic text-sm">اسم المستخدم</Label>
               <div className="relative">
-                <User className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <User className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   id="username"
                   type="text"
                   placeholder="أدخل اسم المستخدم"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pr-10"
+                  className="pr-10 text-sm"
                   dir="ltr"
                   required
                 />
@@ -90,16 +91,16 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">كلمة المرور</Label>
+              <Label htmlFor="password" className="font-arabic text-sm">كلمة المرور</Label>
               <div className="relative">
-                <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="أدخل كلمة المرور"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pr-10"
+                  className="pr-10 text-sm"
                   dir="ltr"
                   required
                 />
@@ -108,7 +109,7 @@ const AdminLogin = ({ onLogin }: AdminLoginProps) => {
 
             <Button 
               type="submit" 
-              className="w-full" 
+              className="w-full bg-blue-600 hover:bg-blue-700 font-arabic text-sm py-2" 
               disabled={isLoading}
             >
               {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
