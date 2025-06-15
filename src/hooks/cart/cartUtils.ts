@@ -53,20 +53,19 @@ export const generateOrderText = (
   orderText += customerName ? `الاسم: ${customerName}\n` : '';
   orderText += customerAddress ? `العنوان: ${customerAddress}\n` : '---\n';
   orderText += customerPhone ? `الجوال: ${customerPhone}\n` : '';
-  // إذا أردت جمع بيانات العميل من نموذج ستظهر هنا فعليًا.
 
   orderText += '-------------------------------------\n';
   orderText += `🚚 *طرق التوصيل:*\n- شحن داخلي / توصيل مباشر\n\n💰 *طرق الدفع:*\n- دفع عند الاستلام\n- تحويل بنكي\n`;
 
   orderText += '-------------------------------------\n';
-  orderText += '☎️ *للتواصل مع المتجر:*\nواتساب: 770006120\n';
+  orderText += '☎️ *للتواصل مع المتجر:*\nواتساب: 715833246\n';
 
   // بإمكانك لاحقاً تضمين QR أو رابط إذا رغبت
   return orderText;
 };
 
 export const openWhatsApp = (orderText: string) => {
-  const whatsappNumber = "967770006120";
+  const whatsappNumber = "967715833246";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderText)}`;
   window.open(whatsappUrl, '_blank');
 };
