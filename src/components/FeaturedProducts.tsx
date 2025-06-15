@@ -70,10 +70,10 @@ const FeaturedProducts = () => {
     <section id="featured" className="py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-blue-900 mb-6 font-arabic">
+          <h2 className="text-5xl font-bold text-blue-800 mb-6 font-arabic">
             منتجاتنا المميزة
           </h2>
-          <p className="text-xl text-blue-700 max-w-3xl mx-auto leading-relaxed font-arabic">
+          <p className="text-xl text-blue-600 max-w-3xl mx-auto leading-relaxed font-arabic">
             اختر من بين أفضل منتجاتنا المصنوعة بعناية فائقة ومكونات طبيعية
           </p>
         </div>
@@ -107,7 +107,7 @@ const FeaturedProducts = () => {
 
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-bold text-blue-800 group-hover:text-yellow-500 transition-colors font-arabic">
+                    <h3 className="text-xl font-bold text-blue-800 group-hover:text-blue-600 transition-colors font-arabic">
                       {product.name}
                     </h3>
                     <div className="flex items-center">
