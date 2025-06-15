@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,30 +48,14 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
       
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
-        .select(`
-          id,
-          invoice_number,
-          customer_name,
-          customer_phone,
-          customer_address,
-          total_amount,
-          status,
-          whatsapp_message,
-          created_at,
-          order_items (
-            id,
-            product_name,
-            quantity,
-            price
-          )
-        `)
+        .select(`*, order_items(*)`)
         .order('created_at', { ascending: false });
 
       if (ordersError) throw ordersError;
 
       const formattedOrders: Order[] = (ordersData || []).map(order => ({
         id: order.id,
-        invoice_number: order.invoice_number,
+        invoice_number: (order as any).invoice_number ?? 0,
         customer_name: order.customer_name,
         customer_phone: order.customer_phone,
         customer_address: order.customer_address,
@@ -80,7 +63,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
         status: order.status as Order['status'],
         whatsapp_message: order.whatsapp_message,
         created_at: order.created_at,
-        items: order.order_items || []
+        items: (order as any).order_items || []
       }));
       
       setOrders(formattedOrders);
