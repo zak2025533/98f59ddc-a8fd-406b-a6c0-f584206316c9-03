@@ -156,19 +156,33 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     setLoading(true);
     try {
       console.log('Processing order...');
-      const orderText = generateOrderText(cartItems, total);
 
-      // الخطوة الجديدة: حفظ الطلب وعناصره ونص الرسالة في قاعدة البيانات
+      // الحصول على رقم الفاتورة الحالي مباشرة بعد الإدخال
+      // (سيتم توليد نص الفاتورة بعد الحصول على رقم الفاتورة والتاريخ)
+      const tempOrderDate = new Date();
+
+      // أولاً، حفظ الطلب بدون نص الرسالة (سينتج لنا invoiceNumber)
+      // ثم توليد النص النهائي واستعماله
       const { orderId, invoiceNumber } = await createOrderWithItems(
         cartItems,
         total,
-        orderText,
-        undefined, // إذا رغبت لاحقاً بإضافة بيانات العميل من النموذج، مررها هنا
+        "", // سيتم تحديث الرسالة أدناه
+        undefined,
         undefined,
         undefined
       );
 
-      // بعد النجاح، أفرغ السلة وبلّغ المستخدم
+      // الآن توليد نص الرسالة بعد معرفة رقم الفاتورة وتاريخها
+      const orderText = generateOrderText(
+        cartItems,
+        total,
+        invoiceNumber,
+        tempOrderDate
+      );
+
+      // تحديث الطلب بنص الرسالة الجديد بدقة فائقة
+      await updateOrderWhatsappMessage(orderId, orderText);
+
       await clearAllCartItems();
       setCartItems([]);
 
@@ -177,7 +191,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         description: `رقم الفاتورة: #${invoiceNumber}. يمكنك متابعة الطلب من لوحة الإدارة.`,
       });
 
-      // الخطوة النهائية: فتح واتساب بنفس نص الرسالة
       openWhatsApp(orderText);
 
     } catch (error: any) {

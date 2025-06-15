@@ -122,3 +122,20 @@ export const createOrderWithItems = async (
 
   return { orderId, invoiceNumber };
 };
+
+/**
+ * تحديث نص رسالة واتساب للطلب بعد توليدها المفصل
+ */
+export const updateOrderWhatsappMessage = async (
+  orderId: string,
+  whatsappMessage: string
+) => {
+  const { error } = await supabase
+    .from('orders')
+    .update({
+      whatsapp_message: whatsappMessage,
+    })
+    .eq('id', orderId);
+
+  if (error) throw new Error(error.message);
+};
