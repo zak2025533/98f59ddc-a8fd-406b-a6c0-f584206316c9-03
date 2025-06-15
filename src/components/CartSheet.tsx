@@ -16,14 +16,16 @@ export const CartSheet = () => {
   const { cartItems, cartCount, total, updateQuantity, removeFromCart, clearCart } = useCart();
   const { handleOrderWithDeliveryInfo } = useOrder();
   const [showDeliveryDialog, setShowDeliveryDialog] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleOrder = () => {
+    setIsOpen(false);
     setShowDeliveryDialog(true);
   };
 
   return (
     <>
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="sm" className="relative h-12 px-4 text-white hover:bg-white/20 font-arabic">
             <ShoppingCart className="h-5 w-5 ml-2" />
@@ -35,14 +37,14 @@ export const CartSheet = () => {
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-blue-50 to-indigo-50 h-[85vh] my-auto right-2 rounded-2xl shadow-2xl">
+        <SheetContent className="bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
           <CartHeader cartCount={cartCount} />
-          <div className="mt-6 flex flex-col h-full">
+          <div className="mt-6 flex flex-col flex-1 min-h-0">
             {cartItems.length === 0 ? (
               <EmptyCart />
             ) : (
               <>
-                <div className="flex-1 overflow-y-auto space-y-4">
+                <div className="flex-1 overflow-y-auto space-y-4 -mx-6 px-6">
                   {cartItems.map((item) => (
                     <CartItemCard
                       key={item.id}
@@ -52,11 +54,13 @@ export const CartSheet = () => {
                     />
                   ))}
                 </div>
-                <CartSummary
-                  total={total}
-                  onClearCart={clearCart}
-                  onHandleOrder={handleOrder}
-                />
+                <div className="px-6">
+                  <CartSummary
+                    total={total}
+                    onClearCart={clearCart}
+                    onHandleOrder={handleOrder}
+                  />
+                </div>
               </>
             )}
           </div>

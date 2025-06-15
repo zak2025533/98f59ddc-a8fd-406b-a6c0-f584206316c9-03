@@ -23,11 +23,11 @@ export const FavoritesSheet = () => {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-blue-50 to-indigo-50 h-[85vh] my-auto right-2 rounded-2xl shadow-2xl">
+      <SheetContent className="bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
         <SheetHeader>
           <SheetTitle className="text-right font-arabic text-blue-900">المفضلة ({favoriteCount} منتج)</SheetTitle>
         </SheetHeader>
-        <div className="mt-6 flex flex-col h-full">
+        <div className="mt-6 flex flex-col flex-1 min-h-0">
           {favorites.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
@@ -36,7 +36,7 @@ export const FavoritesSheet = () => {
               </div>
             </div>
           ) : (
-            <div className="flex-1 overflow-y-auto space-y-4">
+            <div className="flex-1 overflow-y-auto space-y-4 -mx-6 px-6">
               {favorites.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 p-4 border border-blue-200 rounded-lg bg-white/50 backdrop-blur-sm">
                   <img

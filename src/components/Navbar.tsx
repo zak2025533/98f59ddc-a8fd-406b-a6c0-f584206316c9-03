@@ -60,7 +60,7 @@ const Navbar = () => {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-white">
+                <SheetContent side="right" className="bg-white">
                   <nav className="flex flex-col space-y-2 mt-6">
                     {navItems.map((item) => {
                       const Icon = item.icon;
