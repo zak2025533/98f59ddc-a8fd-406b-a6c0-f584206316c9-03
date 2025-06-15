@@ -48,14 +48,30 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
       
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
-        .select(`*, order_items(*)`)
+        .select(`
+          id,
+          invoice_number,
+          customer_name,
+          customer_phone,
+          customer_address,
+          total_amount,
+          status,
+          whatsapp_message,
+          created_at,
+          order_items (
+            id,
+            product_name,
+            quantity,
+            price
+          )
+        `)
         .order('created_at', { ascending: false });
 
       if (ordersError) throw ordersError;
 
       const formattedOrders: Order[] = (ordersData || []).map(order => ({
         id: order.id,
-        invoice_number: (order as any).invoice_number ?? 0,
+        invoice_number: order.invoice_number,
         customer_name: order.customer_name,
         customer_phone: order.customer_phone,
         customer_address: order.customer_address,
@@ -63,7 +79,7 @@ const OrdersManagement = ({ onStatsUpdate }: OrdersManagementProps) => {
         status: order.status as Order['status'],
         whatsapp_message: order.whatsapp_message,
         created_at: order.created_at,
-        items: (order as any).order_items || []
+        items: order.order_items || []
       }));
       
       setOrders(formattedOrders);

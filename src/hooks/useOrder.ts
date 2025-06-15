@@ -98,7 +98,7 @@ export const useOrder = () => {
           customer_phone: deliveryInfo?.phoneNumber || null,
           customer_address: deliveryInfo?.fullAddress || null
         })
-        .select()
+        .select('*')
         .single();
 
       if (orderError) throw orderError;
