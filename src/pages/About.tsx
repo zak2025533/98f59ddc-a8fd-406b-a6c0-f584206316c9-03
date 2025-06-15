@@ -131,17 +131,23 @@ const About = () => {
           </p>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="flex items-center gap-3 justify-center">
-              <MapPin className="h-5 w-5" />
-              <span className="font-arabic">اليمن</span>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white/20 shadow-md">
+                <MapPin className="h-8 w-8 text-white" />
+              </div>
+              <span className="font-arabic font-semibold">اليمن</span>
             </div>
-            <div className="flex items-center gap-3 justify-center">
-              <Clock className="h-5 w-5" />
-              <span className="font-arabic">خدمة العملاء</span>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white/20 shadow-md">
+                <Clock className="h-8 w-8 text-white" />
+              </div>
+              <span className="font-arabic font-semibold">خدمة العملاء</span>
             </div>
-            <div className="flex items-center gap-3 justify-center">
-              <Users className="h-5 w-5" />
-              <span className="font-arabic">فريق محترف ومتخصص</span>
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-16 h-16 flex items-center justify-center rounded-full bg-white/20 shadow-md">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <span className="font-arabic font-semibold">فريق محترف ومتخصص</span>
             </div>
           </div>
         </div>

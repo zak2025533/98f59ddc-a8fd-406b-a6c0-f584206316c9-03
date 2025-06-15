@@ -30,7 +30,7 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4 space-x-reverse">
-            <Button variant="ghost" size="sm" className="touch-target text-white hover:bg-white/20">
+            <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
               <Search className="h-5 w-5" />
             </Button>
             
@@ -42,7 +42,7 @@ const Navbar = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="touch-target text-white hover:bg-white/20">
+                  <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
