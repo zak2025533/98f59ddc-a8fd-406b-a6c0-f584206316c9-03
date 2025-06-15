@@ -23,7 +23,7 @@ export const FavoritesSheet = () => {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-blue-50 to-indigo-50">
+      <SheetContent className="w-[400px] sm:w-[540px] bg-gradient-to-br from-blue-50 to-indigo-50 h-[85vh] my-auto right-2 rounded-2xl shadow-2xl">
         <SheetHeader>
           <SheetTitle className="text-right font-arabic text-blue-900">المفضلة ({favoriteCount} منتج)</SheetTitle>
         </SheetHeader>
