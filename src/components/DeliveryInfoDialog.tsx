@@ -1,15 +1,9 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-interface DeliveryInfo {
-  fullAddress: string;
-  phoneNumber: string;
-  recipientName: string;
-}
+import { DeliveryInfo } from '@/hooks/useOrder';
 
 interface DeliveryInfoDialogProps {
   isOpen: boolean;

@@ -3,7 +3,7 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-interface CartItem {
+export interface CartItem {
   id: string;
   product_id: string;
   quantity: number;
@@ -18,6 +18,7 @@ interface CartItem {
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
+  total: number;
   addToCart: (productId: string, quantity?: number) => Promise<void>;
   removeFromCart: (itemId: string) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
@@ -181,11 +182,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
   return (
     <CartContext.Provider value={{
       cartItems,
       cartCount,
+      total,
       addToCart,
       removeFromCart,
       updateQuantity,
