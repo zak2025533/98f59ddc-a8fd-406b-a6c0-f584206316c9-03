@@ -4,7 +4,7 @@ import { ArrowLeft, Star, Coffee, Cake } from "lucide-react";
 
 const SimpleHeroBanner = () => {
   return (
-    <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 py-20 px-4 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-amber-600 via-yellow-600 to-orange-600 py-20 px-4 overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 animate-bounce">
           <Cake className="h-12 w-12 text-white" />
@@ -23,7 +23,7 @@ const SimpleHeroBanner = () => {
           <img 
             src="/lovable-uploads/3137a9c8-db0b-4846-86ad-d34a734e5f02.png" 
             alt="بلا حدود للحلويات" 
-            className="h-24 w-24 mx-auto rounded-full shadow-xl border-4 border-white/20"
+            className="h-24 w-24 mx-auto rounded-full shadow-xl border-4 border-white/30"
             style={{ 
               backgroundColor: 'transparent',
               mixBlendMode: 'multiply'
@@ -31,19 +31,19 @@ const SimpleHeroBanner = () => {
           />
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-arabic leading-tight">
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-arabic leading-tight drop-shadow-lg">
           مرحباً بك في
-          <span className="block text-yellow-300">بلا حدود للحلويات</span>
+          <span className="block text-amber-100">بلا حدود للحلويات</span>
         </h1>
         
-        <p className="text-xl md:text-2xl text-blue-100 mb-8 font-arabic leading-relaxed max-w-3xl mx-auto">
+        <p className="text-xl md:text-2xl text-amber-50 mb-8 font-arabic leading-relaxed max-w-3xl mx-auto drop-shadow-md">
           اكتشف عالماً من الحلويات اللذيذة والمشروبات المنعشة المحضرة بأفضل المكونات
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button 
             size="lg" 
-            className="bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-blue-900 font-bold px-8 py-3 text-lg font-arabic border-0 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            className="bg-gradient-to-r from-white to-amber-50 hover:from-amber-50 hover:to-white text-amber-800 font-bold px-8 py-3 text-lg font-arabic border-0 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
             onClick={() => document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' })}
           >
             تصفح المنتجات
@@ -53,7 +53,7 @@ const SimpleHeroBanner = () => {
           <Button 
             size="lg" 
             variant="outline" 
-            className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 text-lg font-arabic bg-transparent backdrop-blur-sm"
+            className="border-2 border-white text-white hover:bg-white hover:text-amber-600 px-8 py-3 text-lg font-arabic bg-transparent backdrop-blur-sm shadow-lg"
             onClick={() => window.location.href = '/about'}
           >
             من نحن
