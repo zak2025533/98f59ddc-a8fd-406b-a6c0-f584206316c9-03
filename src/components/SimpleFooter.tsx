@@ -154,7 +154,7 @@ const SimpleFooter = () => {
       </div>
 
       {/* Bottom Footer */}
-      <div className="border-t border-white/10 bg-black/20">
+      <div className="border-t border-white/10 bg-blue-900/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-blue-200 text-sm font-arabic">

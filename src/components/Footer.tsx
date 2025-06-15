@@ -25,7 +25,7 @@ const Footer = () => {
 
   const categories = [
     { name: "كيكات", href: "/category/cakes" },
-    { name: "ويفرات وشوكولاته", href: "/category/wafers-and-chocolate" },
+    { name: "ويفرات وشوكолاته", href: "/category/wafers-and-chocolate" },
     { name: "مشروبات وعصائر", href: "/category/drinks-and-juices" },
     { name: "حلوى ومليمات", href: "/category/candies" }
   ];
@@ -198,7 +198,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Footer */}
-      <div className="border-t border-white/10 bg-black/20">
+      <div className="border-t border-white/10 bg-blue-900/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
