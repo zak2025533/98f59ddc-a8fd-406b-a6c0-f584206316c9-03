@@ -1,11 +1,18 @@
 
-import { useState } from "react";
-import { Menu, Search, ShoppingCart, Heart } from "lucide-react";
+import { Menu, Search, ShoppingCart, Heart, Home, LayoutGrid, Info, MessageCircle, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
 import { useNativeApp } from "@/hooks/useNativeApp";
+
+const navItems = [
+    { name: "الرئيسية", href: "/", icon: Home },
+    { name: "الفئات", href: "/category", icon: LayoutGrid },
+    { name: "من نحن", href: "/about", icon: Info },
+    { name: "اتصل بنا", href: "/contact", icon: MessageCircle },
+    { name: "الإدارة", href: "/admin", icon: Settings }
+];
 
 const Navbar = () => {
   const { isNative } = useNativeApp();
@@ -15,22 +22,31 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <a href="/" className="flex-shrink-0 flex items-center space-x-2 rtl:space-x-reverse">
+            <img src="/lovable-uploads/420dd569-71cd-4e6b-9d6a-946abecbc0e9.png" alt="بلا حدود للحلويات" className="h-10 w-10 hidden sm:block" />
             <h1 className="text-2xl font-bold text-white font-arabic">بلا حدود للحلويات</h1>
-          </div>
+          </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8 space-x-reverse">
-            <a href="/" className="text-white hover:text-yellow-300 font-arabic transition-colors duration-200 font-semibold">الرئيسية</a>
-            <a href="/category" className="text-white hover:text-yellow-300 font-arabic transition-colors duration-200 font-semibold">الفئات</a>
-            <a href="/about" className="text-white hover:text-yellow-300 font-arabic transition-colors duration-200 font-semibold">من نحن</a>
-            <a href="/contact" className="text-white hover:text-yellow-300 font-arabic transition-colors duration-200 font-semibold">اتصل بنا</a>
-            <a href="/admin" className="text-white hover:text-yellow-300 font-arabic transition-colors duration-200 font-semibold">الإدارة</a>
+          <div className="hidden md:flex items-center space-x-6 space-x-reverse">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a 
+                  key={item.name}
+                  href={item.href} 
+                  className="flex items-center space-x-2 space-x-reverse text-white hover:text-yellow-300 transition-colors duration-200 font-semibold group"
+                >
+                  <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <span className="font-arabic">{item.name}</span>
+                </a>
+              );
+            })}
           </div>
 
           {/* Right side buttons */}
-          <div className="flex items-center space-x-4 space-x-reverse">
-            <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
+          <div className="flex items-center space-x-2 sm:space-x-4 space-x-reverse">
+            <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/20">
               <Search className="h-5 w-5" />
             </Button>
             
@@ -42,17 +58,25 @@ const Navbar = () => {
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
+                  <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-white/20">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-white">
-                  <nav className="flex flex-col space-y-4 mt-6">
-                    <a href="/" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الرئيسية</a>
-                    <a href="/category" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الفئات</a>
-                    <a href="/about" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">من نحن</a>
-                    <a href="/contact" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">اتصل بنا</a>
-                    <a href="/admin" className="text-blue-800 hover:text-yellow-500 font-arabic text-lg py-2 font-semibold transition-colors">الإدارة</a>
+                  <nav className="flex flex-col space-y-2 mt-6">
+                    {navItems.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <a 
+                          key={item.name}
+                          href={item.href} 
+                          className="flex items-center space-x-3 space-x-reverse text-blue-800 hover:bg-blue-50 font-arabic text-lg py-3 px-4 rounded-lg font-semibold transition-colors"
+                        >
+                          <Icon className="h-6 w-6 text-blue-600" />
+                          <span>{item.name}</span>
+                        </a>
+                      );
+                    })}
                   </nav>
                 </SheetContent>
               </Sheet>
