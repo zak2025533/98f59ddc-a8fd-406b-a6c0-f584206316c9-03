@@ -72,10 +72,10 @@ const SimpleCategorySection = () => {
     <section className="py-16 px-4 bg-white" id="categories">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-blue-800 mb-4 font-arabic">
+          <h2 className="text-4xl font-bold text-blue-900 mb-4 font-arabic">
             أقسامنا المميزة
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto font-arabic">
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto font-arabic">
             اكتشف مجموعتنا الواسعة من الحلويات والمشروبات اللذيذة
           </p>
         </div>
@@ -85,7 +85,7 @@ const SimpleCategorySection = () => {
             categories.map((category) => (
               <Card 
                 key={category.id} 
-                className="cursor-pointer group overflow-hidden border-2 border-blue-200 hover:border-purple-300 transition-all duration-300 hover:shadow-xl bg-white"
+                className="cursor-pointer group overflow-hidden border-2 border-blue-100 hover:border-yellow-400 transition-all duration-300 hover:shadow-xl bg-white"
                 onClick={() => handleCategoryClick(category.slug)}
               >
                 <div className="h-48 relative overflow-hidden">
@@ -105,12 +105,12 @@ const SimpleCategorySection = () => {
                 </div>
 
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-blue-800 group-hover:text-purple-600 transition-colors font-arabic mb-3">
+                  <h3 className="text-xl font-bold text-blue-800 group-hover:text-yellow-500 transition-colors font-arabic mb-3">
                     {category.name}
                   </h3>
                   <Button 
                     variant="ghost" 
-                    className="w-full group-hover:bg-blue-50 transition-all duration-300 font-arabic"
+                    className="w-full group-hover:bg-yellow-50 transition-all duration-300 font-arabic"
                   >
                     تصفح المنتجات
                     <ArrowLeft className="mr-2 h-4 w-4" />
