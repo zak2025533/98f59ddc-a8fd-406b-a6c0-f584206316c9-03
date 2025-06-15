@@ -1,13 +1,15 @@
-
 import { useCart } from "@/hooks/useCart";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 export interface DeliveryInfo {
   fullAddress: string;
   phoneNumber: string;
   recipientName: string;
 }
+
+type OrderRow = Database['public']['Tables']['orders']['Row'];
 
 export const useOrder = () => {
   const { cartItems, total, clearCart } = useCart();
@@ -82,7 +84,7 @@ export const useOrder = () => {
     return message;
   };
 
-  const saveOrderToDatabase = async (deliveryInfo?: DeliveryInfo) => {
+  const saveOrderToDatabase = async (deliveryInfo?: DeliveryInfo): Promise<OrderRow | null> => {
     try {
       const sessionId = localStorage.getItem('session_id') || 'session_' + Math.random().toString(36).substr(2, 9);
       
@@ -100,6 +102,7 @@ export const useOrder = () => {
         .single();
 
       if (orderError) throw orderError;
+      if (!order) return null;
 
       const orderItems = cartItems.map(item => ({
         order_id: order.id,
