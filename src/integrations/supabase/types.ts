@@ -306,6 +306,53 @@ export type Database = {
         }
         Relationships: []
       }
+      product_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          customer_name: string
+          id: string
+          is_approved: boolean | null
+          is_verified: boolean | null
+          product_id: string
+          rating: number
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          customer_name: string
+          id?: string
+          is_approved?: boolean | null
+          is_verified?: boolean | null
+          product_id: string
+          rating: number
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          customer_name?: string
+          id?: string
+          is_approved?: boolean | null
+          is_verified?: boolean | null
+          product_id?: string
+          rating?: number
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category_id: string | null
@@ -433,7 +480,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      product_ratings_summary: {
+        Row: {
+          average_rating: number | null
+          five_stars: number | null
+          four_stars: number | null
+          one_star: number | null
+          product_id: string | null
+          three_stars: number | null
+          total_reviews: number | null
+          two_stars: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

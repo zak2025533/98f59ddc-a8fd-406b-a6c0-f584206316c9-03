@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useProductReviews } from "@/hooks/useProductReviews";
 
 interface Product {
   id: string;
@@ -23,6 +25,9 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: ProductCardProps) => {
+  const { ratingSummary } = useProductReviews(product.id);
+  const navigate = useNavigate();
+
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite(product.id);
@@ -33,8 +38,15 @@ const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: Pro
     onAddToCart(product.id);
   };
 
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <Card className="hover:scale-105 transition-all duration-300 cursor-pointer group overflow-hidden border-2 border-blue-200 bg-white">
+    <Card 
+      className="hover:scale-105 transition-all duration-300 cursor-pointer group overflow-hidden border-2 border-blue-200 bg-white"
+      onClick={handleCardClick}
+    >
       <div className="h-48 relative overflow-hidden">
         <img
           src={product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
@@ -66,7 +78,14 @@ const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: Pro
           </h3>
           <div className="flex items-center">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-600 mr-1">4.8</span>
+            <span className="text-sm text-gray-600 mr-1">
+              {ratingSummary?.average_rating || 0}
+            </span>
+            {ratingSummary?.total_reviews && (
+              <span className="text-xs text-gray-500 mr-1 font-arabic">
+                ({ratingSummary.total_reviews})
+              </span>
+            )}
           </div>
         </div>
         
