@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -124,9 +123,9 @@ const CategoryManagement = ({ onStatsUpdate }: CategoryManagementProps) => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="pb-3">
         <div className="flex justify-between items-center">
-          <CardTitle className="text-2xl font-arabic text-blue-800">إدارة الأقسام والأقسام الفرعية</CardTitle>
+          <CardTitle className="text-xl font-arabic text-blue-800">إدارة الأقسام والأقسام الفرعية</CardTitle>
           <Button 
             onClick={() => setCategoryDialog({ isOpen: true })}
             className="bg-blue-600 hover:bg-blue-700 font-arabic"
@@ -137,7 +136,7 @@ const CategoryManagement = ({ onStatsUpdate }: CategoryManagementProps) => {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <CategorySearch 
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
