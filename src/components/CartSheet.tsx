@@ -41,7 +41,7 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
           {triggerClassName && <span className="mr-2 font-arabic">سلة التسوق</span>}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[85vw] sm:w-[320px] sm:max-w-sm h-[70vh] sm:h-[80vh] bg-gradient-to-br from-blue-50 to-purple-50">
+      <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="h-full flex flex-col">
           <CartHeader cartCount={cartCount} />
           
