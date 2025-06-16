@@ -8,10 +8,10 @@ import { Badge } from "@/components/ui/badge";
 const BottomNavigation = () => {
   const location = useLocation();
   const { cartItems } = useCart();
-  const { favorites } = useFavorites();
+  const { favoriteItems } = useFavorites();
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const favoritesCount = favorites.length;
+  const favoritesCount = favoriteItems.length;
 
   const navItems = [
     {

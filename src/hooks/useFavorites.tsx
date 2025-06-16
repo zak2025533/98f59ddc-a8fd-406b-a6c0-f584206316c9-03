@@ -15,10 +15,12 @@ interface FavoriteItem {
 }
 
 interface FavoritesContextType {
-  favorites: FavoriteItem[];
+  favorites: string[]; // Array of product IDs
+  favoriteItems: FavoriteItem[];
   favoriteCount: number;
   addToFavorites: (productId: string) => Promise<void>;
   removeFromFavorites: (productId: string) => Promise<void>;
+  toggleFavorite: (productId: string) => Promise<void>;
   isFavorite: (productId: string) => boolean;
   loading: boolean;
 }
@@ -26,7 +28,7 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
-  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -64,7 +66,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         product: item.products as any
       }));
       
-      setFavorites(formattedItems);
+      setFavoriteItems(formattedItems);
     } catch (error) {
       console.error('Error fetching favorites:', error);
     }
@@ -112,7 +114,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         .eq('product_id', productId);
 
       if (error) throw error;
-      setFavorites(prev => prev.filter(item => item.product_id !== productId));
+      setFavoriteItems(prev => prev.filter(item => item.product_id !== productId));
       
       toast({
         title: "تم حذف المنتج",
@@ -123,22 +125,33 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const toggleFavorite = async (productId: string) => {
+    if (isFavorite(productId)) {
+      await removeFromFavorites(productId);
+    } else {
+      await addToFavorites(productId);
+    }
+  };
+
   const isFavorite = (productId: string) => {
-    return favorites.some(item => item.product_id === productId);
+    return favoriteItems.some(item => item.product_id === productId);
   };
 
   useEffect(() => {
     fetchFavorites();
   }, []);
 
-  const favoriteCount = favorites.length;
+  const favorites = favoriteItems.map(item => item.product_id);
+  const favoriteCount = favoriteItems.length;
 
   return (
     <FavoritesContext.Provider value={{
       favorites,
+      favoriteItems,
       favoriteCount,
       addToFavorites,
       removeFromFavorites,
+      toggleFavorite,
       isFavorite,
       loading
     }}>

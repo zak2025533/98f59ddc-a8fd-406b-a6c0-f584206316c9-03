@@ -18,7 +18,7 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
   const { cartItems, updateQuantity, removeFromCart, clearCart, handleOrder } = useCart();
   
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
   const defaultTriggerClasses = "relative p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors";
 
@@ -54,7 +54,7 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
                     key={item.id}
                     item={item}
                     onUpdateQuantity={updateQuantity}
-                    onRemove={removeFromCart}
+                    onRemoveItem={removeFromCart}
                   />
                 ))}
               </div>
