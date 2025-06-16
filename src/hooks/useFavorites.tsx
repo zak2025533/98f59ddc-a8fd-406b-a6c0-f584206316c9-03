@@ -15,12 +15,10 @@ interface FavoriteItem {
 }
 
 interface FavoritesContextType {
-  favorites: string[]; // Array of product IDs
-  favoriteItems: FavoriteItem[];
+  favorites: FavoriteItem[];
   favoriteCount: number;
   addToFavorites: (productId: string) => Promise<void>;
   removeFromFavorites: (productId: string) => Promise<void>;
-  toggleFavorite: (productId: string) => Promise<void>;
   isFavorite: (productId: string) => boolean;
   loading: boolean;
 }
@@ -28,7 +26,7 @@ interface FavoritesContextType {
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
-  const [favoriteItems, setFavoriteItems] = useState<FavoriteItem[]>([]);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -43,7 +41,6 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchFavorites = async () => {
     try {
-      console.log('Loading favorites...');
       const sessionId = getSessionId();
       const { data, error } = await supabase
         .from('favorites')
@@ -59,10 +56,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         `)
         .eq('session_id', sessionId);
 
-      if (error) {
-        console.error('Error fetching favorites:', error);
-        throw error;
-      }
+      if (error) throw error;
       
       const formattedItems = (data || []).map(item => ({
         id: item.id,
@@ -70,32 +64,17 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         product: item.products as any
       }));
       
-      setFavoriteItems(formattedItems);
-      console.log('Favorites loaded:', formattedItems.length);
+      setFavorites(formattedItems);
     } catch (error) {
       console.error('Error fetching favorites:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في تحميل المفضلة",
-        variant: "destructive",
-      });
     }
   };
 
   const addToFavorites = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
-    if (isFavorite(productId)) {
-      console.log('Product already in favorites');
-      return;
-    }
+    if (isFavorite(productId)) return;
     
     setLoading(true);
     try {
-      console.log('Adding to favorites:', productId);
       const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
@@ -124,13 +103,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFromFavorites = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
     try {
-      console.log('Removing from favorites:', productId);
       const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
@@ -139,7 +112,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         .eq('product_id', productId);
 
       if (error) throw error;
-      setFavoriteItems(prev => prev.filter(item => item.product_id !== productId));
+      setFavorites(prev => prev.filter(item => item.product_id !== productId));
       
       toast({
         title: "تم حذف المنتج",
@@ -147,46 +120,25 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       });
     } catch (error) {
       console.error('Error removing from favorites:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في حذف المنتج من المفضلة",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const toggleFavorite = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
-    if (isFavorite(productId)) {
-      await removeFromFavorites(productId);
-    } else {
-      await addToFavorites(productId);
     }
   };
 
   const isFavorite = (productId: string) => {
-    return favoriteItems.some(item => item.product_id === productId);
+    return favorites.some(item => item.product_id === productId);
   };
 
   useEffect(() => {
     fetchFavorites();
   }, []);
 
-  const favorites = favoriteItems.map(item => item.product_id);
-  const favoriteCount = favoriteItems.length;
+  const favoriteCount = favorites.length;
 
   return (
     <FavoritesContext.Provider value={{
       favorites,
-      favoriteItems,
       favoriteCount,
       addToFavorites,
       removeFromFavorites,
-      toggleFavorite,
       isFavorite,
       loading
     }}>

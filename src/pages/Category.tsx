@@ -1,14 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import MobileLayout from "@/components/mobile/MobileLayout";
-import MobileHeader from "@/components/mobile/MobileHeader";
 import SimpleNavbar from "@/components/SimpleNavbar";
 import SimpleFooter from "@/components/SimpleFooter";
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 import CategoryLoading from "@/components/category/CategoryLoading";
 import CategoryNotFound from "@/components/category/CategoryNotFound";
@@ -39,7 +35,6 @@ const CategoryPage = () => {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (categorySlug) {
@@ -97,18 +92,8 @@ const CategoryPage = () => {
   };
 
   if (!categorySlug) {
-    if (isMobile) {
-      return (
-        <MobileLayout>
-          <MobileHeader title="جميع الأقسام" />
-          <AllCategories />
-          <SimpleFooter />
-        </MobileLayout>
-      );
-    }
-    
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <SimpleNavbar />
         <AllCategories />
         <SimpleFooter />
@@ -124,23 +109,8 @@ const CategoryPage = () => {
     return <CategoryNotFound />;
   }
 
-  if (isMobile) {
-    return (
-      <MobileLayout>
-        <MobileHeader title={category.name} />
-        <ProductsGrid
-          products={products}
-          isFavorite={isFavorite}
-          onAddToCart={addToCart}
-          onToggleFavorite={handleToggleFavorite}
-        />
-        <SimpleFooter />
-      </MobileLayout>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <SimpleNavbar />
       
       <CategoryHeader name={category.name} />

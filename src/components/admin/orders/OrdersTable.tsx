@@ -19,21 +19,21 @@ const OrdersTable = ({ orders, onViewOrder, onUpdateStatus, onDeleteOrder, onOpe
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-right font-arabic text-xs">رقم الفاتورة</TableHead>
-            <TableHead className="text-right font-arabic text-xs">بيانات العميل</TableHead>
-            <TableHead className="text-right font-arabic text-xs">العناصر</TableHead>
-            <TableHead className="text-right font-arabic text-xs">المبلغ الإجمالي</TableHead>
-            <TableHead className="text-right font-arabic text-xs">الحالة</TableHead>
-            <TableHead className="text-right font-arabic text-xs">التاريخ</TableHead>
-            <TableHead className="text-right font-arabic text-xs">الإجراءات</TableHead>
+            <TableHead className="text-right font-arabic">رقم الفاتورة</TableHead>
+            <TableHead className="text-right font-arabic">بيانات العميل</TableHead>
+            <TableHead className="text-right font-arabic">العناصر</TableHead>
+            <TableHead className="text-right font-arabic">المبلغ الإجمالي</TableHead>
+            <TableHead className="text-right font-arabic">الحالة</TableHead>
+            <TableHead className="text-right font-arabic">التاريخ</TableHead>
+            <TableHead className="text-right font-arabic">الإجراءات</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {orders.map((order) => (
             <TableRow key={order.id}>
-              <TableCell className="font-medium font-arabic text-xs">#{order.invoice_number}</TableCell>
+              <TableCell className="font-medium font-arabic">#{order.invoice_number}</TableCell>
               <TableCell>
-                <div className="space-y-1 text-xs">
+                <div className="space-y-1 text-sm">
                   {order.customer_name && (
                     <div className="flex items-center gap-1 font-arabic">
                       <User className="h-3 w-3" />
@@ -49,7 +49,7 @@ const OrdersTable = ({ orders, onViewOrder, onUpdateStatus, onDeleteOrder, onOpe
                   {order.customer_address && (
                     <div className="flex items-center gap-1 font-arabic">
                       <MapPin className="h-3 w-3" />
-                      <span className="truncate max-w-[120px]">{order.customer_address}</span>
+                      <span className="truncate max-w-[150px]">{order.customer_address}</span>
                     </div>
                   )}
                   {!order.customer_name && !order.customer_phone && !order.customer_address && (
@@ -60,9 +60,9 @@ const OrdersTable = ({ orders, onViewOrder, onUpdateStatus, onDeleteOrder, onOpe
               <TableCell>
                 <div className="space-y-1">
                   {order.items.slice(0, 2).map((item, index) => (
-                    <div key={index} className="text-xs font-arabic">
+                    <div key={index} className="text-sm font-arabic">
                       {item.product_name} × {item.quantity}
-                      <span className="text-blue-600 mr-1">({item.price} ر.ي)</span>
+                      <span className="text-blue-600 mr-2">({item.price} ريال يمني)</span>
                     </div>
                   ))}
                   {order.items.length > 2 && (
@@ -72,13 +72,13 @@ const OrdersTable = ({ orders, onViewOrder, onUpdateStatus, onDeleteOrder, onOpe
                   )}
                 </div>
               </TableCell>
-              <TableCell className="font-bold text-blue-800 font-arabic text-xs">
-                {order.total_amount} ر.ي
+              <TableCell className="font-bold text-blue-800 font-arabic">
+                {order.total_amount} ريال يمني
               </TableCell>
               <TableCell>
                 <OrderStatusBadge status={order.status} />
               </TableCell>
-              <TableCell className="font-arabic text-xs">
+              <TableCell className="font-arabic">
                 {new Date(order.created_at).toLocaleDateString('ar-SA')}
               </TableCell>
               <TableCell>
@@ -94,7 +94,7 @@ const OrdersTable = ({ orders, onViewOrder, onUpdateStatus, onDeleteOrder, onOpe
           ))}
           {orders.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-6">
+              <TableCell colSpan={7} className="text-center py-8">
                 <div className="text-gray-500 font-arabic">لا توجد طلبات حتى الآن</div>
               </TableCell>
             </TableRow>

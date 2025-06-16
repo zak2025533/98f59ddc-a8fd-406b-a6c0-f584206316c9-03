@@ -1,53 +1,22 @@
 
-import MobileLayout from "@/components/mobile/MobileLayout";
-import MobileHeader from "@/components/mobile/MobileHeader";
+import Navbar from "@/components/Navbar";
 import HeroBanner from "@/components/HeroBanner";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
+import SimpleCategorySection from "@/components/SimpleCategorySection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import SimpleFooter from "@/components/SimpleFooter";
-import Navbar from "@/components/Navbar";
-import { CartSheet } from "@/components/CartSheet";
-import { FavoritesSheet } from "@/components/FavoritesSheet";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   useVisitorTracking();
-  const isMobile = useIsMobile();
 
-  if (isMobile) {
-    return (
-      <MobileLayout>
-        <MobileHeader title="بلا حدود للحلويات" />
-        {/* Hidden Cart and Favorites triggers for mobile navigation */}
-        <div className="hidden">
-          <CartSheet />
-          <FavoritesSheet />
-        </div>
-        <div className="space-y-0">
-          <HeroBanner />
-          <AnnouncementBanner />
-          <FeaturedProducts />
-        </div>
-        <SimpleFooter />
-      </MobileLayout>
-    );
-  }
-
-  // Desktop version
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-gray-50">
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
-      {/* Hidden Cart and Favorites triggers for desktop navigation */}
-      <div className="hidden">
-        <CartSheet />
-        <FavoritesSheet />
-      </div>
-      <div className="space-y-0">
-        <HeroBanner />
-        <AnnouncementBanner />
-        <FeaturedProducts />
-      </div>
+      <HeroBanner />
+      <AnnouncementBanner />
+      <SimpleCategorySection />
+      <FeaturedProducts />
       <SimpleFooter />
     </div>
   );

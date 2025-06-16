@@ -8,7 +8,7 @@ interface CategoryHeaderProps {
 
 const CategoryHeader = ({ name }: CategoryHeaderProps) => {
   return (
-    <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-blue-800">
+    <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
       <div className="max-w-7xl mx-auto text-center text-white">
         <Button
           onClick={() => window.history.back()}

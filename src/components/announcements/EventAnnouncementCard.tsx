@@ -23,13 +23,13 @@ const EventAnnouncementCard = ({
   getTypeLabel,
 }: EventAnnouncementCardProps) => {
   return (
-    <Card className="bg-white shadow-md hover:shadow-lg transition-all duration-300">
+    <Card className="bg-white shadow-lg hover:shadow-xl transition-all duration-300">
       <CardContent className="p-0">
         {event.video_url && (
           <div className="relative">
             <video
               controls
-              className="w-full h-32 md:h-40 object-cover rounded-t-lg"
+              className="w-full h-48 object-cover rounded-t-lg"
               poster={event.image_url || undefined}
             >
               <source src={event.video_url} type="video/mp4" />
@@ -38,30 +38,30 @@ const EventAnnouncementCard = ({
           </div>
         )}
         
-        <div className="p-3">
-          <div className="flex items-center justify-between mb-2">
-            <Badge className="bg-orange-100 text-orange-800 font-arabic text-xs">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-3">
+            <Badge className="bg-orange-100 text-orange-800 font-arabic">
               {getTypeLabel(event.type)}
             </Badge>
             {getAnnouncementIcon(event.type)}
           </div>
 
-          <h3 className="text-sm md:text-base font-bold text-gray-800 font-arabic mb-2 text-right">
+          <h3 className="text-xl font-bold text-gray-800 font-arabic mb-3 text-right">
             {event.title}
           </h3>
 
           {event.description && (
-            <p className="text-xs md:text-sm text-gray-600 font-arabic mb-2 text-right leading-relaxed">
+            <p className="text-gray-600 font-arabic mb-4 text-right leading-relaxed">
               {event.description}
             </p>
           )}
 
           {event.image_url && !event.video_url && (
-            <div className="mt-2">
+            <div className="mt-3">
               <img
                 src={event.image_url}
                 alt={event.title}
-                className="w-full h-24 md:h-32 object-cover rounded-lg"
+                className="w-full h-32 object-cover rounded-lg"
               />
             </div>
           )}
