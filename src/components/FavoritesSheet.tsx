@@ -48,7 +48,6 @@ export const FavoritesSheet = ({ triggerClassName, iconClassName }: FavoritesShe
           size="icon" 
           className={triggerClassName || defaultTriggerClasses}
           data-favorites-trigger
-          data-testid="favorites-trigger"
         >
           <Heart className={iconClassName || "h-5 w-5"} />
           {favoritesCount > 0 && (
@@ -59,7 +58,7 @@ export const FavoritesSheet = ({ triggerClassName, iconClassName }: FavoritesShe
           {triggerClassName && <span className="mr-2 font-arabic">المفضلة</span>}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[85vw] sm:w-[320px] sm:max-w-sm h-[70vh] sm:h-[80vh] bg-gradient-to-br from-pink-50 to-red-50">
+      <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-pink-50 to-red-50">
         <div className="h-full flex flex-col">
           <SheetHeader>
             <SheetTitle className="text-right font-arabic text-pink-900">

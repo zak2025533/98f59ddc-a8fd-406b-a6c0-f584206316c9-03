@@ -22,41 +22,29 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const loadCartItems = async () => {
     try {
-      console.log('Loading cart items...');
       const items = await fetchCartItems();
       setCartItems(items);
-      console.log('Cart items loaded:', items.length);
     } catch (error) {
       console.error('Error fetching cart items:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في تحميل عناصر السلة",
-        variant: "destructive",
-      });
     }
   };
 
   const addToCart = async (productId: string, quantity = 1) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
     setLoading(true);
     try {
-      console.log('Adding to cart:', { productId, quantity });
       const existingItem = cartItems.find(item => item.product_id === productId);
       
       if (existingItem) {
-        console.log('Item exists, updating quantity');
         await updateQuantity(existingItem.id, existingItem.quantity + quantity);
       } else {
-        console.log('New item, adding to cart');
         await addCartItem(productId, quantity);
         await loadCartItems();
       }
       
-      console.log('Successfully added to cart');
+      toast({
+        title: "تم إضافة المنتج",
+        description: "تم إضافة المنتج إلى سلة التسوق بنجاح",
+      });
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast({
@@ -70,13 +58,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
 
   const removeFromCart = async (itemId: string) => {
-    if (!itemId) {
-      console.error('Item ID is required');
-      return;
-    }
-
     try {
-      console.log('Removing from cart:', itemId);
       await removeCartItem(itemId);
       setCartItems(prev => prev.filter(item => item.id !== itemId));
       
@@ -86,27 +68,16 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       });
     } catch (error) {
       console.error('Error removing from cart:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في حذف المنتج من السلة",
-        variant: "destructive",
-      });
     }
   };
 
   const updateQuantity = async (itemId: string, quantity: number) => {
-    if (!itemId) {
-      console.error('Item ID is required');
-      return;
-    }
-
     if (quantity <= 0) {
       await removeFromCart(itemId);
       return;
     }
 
     try {
-      console.log('Updating quantity:', { itemId, quantity });
       await updateCartItemQuantity(itemId, quantity);
       setCartItems(prev => 
         prev.map(item => 
@@ -115,17 +86,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       );
     } catch (error) {
       console.error('Error updating quantity:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في تحديث الكمية",
-        variant: "destructive",
-      });
     }
   };
 
   const clearCart = async () => {
     try {
-      console.log('Clearing cart...');
       await clearAllCartItems();
       setCartItems([]);
       
@@ -135,11 +100,6 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       });
     } catch (error) {
       console.error('Error clearing cart:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في مسح السلة",
-        variant: "destructive",
-      });
     }
   };
 
@@ -153,18 +113,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       return;
     }
 
-    try {
-      console.log('Processing order...');
-      const orderText = generateOrderText(cartItems, total);
-      openWhatsApp(orderText);
-    } catch (error) {
-      console.error('Error processing order:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في معالجة الطلب",
-        variant: "destructive",
-      });
-    }
+    const orderText = generateOrderText(cartItems, total);
+    openWhatsApp(orderText);
   };
 
   useEffect(() => {

@@ -43,7 +43,6 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchFavorites = async () => {
     try {
-      console.log('Loading favorites...');
       const sessionId = getSessionId();
       const { data, error } = await supabase
         .from('favorites')
@@ -59,10 +58,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         `)
         .eq('session_id', sessionId);
 
-      if (error) {
-        console.error('Error fetching favorites:', error);
-        throw error;
-      }
+      if (error) throw error;
       
       const formattedItems = (data || []).map(item => ({
         id: item.id,
@@ -71,31 +67,16 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       }));
       
       setFavoriteItems(formattedItems);
-      console.log('Favorites loaded:', formattedItems.length);
     } catch (error) {
       console.error('Error fetching favorites:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في تحميل المفضلة",
-        variant: "destructive",
-      });
     }
   };
 
   const addToFavorites = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
-    if (isFavorite(productId)) {
-      console.log('Product already in favorites');
-      return;
-    }
+    if (isFavorite(productId)) return;
     
     setLoading(true);
     try {
-      console.log('Adding to favorites:', productId);
       const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
@@ -124,13 +105,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFromFavorites = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
     try {
-      console.log('Removing from favorites:', productId);
       const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
@@ -147,20 +122,10 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
       });
     } catch (error) {
       console.error('Error removing from favorites:', error);
-      toast({
-        title: "خطأ",
-        description: "فشل في حذف المنتج من المفضلة",
-        variant: "destructive",
-      });
     }
   };
 
   const toggleFavorite = async (productId: string) => {
-    if (!productId) {
-      console.error('Product ID is required');
-      return;
-    }
-
     if (isFavorite(productId)) {
       await removeFromFavorites(productId);
     } else {

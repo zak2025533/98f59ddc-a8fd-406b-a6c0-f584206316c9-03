@@ -46,7 +46,7 @@ const AdminDashboard = ({ onLogout }: AdminDashboardProps) => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto p-3 max-w-7xl">
+      <div className="container mx-auto p-6 max-w-7xl">
         <AdminHeader onLogout={onLogout} />
         <AdminStatsCards stats={stats} />
 
