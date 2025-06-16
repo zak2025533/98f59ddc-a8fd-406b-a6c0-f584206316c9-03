@@ -48,6 +48,7 @@ export const FavoritesSheet = ({ triggerClassName, iconClassName }: FavoritesShe
           size="icon" 
           className={triggerClassName || defaultTriggerClasses}
           data-favorites-trigger
+          data-testid="favorites-trigger"
         >
           <Heart className={iconClassName || "h-5 w-5"} />
           {favoritesCount > 0 && (

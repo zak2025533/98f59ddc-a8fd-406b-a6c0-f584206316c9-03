@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Admin from "@/pages/Admin";
 
@@ -58,15 +58,30 @@ const BottomNavigation = () => {
     return location.pathname.startsWith(path);
   };
 
+  // Wait for DOM to be ready before trying to find elements
+  useEffect(() => {
+    console.log('BottomNavigation mounted, DOM ready');
+  }, []);
+
   const handleCartClick = () => {
     try {
       console.log('Cart button clicked');
-      const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-      if (cartButton) {
-        cartButton.click();
-      } else {
-        console.error('Cart trigger button not found');
-      }
+      // Wait a bit for DOM to be ready
+      setTimeout(() => {
+        const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
+        if (cartButton) {
+          console.log('Cart trigger found, clicking...');
+          cartButton.click();
+        } else {
+          console.error('Cart trigger button not found');
+          // Fallback: try finding any cart sheet trigger
+          const fallbackCartButton = document.querySelector('button[data-cart-trigger], [data-testid="cart-trigger"]') as HTMLButtonElement;
+          if (fallbackCartButton) {
+            console.log('Fallback cart trigger found, clicking...');
+            fallbackCartButton.click();
+          }
+        }
+      }, 100);
     } catch (error) {
       console.error('Error opening cart:', error);
     }
@@ -75,12 +90,22 @@ const BottomNavigation = () => {
   const handleFavoritesClick = () => {
     try {
       console.log('Favorites button clicked');
-      const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-      if (favButton) {
-        favButton.click();
-      } else {
-        console.error('Favorites trigger button not found');
-      }
+      // Wait a bit for DOM to be ready
+      setTimeout(() => {
+        const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
+        if (favButton) {
+          console.log('Favorites trigger found, clicking...');
+          favButton.click();
+        } else {
+          console.error('Favorites trigger button not found');
+          // Fallback: try finding any favorites sheet trigger
+          const fallbackFavButton = document.querySelector('button[data-favorites-trigger], [data-testid="favorites-trigger"]') as HTMLButtonElement;
+          if (fallbackFavButton) {
+            console.log('Fallback favorites trigger found, clicking...');
+            fallbackFavButton.click();
+          }
+        }
+      }, 100);
     } catch (error) {
       console.error('Error opening favorites:', error);
     }
