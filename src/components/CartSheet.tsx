@@ -30,7 +30,6 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
           size="icon" 
           className={triggerClassName || defaultTriggerClasses}
           data-cart-trigger
-          data-testid="cart-trigger"
         >
           <ShoppingCart className={iconClassName || "h-5 w-5"} />
           {cartCount > 0 && (
