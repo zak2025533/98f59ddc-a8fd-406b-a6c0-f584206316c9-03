@@ -108,7 +108,7 @@ const CategoryPage = () => {
     }
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
+      <div className="min-h-screen bg-gray-50">
         <SimpleNavbar />
         <AllCategories />
         <SimpleFooter />
@@ -140,7 +140,7 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <SimpleNavbar />
       
       <CategoryHeader name={category.name} />

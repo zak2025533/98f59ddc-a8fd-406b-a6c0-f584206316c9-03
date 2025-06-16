@@ -34,7 +34,7 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
   };
 
   return (
-    <Card className="bg-white shadow-sm border border-blue-200 overflow-hidden hover:shadow-md transition-shadow">
+    <Card className="bg-white shadow-sm border border-gray-200 overflow-hidden">
       <div className="relative h-40">
         <img
           src={product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
@@ -53,7 +53,7 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
           <Button 
             size="sm" 
             variant="ghost" 
-            className="h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full shadow-sm"
+            className="h-8 w-8 p-0 bg-white/80 hover:bg-white rounded-full"
             onClick={handleFavoriteClick}
           >
             <Heart className={`h-4 w-4 ${isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-gray-600'}`} />
@@ -62,7 +62,7 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
 
         {/* Stock status */}
         {!product.in_stock && (
-          <div className="absolute inset-0 bg-gray-900/60 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <span className="text-white font-arabic text-sm">غير متوفر</span>
           </div>
         )}
@@ -70,10 +70,10 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
 
       <CardContent className="p-3">
         <div className="mb-2">
-          <h3 className="text-base font-bold text-blue-900 font-arabic line-clamp-1 mb-1">
+          <h3 className="text-base font-bold text-gray-900 font-arabic line-clamp-1 mb-1">
             {product.name}
           </h3>
-          <p className="text-blue-600 text-sm font-arabic line-clamp-2 leading-relaxed">
+          <p className="text-gray-600 text-sm font-arabic line-clamp-2 leading-relaxed">
             {product.description}
           </p>
         </div>
@@ -81,12 +81,12 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center">
-              <span className="text-lg font-bold text-blue-700 font-arabic">{product.price}</span>
-              <span className="text-xs text-blue-500 mr-1">ريال</span>
+              <span className="text-lg font-bold text-blue-600 font-arabic">{product.price}</span>
+              <span className="text-xs text-gray-500 mr-1">ريال</span>
             </div>
             <div className="flex items-center">
               <Star className="h-3 w-3 text-yellow-400 fill-current" />
-              <span className="text-xs text-blue-500 mr-1">4.8</span>
+              <span className="text-xs text-gray-500 mr-1">4.8</span>
             </div>
           </div>
           
