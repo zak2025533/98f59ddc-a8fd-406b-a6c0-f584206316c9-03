@@ -55,11 +55,11 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
   if (loading) {
     return (
       <Card className="bg-white border-2 border-gray-300">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="font-arabic text-right text-gray-800">إدارة المنتجات</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-center items-center py-8">
+          <div className="flex justify-center items-center py-6">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         </CardContent>
@@ -70,8 +70,8 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
   return (
     <>
       <Card className="bg-white border-2 border-gray-300">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <CardHeader className="pb-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <CardTitle className="font-arabic text-right flex items-center gap-2 text-gray-800">
               <Package className="h-5 w-5" />
               إدارة المنتجات ({products.length})
@@ -82,46 +82,44 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="mb-6">
-            <div className="relative">
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 h-4 w-4" />
-              <Input
-                placeholder="البحث في المنتجات..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pr-10 font-arabic text-right border-2 border-gray-300 focus:border-blue-500 text-gray-800"
-              />
-            </div>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 h-4 w-4" />
+            <Input
+              placeholder="البحث في المنتجات..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pr-10 font-arabic text-right border-2 border-gray-300 focus:border-blue-500 text-gray-800"
+            />
           </div>
 
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-8">
-              <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+            <div className="text-center py-6">
+              <Package className="h-12 w-12 mx-auto text-gray-400 mb-3" />
               <p className="text-gray-600 font-arabic">
                 {searchTerm ? "لا توجد منتجات تطابق البحث" : "لا توجد منتجات حتى الآن"}
               </p>
-              <Button onClick={openNewDialog} className="mt-4 font-arabic bg-blue-600 hover:bg-blue-700 text-white">
+              <Button onClick={openNewDialog} className="mt-3 font-arabic bg-blue-600 hover:bg-blue-700 text-white">
                 إضافة أول منتج
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="border-2 border-gray-300 rounded-lg p-4 space-y-3 bg-white">
+                <div key={product.id} className="border-2 border-gray-300 rounded-lg p-3 space-y-2 bg-white">
                   {product.image_url && (
                     <img
                       src={product.image_url}
                       alt={product.name}
-                      className="w-full h-32 object-cover rounded-md"
+                      className="w-full h-24 object-cover rounded-md"
                     />
                   )}
                   <div>
-                    <h3 className="font-semibold font-arabic text-right text-gray-800">{product.name}</h3>
-                    <p className="text-sm text-gray-600 font-arabic text-right">
+                    <h3 className="font-semibold font-arabic text-right text-gray-800 text-sm">{product.name}</h3>
+                    <p className="text-xs text-gray-600 font-arabic text-right">
                       {product.categories?.name}
                     </p>
-                    <p className="text-lg font-bold text-blue-700 font-arabic text-right">
+                    <p className="text-base font-bold text-blue-700 font-arabic text-right">
                       {product.price} ريال يمني
                     </p>
                   </div>
@@ -130,14 +128,14 @@ const ProductManagement = ({ onStatsUpdate }: ProductManagementProps) => {
                       variant="outline"
                       size="sm"
                       onClick={() => openEditDialog(product)}
-                      className="font-arabic flex-1 border-blue-300 text-blue-700 hover:bg-blue-50"
+                      className="font-arabic flex-1 border-blue-300 text-blue-700 hover:bg-blue-50 text-xs"
                     >
                       تعديل
                     </Button>
                     <Button
                       size="sm"
                       onClick={() => handleDelete(product.id)}
-                      className="font-arabic flex-1 bg-red-600 hover:bg-red-700 text-white"
+                      className="font-arabic flex-1 bg-red-600 hover:bg-red-700 text-white text-xs"
                     >
                       حذف
                     </Button>

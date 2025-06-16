@@ -13,7 +13,7 @@ interface AdminTabsContentProps {
 
 const AdminTabsContent = ({ onStatsUpdate }: AdminTabsContentProps) => {
   return (
-    <div className="p-6">
+    <div className="p-3">
       <TabsContent value="products" className="m-0">
         <ProductManagement onStatsUpdate={onStatsUpdate} />
       </TabsContent>
