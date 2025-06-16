@@ -58,6 +58,34 @@ const BottomNavigation = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleCartClick = () => {
+    try {
+      console.log('Cart button clicked');
+      const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
+      if (cartButton) {
+        cartButton.click();
+      } else {
+        console.error('Cart trigger button not found');
+      }
+    } catch (error) {
+      console.error('Error opening cart:', error);
+    }
+  };
+
+  const handleFavoritesClick = () => {
+    try {
+      console.log('Favorites button clicked');
+      const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
+      if (favButton) {
+        favButton.click();
+      } else {
+        console.error('Favorites trigger button not found');
+      }
+    } catch (error) {
+      console.error('Error opening favorites:', error);
+    }
+  };
+
   return (
     <>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe-area-inset-bottom">
@@ -73,11 +101,7 @@ const BottomNavigation = () => {
                   className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
                     active ? "text-blue-600" : "text-gray-500"
                   }`}
-                  onClick={() => {
-                    // This will be handled by existing CartSheet functionality
-                    const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-                    cartButton?.click();
-                  }}
+                  onClick={handleCartClick}
                 >
                   <div className="relative">
                     <Icon className="h-6 w-6" />
@@ -99,11 +123,7 @@ const BottomNavigation = () => {
                   className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
                     active ? "text-blue-600" : "text-gray-500"
                   }`}
-                  onClick={() => {
-                    // This will be handled by existing FavoritesSheet functionality
-                    const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-                    favButton?.click();
-                  }}
+                  onClick={handleFavoritesClick}
                 >
                   <div className="relative">
                     <Icon className="h-6 w-6" />
