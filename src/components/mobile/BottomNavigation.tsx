@@ -1,4 +1,3 @@
-
 import { Home, Grid3X3, ShoppingCart, Heart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
@@ -18,39 +17,11 @@ const BottomNavigation = () => {
   const favoritesCount = favoriteItems.length;
 
   const navItems = [
-    {
-      icon: Home,
-      label: "الرئيسية",
-      path: "/",
-      count: 0
-    },
-    {
-      icon: Grid3X3,
-      label: "المنتجات",
-      path: "/category",
-      count: 0
-    },
-    {
-      icon: ShoppingCart,
-      label: "السلة",
-      path: "#",
-      count: cartCount,
-      isCart: true
-    },
-    {
-      icon: Heart,
-      label: "المفضلة",
-      path: "#",
-      count: favoritesCount,
-      isFavorites: true
-    },
-    {
-      icon: User,
-      label: "لوحة التحكم",
-      path: "#",
-      count: 0,
-      isAdmin: true
-    }
+    { icon: Home, label: "الرئيسية", path: "/", count: 0 },
+    { icon: Grid3X3, label: "المنتجات", path: "/category", count: 0 },
+    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, isCart: true },
+    { icon: Heart, label: "المفضلة", path: "#", count: favoritesCount, isFavorites: true },
+    { icon: User, label: "لوحة التحكم", path: "#", count: 0, isAdmin: true }
   ];
 
   const isActive = (path: string) => {
@@ -60,58 +31,54 @@ const BottomNavigation = () => {
 
   const handleCartClick = () => {
     try {
-      console.log('Cart button clicked');
       const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-      if (cartButton) {
-        cartButton.click();
-      } else {
-        console.error('Cart trigger button not found');
-      }
+      cartButton?.click();
     } catch (error) {
-      console.error('Error opening cart:', error);
+      console.error("Error opening cart:", error);
     }
   };
 
   const handleFavoritesClick = () => {
     try {
-      console.log('Favorites button clicked');
       const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-      if (favButton) {
-        favButton.click();
-      } else {
-        console.error('Favorites trigger button not found');
-      }
+      favButton?.click();
     } catch (error) {
-      console.error('Error opening favorites:', error);
+      console.error("Error opening favorites:", error);
     }
   };
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe-area-inset-bottom">
-        <div className="flex justify-around items-center py-2 px-4">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-[env(safe-area-inset-bottom)]">
+        <div className="flex justify-around items-center py-2 px-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
+            const baseClass =
+              "flex flex-col items-center justify-center p-2 min-w-[48px] sm:min-w-[60px] relative transition-colors duration-200";
+
+            const iconClass = "sm:h-6 sm:w-6 h-5 w-5";
+            const badgeClass =
+              "absolute -top-1 -right-1 sm:h-5 sm:w-5 h-4 w-4 text-[10px] sm:text-xs bg-red-500 text-white p-0 flex items-center justify-center rounded-full";
+
+            const labelClass = "text-[10px] sm:text-xs mt-1 font-arabic";
+
             if (item.isCart) {
               return (
                 <button
                   key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    active ? "text-blue-600" : "text-gray-500"
-                  }`}
+                  className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
                   onClick={handleCartClick}
                 >
                   <div className="relative">
-                    <Icon className="h-6 w-6" />
+                    <Icon className={iconClass} />
                     {item.count > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                      <Badge className={badgeClass}>
                         {item.count > 99 ? "99+" : item.count}
                       </Badge>
                     )}
                   </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                  <span className={labelClass}>{item.label}</span>
                 </button>
               );
             }
@@ -120,20 +87,18 @@ const BottomNavigation = () => {
               return (
                 <button
                   key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    active ? "text-blue-600" : "text-gray-500"
-                  }`}
+                  className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
                   onClick={handleFavoritesClick}
                 >
                   <div className="relative">
-                    <Icon className="h-6 w-6" />
+                    <Icon className={iconClass} />
                     {item.count > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                      <Badge className={badgeClass}>
                         {item.count > 99 ? "99+" : item.count}
                       </Badge>
                     )}
                   </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                  <span className={labelClass}>{item.label}</span>
                 </button>
               );
             }
@@ -142,43 +107,39 @@ const BottomNavigation = () => {
               return (
                 <button
                   key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    adminDialogOpen ? "text-blue-600" : "text-gray-500"
-                  }`}
+                  className={`${baseClass} ${adminDialogOpen ? "text-blue-600" : "text-gray-500"}`}
                   onClick={() => setAdminDialogOpen(true)}
                 >
                   <div className="relative">
-                    <Icon className="h-6 w-6" />
+                    <Icon className={iconClass} />
                   </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                  <span className={labelClass}>{item.label}</span>
                 </button>
               );
             }
 
             return (
               <Link
-                key={item.label}
+                key={`${item.label}-${item.path}`}
                 to={item.path}
-                className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                  active ? "text-blue-600" : "text-gray-500"
-                }`}
+                className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
               >
                 <div className="relative">
-                  <Icon className="h-6 w-6" />
+                  <Icon className={iconClass} />
                   {item.count > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                    <Badge className={badgeClass}>
                       {item.count > 99 ? "99+" : item.count}
                     </Badge>
                   )}
                 </div>
-                <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                <span className={labelClass}>{item.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
 
-      {/* Admin Dialog for Mobile */}
+      {/* Admin Panel Dialog */}
       <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>
         <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-y-auto p-0 m-2">
           <DialogHeader className="sr-only">
