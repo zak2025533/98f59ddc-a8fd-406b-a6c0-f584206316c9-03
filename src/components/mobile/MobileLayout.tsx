@@ -1,7 +1,7 @@
-
 import { ReactNode } from "react";
 import BottomNavigation from "./BottomNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CartSheet } from "@/components/CartSheet"; // ✅ أضف هذا الاستيراد
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -17,9 +17,14 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
       <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
         {children}
       </main>
-      
-      {/* Bottom Navigation - only show on mobile */}
-      {showBottomNav && isMobile && <BottomNavigation />}
+
+      {/* ✅ أضف CartSheet هنا */}
+      {showBottomNav && isMobile && (
+        <>
+          <CartSheet />
+          <BottomNavigation />
+        </>
+      )}
     </div>
   );
 };
