@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import BottomNavigation from "./BottomNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CartSheet } from "@/components/CartSheet";
-import { FavoritesSheet } from "@/components/FavoritesSheet"; // ✅
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -19,13 +17,10 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
         {children}
       </main>
 
-      {/* ✅ كلا من السلة والمفضلة يجب أن تكون هنا دائمًا */}
+      {/* ✅ لا CartSheet هنا */}
+      {/* ✅ BottomNavigation فقط */}
       {showBottomNav && isMobile && (
-        <>
-          <CartSheet />
-          <FavoritesSheet /> {/* ✅ تمت الإضافة */}
-          <BottomNavigation />
-        </>
+        <BottomNavigation />
       )}
     </div>
   );
