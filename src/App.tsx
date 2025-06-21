@@ -28,28 +28,18 @@ const App = () => (
         <FavoritesProvider>
           <Toaster />
           <Sonner />
-          
-          {/* تغليف رئيسي لتفعيل flex و safe area */}
-          <div
-            id="root-wrapper"
-            className="flex flex-col min-h-screen
-                       pt-[env(safe-area-inset-top)]
-                       pb-[env(safe-area-inset-bottom)]
-                       overflow-hidden"
-          >
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/category" element={<Category />} />
-                <Route path="/category/:categorySlug" element={<Category />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/*" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </div>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/category" element={<Category />} />
+              <Route path="/category/:categorySlug" element={<Category />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/*" element={<Admin />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </FavoritesProvider>
       </CartProvider>
     </TooltipProvider>
