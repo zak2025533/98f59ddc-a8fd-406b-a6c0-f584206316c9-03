@@ -1,8 +1,8 @@
- import { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search } from "lucide-react";
 import SearchDialog from "./SearchDialog";
-import { CartSheet } from "./CartSheet";
+// ✅ حذفنا CartSheet
 import { FavoritesSheet } from "./FavoritesSheet";
 import CategoriesDialog from "./CategoriesDialog";
 import AdminDialog from "./AdminDialog";
@@ -44,7 +44,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-3 space-x-reverse">
             <SearchDialog />
             <FavoritesSheet />
-            <CartSheet />
+            {/* ✅ CartSheet تمت إزالته من هنا */}
             <AdminDialog />
             
             {/* Mobile Menu Button */}
