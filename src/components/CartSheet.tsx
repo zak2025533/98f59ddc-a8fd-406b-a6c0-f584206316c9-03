@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
@@ -7,7 +7,6 @@ import { EmptyCart } from "./cart/EmptyCart";
 import { CartItemCard } from "./cart/CartItemCard";
 import { CartSummary } from "./cart/CartSummary";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
 
 interface CartSheetProps {
   triggerClassName?: string;
@@ -16,27 +15,18 @@ interface CartSheetProps {
 
 export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) => {
   const { cartItems, updateQuantity, removeFromCart, clearCart, handleOrder } = useCart();
-  const { toast } = useToast();
-
+  
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
   const defaultTriggerClasses = "relative p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors";
 
-  const handleOrderWithToast = () => {
-    handleOrder();
-    toast({
-      title: "تم تأكيد الطلب",
-      description: "سيتم التواصل معك قريبًا لتأكيد التفاصيل",
-    });
-  };
-
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
+        <Button 
+          variant="ghost" 
+          size="icon" 
           className={triggerClassName || defaultTriggerClasses}
           data-cart-trigger
         >
@@ -49,11 +39,10 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
           {triggerClassName && <span className="mr-2 font-arabic">سلة التسوق</span>}
         </Button>
       </SheetTrigger>
-
-      <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-blue-50 to-purple-50 rtl:text-right font-arabic">
+      <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="h-full flex flex-col">
           <CartHeader cartCount={cartCount} />
-
+          
           {cartItems.length === 0 ? (
             <EmptyCart />
           ) : (
@@ -65,23 +54,13 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
                     item={item}
                     onUpdateQuantity={updateQuantity}
                     onRemoveItem={removeFromCart}
-                    isRTL // دعم اللغة العربية داخل العنصر
                   />
                 ))}
               </div>
-              <CartSummary
+              <CartSummary 
                 total={total}
-                onClearCart={() => {
-                  if (confirm("هل أنت متأكد من حذف جميع العناصر من السلة؟")) {
-                    clearCart();
-                    toast({
-                      title: "تم مسح السلة",
-                      description: "تم حذف جميع العناصر من السلة بنجاح",
-                    });
-                  }
-                }}
-                onHandleOrder={handleOrderWithToast}
-                currency="ريال يمني"
+                onClearCart={clearCart}
+                onHandleOrder={handleOrder}
               />
             </>
           )}
