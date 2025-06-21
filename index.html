@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- ✅ ضبط العرض وتفادي تكبير الصفحة أو كسر العرض -->
+    <!-- ✅ Viewport مثالي لكل أنواع الأجهزة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
-    <!-- ✅ تحسين دعم PWA في iPhone -->
+    <!-- ✅ دعم PWA على Android وiOS -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
@@ -18,13 +18,12 @@
     <title>بلا حدود للحلويات</title>
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
-    <!-- ✅ تحسين تنسيق المساحات الآمنة على iOS -->
     <style>
       :root {
-        --safe-area-inset-top: env(safe-area-inset-top);
-        --safe-area-inset-right: env(safe-area-inset-right);
-        --safe-area-inset-bottom: env(safe-area-inset-bottom);
-        --safe-area-inset-left: env(safe-area-inset-left);
+        --safe-area-inset-top: env(safe-area-inset-top, 0px);
+        --safe-area-inset-right: env(safe-area-inset-right, 0px);
+        --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-area-inset-left: env(safe-area-inset-left, 0px);
       }
 
       html, body {
@@ -33,26 +32,31 @@
         width: 100%;
         height: 100%;
         min-height: 100%;
-        background-color: #fff;
-        overscroll-behavior-y: contain;
+        background-color: #ffffff;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        direction: rtl;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
-        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        direction: rtl;
+        overscroll-behavior-y: contain;
         overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
       }
 
       #root {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-        width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        padding-left: env(safe-area-inset-left, 0px);
+        padding-right: env(safe-area-inset-right, 0px);
         height: 100%;
+        box-sizing: border-box;
       }
 
-      /* ✅ منع التكبير على iOS عند الضغط على الحقول */
+      /* ✅ منع تكبير الشاشة عند تركيز المستخدم على الحقول */
       input, select, textarea {
         font-size: 16px !important;
       }
