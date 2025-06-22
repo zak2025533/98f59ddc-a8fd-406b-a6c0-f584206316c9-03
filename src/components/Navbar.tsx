@@ -43,18 +43,10 @@ const Navbar = () => {
           {/* Action Buttons */}
           <div className="flex items-center space-x-3 space-x-reverse">
             <SearchDialog />
-
-            {/* ✅ عرض فقط في الشاشات المتوسطة (md) وما فوق */}
-            <div className="hidden md:block">
-              <FavoritesSheet />
-            </div>
-
-            <div className="hidden md:block">
-              <CartSheet />
-            </div>
-
+            <FavoritesSheet />
+            <CartSheet />
             <AdminDialog />
-
+            
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"

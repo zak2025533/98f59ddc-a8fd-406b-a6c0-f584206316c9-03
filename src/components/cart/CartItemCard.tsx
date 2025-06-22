@@ -1,5 +1,4 @@
-
-import { Button } from "@/components/ui/button";
+ import { Button } from "@/components/ui/button";
 import { CartItem } from "@/hooks/useCart";
 import { Minus, Plus, Trash2 } from "lucide-react";
 

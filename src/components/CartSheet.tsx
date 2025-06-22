@@ -1,5 +1,4 @@
-
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
