@@ -1,16 +1,11 @@
+
 import { useState } from "react";
-import {
-  Menu,
-  Search,
-  Home,
-  Grid3X3,
-  Info,
-  MessageCircle,
-  Settings
-} from "lucide-react";
+import { Menu, Search, ShoppingCart, Heart, Home, Grid3X3, Info, MessageCircle, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CartSheet } from "./CartSheet";
+import { FavoritesSheet } from "./FavoritesSheet";
 import { useNativeApp } from "@/hooks/useNativeApp";
 import Admin from "@/pages/Admin";
 
@@ -67,32 +62,22 @@ const SimpleNavbar = () => {
 
             {/* Right side buttons */}
             <div className="flex items-center space-x-4 space-x-reverse">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full text-white bg-white/10 hover:bg-white/20"
-              >
+              <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
                 <Search className="h-5 w-5" />
               </Button>
-
-              {/* ✅ تم حذف FavoritesSheet و CartSheet من هنا */}
+              
+              <FavoritesSheet />
+              <CartSheet />
 
               {/* Mobile menu */}
               <div className="md:hidden">
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full text-white bg-white/10 hover:bg-white/20"
-                    >
+                    <Button variant="ghost" size="icon" className="rounded-full text-white bg-white/10 hover:bg-white/20">
                       <Menu className="h-5 w-5" />
                     </Button>
                   </SheetTrigger>
-                  <SheetContent
-                    side="right"
-                    className="w-[300px] bg-gradient-to-br from-orange-50 to-yellow-50"
-                  >
+                  <SheetContent side="right" className="w-[300px] bg-gradient-to-br from-orange-50 to-yellow-50">
                     <nav className="flex flex-col space-y-4 mt-6">
                       {navItems.map((item) => {
                         const Icon = item.icon;
