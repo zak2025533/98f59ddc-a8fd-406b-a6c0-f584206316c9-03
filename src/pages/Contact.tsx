@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
-  Clock, 
-  MessageSquare, 
+import emailjs from "emailjs-com";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageSquare,
   Send,
   Facebook,
   Instagram,
@@ -26,6 +27,7 @@ const Contact = () => {
     message: ''
   });
   const { toast } = useToast();
+  const formRef = useRef(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,16 +41,23 @@ const Contact = () => {
       return;
     }
 
-    toast({
-      title: "تم الإرسال بنجاح",
-      description: "شكراً لتواصلكم معنا. سنقوم بالرد عليكم في أقرب وقت ممكن.",
-    });
-
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: ''
+    emailjs.sendForm(
+      "service_l0ufhib",
+      "template_12labw9",
+      formRef.current!,
+      "egJiLm9r0XTOMvN0x"
+    ).then(() => {
+      toast({
+        title: "تم الإرسال بنجاح",
+        description: "شكراً لتواصلكم معنا. سنقوم بالرد عليكم في أقرب وقت ممكن."
+      });
+      setFormData({ name: '', email: '', phone: '', message: '' });
+    }).catch(() => {
+      toast({
+        title: "فشل في الإرسال",
+        description: "حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة لاحقاً.",
+        variant: "destructive",
+      });
     });
   };
 
@@ -153,12 +162,13 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label className="block text-sm mb-1 text-right font-arabic">الاسم الكامل *</label>
                     <Input
+                      name="from_name"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="font-arabic text-right"
                       required
                     />
@@ -168,8 +178,9 @@ const Contact = () => {
                     <label className="block text-sm mb-1 text-right font-arabic">البريد الإلكتروني *</label>
                     <Input
                       type="email"
+                      name="from_email"
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="font-arabic text-right"
                       required
                     />
@@ -179,8 +190,9 @@ const Contact = () => {
                     <label className="block text-sm mb-1 text-right font-arabic">رقم الهاتف</label>
                     <Input
                       type="tel"
+                      name="phone"
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="font-arabic text-right"
                     />
                   </div>
@@ -188,15 +200,16 @@ const Contact = () => {
                   <div>
                     <label className="block text-sm mb-1 text-right font-arabic">الرسالة *</label>
                     <Textarea
+                      name="message"
                       value={formData.message}
-                      onChange={(e) => setFormData({...formData, message: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="font-arabic text-right min-h-[120px]"
                       required
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full font-arabic bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   >
                     <Send className="h-4 w-4 ml-2" />
