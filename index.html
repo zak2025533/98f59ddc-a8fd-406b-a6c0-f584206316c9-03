@@ -4,34 +4,29 @@
     <meta charset="UTF-8" />
     <title>بلا حدود للحلويات</title>
 
-    <!-- Viewport: أساسي للتجاوب -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <!-- تحميل خط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
 
-    <!-- Favicon -->
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- دعم PWA وتطبيق أندرويد -->
+    <!-- دعم PWA و Android -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#2563eb" />
     <meta name="application-name" content="بلا حدود للحلويات" />
     <meta name="msapplication-TileColor" content="#2563eb" />
     <meta name="msapplication-tap-highlight" content="no" />
-
-    <!-- دعم أجهزة Android المختلفة -->
     <meta name="HandheldFriendly" content="true" />
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <meta name="google" content="notranslate" />
     <meta name="color-scheme" content="light dark" />
-
-    <!-- تحسين عند التثبيت على الشاشة الرئيسية -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-    <!-- وصف الموقع -->
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
-    <!-- CSS مدمج لحماية التخطيط على الأجهزة -->
     <style>
       :root {
         --safe-area-inset-top: env(safe-area-inset-top);
@@ -39,17 +34,15 @@
         --safe-area-inset-bottom: env(safe-area-inset-bottom);
         --safe-area-inset-left: env(safe-area-inset-left);
       }
-
       html {
         scroll-behavior: smooth;
         -webkit-text-size-adjust: 100%;
       }
-
       body {
         margin: 0;
         padding: 0;
-        font-family: system-ui, "Cairo", "Arial", sans-serif;
-        background-color: #ffffff;
+        font-family: "Cairo", system-ui, Arial, sans-serif;
+        background-color: #fff;
         overflow-x: hidden;
         overscroll-behavior-y: contain;
         -webkit-user-select: none;
@@ -58,11 +51,9 @@
         direction: rtl;
         text-align: right;
       }
-
       input, select, textarea {
-        font-size: 16px !important; /* منع التكبير التلقائي في Android */
+        font-size: 16px !important; /* منع التكبير التلقائي */
       }
-
       img {
         max-width: 100%;
         height: auto;
@@ -70,12 +61,8 @@
       }
     </style>
   </head>
-
   <body>
-    <!-- جذر تطبيق React -->
     <div id="root"></div>
-
-    <!-- سكربت التطبيق الرئيسي -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
