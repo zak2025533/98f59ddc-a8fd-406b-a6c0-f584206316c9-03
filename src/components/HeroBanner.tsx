@@ -3,7 +3,7 @@ import { ShoppingBag, ArrowDown } from "lucide-react";
 
 const HeroBanner = () => {
   return (
-    <section className="relative min-h-screen sm:min-h-[500px] pt-[env(safe-area-inset-top)] flex items-center overflow-hidden">
+    <section className="relative h-screen flex items-center overflow-hidden">
       {/* خلفيات متدرجة */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/15 via-transparent to-transparent"></div>
