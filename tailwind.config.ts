@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import tailwindDir from "tailwindcss-dir"; // دعم الاتجاهات
+//import tailwindDir from "tailwindcss-dir"; // دعم الاتجاهات
 
 export default {
   darkMode: ["class"],
