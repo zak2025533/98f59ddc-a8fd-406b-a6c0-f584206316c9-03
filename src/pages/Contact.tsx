@@ -1,4 +1,3 @@
-import SimpleNavbar from "@/components/SimpleNavbar";
 import SimpleFooter from "@/components/SimpleFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,7 +102,8 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <SimpleNavbar />
+      {/* تم إيقاف شريط القائمة العلوي */}
+      {/* <SimpleNavbar /> */}
 
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -207,7 +207,6 @@ const Contact = () => {
             </Card>
 
             <div className="space-y-6">
-              {/* Google Map Embed */}
               <Card className="shadow-lg border-purple-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-purple-800 font-arabic text-right">
