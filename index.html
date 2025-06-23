@@ -4,31 +4,36 @@
     <meta charset="UTF-8" />
     <title>بلا حدود للحلويات</title>
 
-    <!-- تحميل خط Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+    <!-- Viewport: أساسي لدعم الشاشات الطويلة -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
-    <!-- Viewport -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-    />
-
+    <!-- فافيكون -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- دعم PWA و Android -->
+    <!-- تحسينات لأجهزة Android -->
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#2563eb" />
     <meta name="application-name" content="بلا حدود للحلويات" />
+    <meta name="theme-color" content="#2563eb" />
     <meta name="msapplication-TileColor" content="#2563eb" />
-    <meta name="msapplication-tap-highlight" content="no" />
     <meta name="HandheldFriendly" content="true" />
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <meta name="google" content="notranslate" />
     <meta name="color-scheme" content="light dark" />
 
+    <!-- تحسين التثبيت كتطبيق -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- وصف -->
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
+    <!-- CSS لتغطية الشاشة الكاملة -->
     <style>
+      html, body, #root {
+        height: 100%;
+      }
+
       :root {
         --safe-area-inset-top: env(safe-area-inset-top);
         --safe-area-inset-right: env(safe-area-inset-right);
@@ -39,33 +44,23 @@
       html {
         scroll-behavior: smooth;
         -webkit-text-size-adjust: 100%;
-        height: 100%;
       }
 
       body {
         margin: 0;
-        padding-top: var(--safe-area-inset-top);
-        padding-bottom: var(--safe-area-inset-bottom);
-        padding-left: var(--safe-area-inset-left);
-        padding-right: var(--safe-area-inset-right);
-        font-family: "Cairo", system-ui, Arial, sans-serif;
-        background-color: #fff;
-        direction: rtl;
-        text-align: right;
-
-        /* السماح بالتمرير العمودي */
-        overflow-y: auto;
-        overscroll-behavior-y: contain;
-
+        padding: 0;
+        font-family: system-ui, "Cairo", "Arial", sans-serif;
+        background-color: #ffffff;
+        overflow-x: hidden;
+        overscroll-behavior-y: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
-        min-height: 100vh; /* لجعل الجسم على الأقل بنفس ارتفاع الشاشة */
+        direction: rtl;
+        text-align: right;
       }
 
-      input,
-      select,
-      textarea {
+      input, select, textarea {
         font-size: 16px !important;
       }
 
@@ -74,14 +69,13 @@
         height: auto;
         display: block;
       }
-
-      #root {
-        min-height: 100vh;
-      }
     </style>
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- سكربت التطبيق -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
