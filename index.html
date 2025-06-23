@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <title>بلا حدود للحلويات</title>
 
-    <!-- Viewport -->
+    <!-- Viewport: أساسي لدعم الشاشات الطويلة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
     <!-- فافيكون -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- تحسينات Android و iOS -->
+    <!-- تحسينات لأجهزة Android -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="بلا حدود للحلويات" />
     <meta name="theme-color" content="#2563eb" />
@@ -19,39 +19,33 @@
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <meta name="google" content="notranslate" />
     <meta name="color-scheme" content="light dark" />
+
+    <!-- تحسين التثبيت كتطبيق -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- وصف -->
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
-    <!-- OneSignal V16 SDK -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "2d9be3c4-9c02-4ecd-b0d7-38ac21b49db9",
-          safari_web_id: "web.onesignal.auto.5093406a-927f-4c57-a877-608b6718a7cc",
-          notifyButton: {
-            enable: true,
-          },
-        });
-      });
-    </script>
-
-    <!-- CSS لتغطية الشاشة -->
+    <!-- CSS لتغطية الشاشة الكاملة -->
     <style>
-      html, body, #root { height: 100%; }
+      html, body, #root {
+        height: 100%;
+      }
+
       :root {
         --safe-area-inset-top: env(safe-area-inset-top);
         --safe-area-inset-right: env(safe-area-inset-right);
         --safe-area-inset-bottom: env(safe-area-inset-bottom);
         --safe-area-inset-left: env(safe-area-inset-left);
       }
+
       html {
         scroll-behavior: smooth;
         -webkit-text-size-adjust: 100%;
       }
+
       body {
         margin: 0;
         padding: 0;
@@ -65,15 +59,61 @@
         direction: rtl;
         text-align: right;
       }
+
       input, select, textarea {
         font-size: 16px !important;
       }
+
       img {
         max-width: 100%;
         height: auto;
         display: block;
       }
     </style>
+
+    <!-- OneSignal SDK وإعداد الإشعارات -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "2d9be3c4-9c02-4ecd-b0d7-38ac21b49db9",
+          notifyButton: {
+            enable: true,
+            position: "bottom-left",
+            theme: "default",
+            size: "medium",
+            showCredit: false,
+            text: {
+              'tip.state.unsubscribed': 'تفعيل الإشعارات',
+              'tip.state.subscribed': 'الإشعارات مفعلة',
+              'tip.state.blocked': 'تم حظر الإشعارات',
+              'message.prenotify': 'اضغط لتفعيل الإشعارات',
+              'message.action.subscribed': 'تم تفعيل الإشعارات ✅',
+              'message.action.resubscribed': 'تم إعادة تفعيل الإشعارات',
+              'message.action.unsubscribed': 'تم إيقاف الإشعارات',
+              'dialog.main.title': 'إدارة الإشعارات',
+              'dialog.main.button.subscribe': 'تفعيل',
+              'dialog.main.button.unsubscribe': 'إيقاف',
+              'dialog.blocked.title': 'تم حظر الإشعارات',
+              'dialog.blocked.message': 'يرجى السماح بالإشعارات من إعدادات المتصفح'
+            }
+          }
+        });
+
+        // إرسال إشعار ترحيبي بعد الموافقة
+        const isPushEnabled = await OneSignal.isPushNotificationsEnabled();
+        if (isPushEnabled) {
+          OneSignal.sendSelfNotification(
+            "مرحباً بك في متجر بلا حدود للحلويات 🍬",
+            "تابعنا لتصلك آخر العروض والمنتجات!",
+            "https://98f59ddc-a8fd-406b-a6c0-f584206316c-beta.vercel.app/",
+            "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
+            { notificationType: "welcome" }
+          );
+        }
+      });
+    </script>
   </head>
 
   <body>
