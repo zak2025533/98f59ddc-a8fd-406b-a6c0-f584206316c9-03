@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -30,16 +29,19 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/category" element={<Category />} />
-              <Route path="/category/:categorySlug" element={<Category />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/admin/*" element={<Admin />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            {/* ✅ تغليف المحتوى بواجهة متوافقة مع الموبايل */}
+            <div className="min-h-[100dvh] pt-safe-top pb-safe-bottom px-4 flex flex-col justify-between bg-background font-arabic">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/category" element={<Category />} />
+                <Route path="/category/:categorySlug" element={<Category />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/*" element={<Admin />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
           </BrowserRouter>
         </FavoritesProvider>
       </CartProvider>
