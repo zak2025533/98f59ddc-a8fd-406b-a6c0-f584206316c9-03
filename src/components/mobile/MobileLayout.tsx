@@ -14,14 +14,12 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* ✅ المحتوى الرئيسي مع عرض مضبوط */}
       <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
-        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-0">
           {children}
         </div>
       </main>
 
-      {/* ✅ مكونات التنقل السفلي والشرائح الجانبية */}
       {showBottomNav && isMobile && (
         <>
           <CartSheet />
