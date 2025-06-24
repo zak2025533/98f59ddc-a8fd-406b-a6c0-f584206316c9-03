@@ -17,7 +17,7 @@ export default {
         sm: '1rem',
         md: '1.5rem',
         lg: '2rem',
-        xl: '2rem',
+        xl: '2.5rem',
         '2xl': '3rem',
       },
       screens: {
@@ -37,31 +37,31 @@ export default {
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          foreground: 'hsl(var(--primary-foreground))'
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          foreground: 'hsl(var(--secondary-foreground))'
         },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
+          foreground: 'hsl(var(--destructive-foreground))'
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          foreground: 'hsl(var(--muted-foreground))'
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          foreground: 'hsl(var(--accent-foreground))'
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          foreground: 'hsl(var(--popover-foreground))'
         },
         card: {
           DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
+          foreground: 'hsl(var(--card-foreground))'
         },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',
@@ -71,7 +71,7 @@ export default {
           accent: 'hsl(var(--sidebar-accent))',
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'hsl(var(--sidebar-border))',
-          ring: 'hsl(var(--sidebar-ring))',
+          ring: 'hsl(var(--sidebar-ring))'
         },
         'sweet-orange': 'hsl(var(--sweet-orange))',
         'sweet-gold': 'hsl(var(--sweet-gold))',
@@ -81,19 +81,19 @@ export default {
         'sweet-purple': '270 70% 60%',
         'sweet-mint': '160 60% 55%',
       },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-      fontFamily: {
-        arabic: ['Cairo', 'Arial', 'sans-serif'],
-      },
       spacing: {
         'safe-top': 'env(safe-area-inset-top)',
         'safe-bottom': 'env(safe-area-inset-bottom)',
         'safe-left': 'env(safe-area-inset-left)',
         'safe-right': 'env(safe-area-inset-right)',
+      },
+      fontFamily: {
+        arabic: ['Cairo', 'Arial', 'sans-serif'],
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)'
       },
       keyframes: {
         'accordion-down': {
@@ -107,48 +107,48 @@ export default {
         'bounce-in': {
           '0%': {
             transform: 'scale(0.3)',
-            opacity: '0',
+            opacity: '0'
           },
           '50%': {
-            transform: 'scale(1.05)',
+            transform: 'scale(1.05)'
           },
           '70%': {
-            transform: 'scale(0.9)',
+            transform: 'scale(0.9)'
           },
           '100%': {
             transform: 'scale(1)',
-            opacity: '1',
-          },
+            opacity: '1'
+          }
         },
         'slide-up': {
           '0%': {
             transform: 'translateY(100%)',
-            opacity: '0',
+            opacity: '0'
           },
           '100%': {
             transform: 'translateY(0)',
-            opacity: '1',
-          },
+            opacity: '1'
+          }
         },
         'mobile-fade-in': {
           '0%': {
             opacity: '0',
-            transform: 'translateY(20px)',
+            transform: 'translateY(20px)'
           },
           '100%': {
             opacity: '1',
-            transform: 'translateY(0)',
-          },
-        },
+            transform: 'translateY(0)'
+          }
+        }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'bounce-in': 'bounce-in 0.6s ease-out',
         'slide-up': 'slide-up 0.5s ease-out',
-        'mobile-fade-in': 'mobile-fade-in 0.4s ease-out',
-      },
-    },
+        'mobile-fade-in': 'mobile-fade-in 0.4s ease-out'
+      }
+    }
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
