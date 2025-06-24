@@ -14,10 +14,9 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* ✅ محتوى بعرض كامل بدون حواف جانبية */}
       <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
-        <div className="w-full px-0">
-          {children}
-        </div>
+        {children}
       </main>
 
       {showBottomNav && isMobile && (
