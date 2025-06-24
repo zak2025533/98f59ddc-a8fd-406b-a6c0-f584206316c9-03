@@ -30,7 +30,7 @@
     <style>
       html, body, #root {
         height: 100%;
-        width: 100%; /* ✅ هذا السطر تمت إضافته */
+        width: 100%;
       }
 
       :root {
@@ -70,48 +70,8 @@
       }
     </style>
 
-    <!-- OneSignal إشعارات -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "2d9be3c4-9c02-4ecd-b0d7-38ac21b49db9",
-          notifyButton: {
-            enable: true,
-            position: "bottom-left",
-            theme: "default",
-            size: "medium",
-            showCredit: false,
-            text: {
-              'tip.state.unsubscribed': 'تفعيل الإشعارات',
-              'tip.state.subscribed': 'الإشعارات مفعلة',
-              'tip.state.blocked': 'تم حظر الإشعارات',
-              'message.prenotify': 'اضغط لتفعيل الإشعارات',
-              'message.action.subscribed': 'تم تفعيل الإشعارات ✅',
-              'message.action.resubscribed': 'تم إعادة تفعيل الإشعارات',
-              'message.action.unsubscribed': 'تم إيقاف الإشعارات',
-              'dialog.main.title': 'إدارة الإشعارات',
-              'dialog.main.button.subscribe': 'تفعيل',
-              'dialog.main.button.unsubscribe': 'إيقاف',
-              'dialog.blocked.title': 'تم حظر الإشعارات',
-              'dialog.blocked.message': 'يرجى السماح بالإشعارات من إعدادات المتصفح'
-            }
-          }
-        });
-
-        const isPushEnabled = await OneSignal.isPushNotificationsEnabled();
-        if (isPushEnabled) {
-          OneSignal.sendSelfNotification(
-            "مرحباً بك في متجر بلا حدود للحلويات 🍬",
-            "تابعنا لتصلك آخر العروض والمنتجات!",
-            "https://98f59ddc-a8fd-406b-a6c0-f584206316c-beta.vercel.app/",
-            "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
-            { notificationType: "welcome" }
-          );
-        }
-      });
-    </script>
+    <!-- ✅ SendPulse Web Push -->
+    <script charset="UTF-8" src="//web.webpushs.com/js/push/825022bae7ea9da7f0fd8161384f766f_1.js" async></script>
   </head>
 
   <body>
