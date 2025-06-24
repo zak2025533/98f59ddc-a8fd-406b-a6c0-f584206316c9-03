@@ -30,6 +30,7 @@
     <style>
       html, body, #root {
         height: 100%;
+        width: 100%; /* ✅ هذا السطر تمت إضافته */
       }
 
       :root {
@@ -99,7 +100,6 @@
           }
         });
 
-        // إشعار ترحيبي للمستخدم
         const isPushEnabled = await OneSignal.isPushNotificationsEnabled();
         if (isPushEnabled) {
           OneSignal.sendSelfNotification(
