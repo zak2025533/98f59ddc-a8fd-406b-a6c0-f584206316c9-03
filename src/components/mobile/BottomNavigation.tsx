@@ -49,26 +49,82 @@ const BottomNavigation = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-[env(safe-area-inset-bottom)]">
-        <div className="flex justify-around items-center py-2 px-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            const baseClass =
-              "flex flex-col items-center justify-center p-2 min-w-[48px] sm:min-w-[60px] relative transition-colors duration-200";
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
+        <div className="container max-w-4xl mx-auto">
+          <div className="flex justify-around items-center py-2 px-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.path);
+              const baseClass =
+                "flex flex-col items-center justify-center p-2 min-w-[48px] sm:min-w-[60px] relative transition-colors duration-200";
+              const iconClass = "sm:h-6 sm:w-6 h-5 w-5";
+              const badgeClass =
+                "absolute -top-1 -right-1 sm:h-5 sm:w-5 h-4 w-4 text-[10px] sm:text-xs bg-red-500 text-white p-0 flex items-center justify-center rounded-full";
+              const labelClass = "text-[10px] sm:text-xs mt-1 font-arabic";
 
-            const iconClass = "sm:h-6 sm:w-6 h-5 w-5";
-            const badgeClass =
-              "absolute -top-1 -right-1 sm:h-5 sm:w-5 h-4 w-4 text-[10px] sm:text-xs bg-red-500 text-white p-0 flex items-center justify-center rounded-full";
+              if (item.isCart) {
+                return (
+                  <button
+                    key={item.label}
+                    aria-label="السلة"
+                    className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
+                    onClick={handleCartClick}
+                  >
+                    <div className="relative">
+                      <Icon className={iconClass} />
+                      {item.count > 0 && (
+                        <Badge className={badgeClass}>
+                          {item.count > 99 ? "99+" : item.count}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className={labelClass}>{item.label}</span>
+                  </button>
+                );
+              }
 
-            const labelClass = "text-[10px] sm:text-xs mt-1 font-arabic";
+              if (item.isFavorites) {
+                return (
+                  <button
+                    key={item.label}
+                    aria-label="المفضلة"
+                    className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
+                    onClick={handleFavoritesClick}
+                  >
+                    <div className="relative">
+                      <Icon className={iconClass} />
+                      {item.count > 0 && (
+                        <Badge className={badgeClass}>
+                          {item.count > 99 ? "99+" : item.count}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className={labelClass}>{item.label}</span>
+                  </button>
+                );
+              }
 
-            if (item.isCart) {
+              if (item.isAdmin) {
+                return (
+                  <button
+                    key={item.label}
+                    aria-label="لوحة التحكم"
+                    className={`${baseClass} ${adminDialogOpen ? "text-blue-600" : "text-gray-500"}`}
+                    onClick={() => setAdminDialogOpen(true)}
+                  >
+                    <div className="relative">
+                      <Icon className={iconClass} />
+                    </div>
+                    <span className={labelClass}>{item.label}</span>
+                  </button>
+                );
+              }
+
               return (
-                <button
-                  key={item.label}
+                <Link
+                  key={`${item.label}-${item.path}`}
+                  to={item.path}
                   className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
-                  onClick={handleCartClick}
                 >
                   <div className="relative">
                     <Icon className={iconClass} />
@@ -79,67 +135,14 @@ const BottomNavigation = () => {
                     )}
                   </div>
                   <span className={labelClass}>{item.label}</span>
-                </button>
+                </Link>
               );
-            }
-
-            if (item.isFavorites) {
-              return (
-                <button
-                  key={item.label}
-                  className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
-                  onClick={handleFavoritesClick}
-                >
-                  <div className="relative">
-                    <Icon className={iconClass} />
-                    {item.count > 0 && (
-                      <Badge className={badgeClass}>
-                        {item.count > 99 ? "99+" : item.count}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className={labelClass}>{item.label}</span>
-                </button>
-              );
-            }
-
-            if (item.isAdmin) {
-              return (
-                <button
-                  key={item.label}
-                  className={`${baseClass} ${adminDialogOpen ? "text-blue-600" : "text-gray-500"}`}
-                  onClick={() => setAdminDialogOpen(true)}
-                >
-                  <div className="relative">
-                    <Icon className={iconClass} />
-                  </div>
-                  <span className={labelClass}>{item.label}</span>
-                </button>
-              );
-            }
-
-            return (
-              <Link
-                key={`${item.label}-${item.path}`}
-                to={item.path}
-                className={`${baseClass} ${active ? "text-blue-600" : "text-gray-500"}`}
-              >
-                <div className="relative">
-                  <Icon className={iconClass} />
-                  {item.count > 0 && (
-                    <Badge className={badgeClass}>
-                      {item.count > 99 ? "99+" : item.count}
-                    </Badge>
-                  )}
-                </div>
-                <span className={labelClass}>{item.label}</span>
-              </Link>
-            );
-          })}
+            })}
+          </div>
         </div>
       </nav>
 
-      {/* Admin Panel Dialog */}
+      {/* لوحة التحكم */}
       <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>
         <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-y-auto p-0 m-2">
           <DialogHeader className="sr-only">
