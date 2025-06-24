@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <title>بلا حدود للحلويات</title>
 
-    <!-- Viewport: أساسي لدعم الشاشات الطويلة -->
+    <!-- Viewport: دعم الشاشات الطويلة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
     <!-- فافيكون -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- تحسينات لأجهزة Android -->
+    <!-- تحسينات Android و iOS -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="بلا حدود للحلويات" />
     <meta name="theme-color" content="#2563eb" />
@@ -19,16 +19,14 @@
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <meta name="google" content="notranslate" />
     <meta name="color-scheme" content="light dark" />
-
-    <!-- تحسين التثبيت كتطبيق -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- وصف -->
+    <!-- وصف الموقع -->
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
-    <!-- CSS لتغطية الشاشة الكاملة -->
+    <!-- CSS لتغطية الشاشة الكاملة وتجربة موبايل مثالية -->
     <style>
       html, body, #root {
         height: 100%;
@@ -71,7 +69,7 @@
       }
     </style>
 
-    <!-- OneSignal SDK وإعداد الإشعارات -->
+    <!-- OneSignal إشعارات -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -101,7 +99,7 @@
           }
         });
 
-        // إرسال إشعار ترحيبي بعد الموافقة
+        // إشعار ترحيبي للمستخدم
         const isPushEnabled = await OneSignal.isPushNotificationsEnabled();
         if (isPushEnabled) {
           OneSignal.sendSelfNotification(
