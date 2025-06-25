@@ -42,7 +42,7 @@ const AllCategories = () => {
   }
 
   return (
-    <div className="bg-white w-full px-0">
+    <div className="bg-white w-full">
       <div className="w-full py-16 px-4">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 font-arabic">جميع الفئات</h2>
@@ -50,7 +50,11 @@ const AllCategories = () => {
         </div>
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((category) => (
-            <Link key={category.id} to={`/category/${category.slug}`} className="group block text-center">
+            <Link
+              key={category.id}
+              to={`/category/${category.slug}`}
+              className="group block text-center"
+            >
               <div className="relative h-64 w-full rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 group-hover:scale-105">
                 <img
                   src={category.image_url}
@@ -59,7 +63,9 @@ const AllCategories = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300" />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-gray-900 font-arabic">{category.name}</h3>
+              <h3 className="mt-4 text-xl font-semibold text-gray-900 font-arabic">
+                {category.name}
+              </h3>
             </Link>
           ))}
         </div>
