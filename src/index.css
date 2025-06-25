@@ -37,6 +37,24 @@ body {
   font-family: 'Cairo', sans-serif;
 }
 
+/* ✅ حاوية المحتوى لتظهر كواجهة تطبيق */
+.app-content-wrapper {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  border-radius: 1rem 1rem 0 0; /* rounded-t-xl */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+/* إزالة الهوامش الجانبية لعناصر النصوص */
+h1, h2, h3, p {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 /* Safe area utilities for native apps */
 .pt-safe-area-inset-top {
   padding-top: var(--safe-area-inset-top);
@@ -52,15 +70,6 @@ body {
 
 .pr-safe-area-inset-right {
   padding-right: var(--safe-area-inset-right);
-}
-
-/* Enhanced touch targets for better mobile interaction */
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Line clamp utilities */
@@ -92,7 +101,7 @@ body {
   }
 }
 
-/* Prevent zoom on input focus */
+/* منع التكبير عند التركيز */
 input, select, textarea {
   font-size: 16px !important;
 }
@@ -103,7 +112,7 @@ input, select, textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Enhanced mobile scrollbar */
+/* شريط تمرير نحيف */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -121,7 +130,7 @@ input, select, textarea {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* Mobile-specific animations */
+/* Mobile slide up animation */
 @keyframes mobile-slide-up {
   from {
     transform: translateY(100%);
@@ -137,14 +146,14 @@ input, select, textarea {
   animation: mobile-slide-up 0.3s ease-out;
 }
 
-/* Enhanced focus styles for accessibility */
+/* Enhanced focus styles */
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* Mobile-optimized card hover effects */
+/* Hover effects */
 @media (hover: hover) {
   .mobile-card:hover {
     transform: translateY(-2px);
@@ -155,28 +164,7 @@ a:focus-visible {
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 215.2 84% 4.9%;
+    --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
   }
-}
-
-/* === التعديلات لإزالة الحواف البيضاء الجانبية === */
-
-/* إزالة الهوامش الجانبية لعناصر النصوص الشائعة */
-h1, h2, h3, p {
-  margin-left: 2;
-  margin-right: 2;
-}
-
-/* ضمان أن حاوية المحتوى تمتد عرضيًا بالكامل */
-.bg-white {
-  width: 100%;
-  padding-left: 0.5;
-  padding-right: 0.5;
-}
-
-/* في حال رغبتك بإضافة حشو داخلي بسيط */
-.bg-white.px-4 {
-  padding-left: 16px !important;
-  padding-right: 16px !important;
 }
