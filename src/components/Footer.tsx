@@ -1,17 +1,17 @@
-
-import { 
-  Facebook, 
-  Instagram, 
-  Twitter, 
-  Phone, 
-  Mail, 
-  MapPin, 
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Phone,
+  Mail,
+  MapPin,
   Clock,
   Home,
   Grid3X3,
   Info,
-  MessageCircle
+  MessageCircle,
 } from "lucide-react";
+
 import FooterHeader from "./footer/FooterHeader";
 import FooterNav from "./footer/FooterNav";
 import FooterCategories from "./footer/FooterCategories";
@@ -24,71 +24,71 @@ const Footer = () => {
     { name: "الرئيسية", href: "/", icon: Home },
     { name: "الأقسام", href: "/#categories", icon: Grid3X3 },
     { name: "من نحن", href: "/about", icon: Info },
-    { name: "اتصل بنا", href: "/contact", icon: MessageCircle }
+    { name: "اتصل بنا", href: "/contact", icon: MessageCircle },
   ];
 
   const categories = [
     { name: "كيكات", href: "/category/cakes" },
-    { name: "ويفرات وشوكолاته", href: "/category/wafers-and-chocolate" },
+    { name: "ويفرات وشوكولاته", href: "/category/wafers-and-chocolate" },
     { name: "مشروبات وعصائر", href: "/category/drinks-and-juices" },
-    { name: "حلوى ومليمات", href: "/category/candies" }
+    { name: "حلوى ومليمات", href: "/category/candies" },
   ];
 
   const socialLinks = [
-    { 
-      icon: Facebook, 
-      href: "#", 
-      name: "فيسبوك", 
-      color: "hover:bg-blue-600 hover:shadow-blue-500/25" 
+    {
+      icon: Facebook,
+      href: "#",
+      name: "فيسبوك",
+      color: "hover:bg-blue-600 hover:shadow-blue-500/25",
     },
-    { 
-      icon: Instagram, 
-      href: "https://www.instagram.com/mthr8180?utm_source=qr&igsh=MWx3dDJkajk0OGY3eg==", 
-      name: "انستقرام", 
-      color: "hover:bg-pink-600 hover:shadow-pink-500/25" 
+    {
+      icon: Instagram,
+      href: "https://www.instagram.com/mthr8180?utm_source=qr&igsh=MWx3dDJkajk0OGY3eg==",
+      name: "انستقرام",
+      color: "hover:bg-pink-600 hover:shadow-pink-500/25",
     },
-    { 
-      icon: Twitter, 
-      href: "#", 
-      name: "تويتر", 
-      color: "hover:bg-sky-500 hover:shadow-sky-500/25" 
-    }
+    {
+      icon: Twitter,
+      href: "#",
+      name: "تويتر",
+      color: "hover:bg-sky-500 hover:shadow-sky-500/25",
+    },
   ];
 
   const contactInfo = [
-    { 
-      icon: Phone, 
-      text: "770006120", 
-      color: "text-green-400",
+    {
+      icon: Phone,
+      text: "770006120",
+      color: "text-green-500",
       href: "tel:+967770006120",
-      bgColor: "hover:bg-green-500/10"
+      bgColor: "hover:bg-green-500/10",
     },
-    { 
-      icon: Mail, 
-      text: "motahr4742@gmail.com", 
-      color: "text-red-400",
+    {
+      icon: Mail,
+      text: "motahr4742@gmail.com",
+      color: "text-red-500",
       href: "mailto:motahr4742@gmail.com",
-      bgColor: "hover:bg-red-500/10"
+      bgColor: "hover:bg-red-500/10",
     },
-    { 
-      icon: MapPin, 
-      text: "اليمن - محافظة إب", 
-      color: "text-yellow-400",
+    {
+      icon: MapPin,
+      text: "اليمن - محافظة إب",
+      color: "text-yellow-500",
       href: "https://maps.google.com/?q=اليمن محافظة إب",
-      bgColor: "hover:bg-yellow-500/10"
+      bgColor: "hover:bg-yellow-500/10",
     },
-    { 
-      icon: Clock, 
-      text: "السبت - الخميس: 8 ص - 12 م", 
-      color: "text-purple-400",
+    {
+      icon: Clock,
+      text: "السبت - الخميس: 8 ص - 12 م",
+      color: "text-purple-500",
       href: "#",
-      bgColor: "hover:bg-purple-500/10"
-    }
+      bgColor: "hover:bg-purple-500/10",
+    },
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <footer className="w-full text-gray-800 border-t border-gray-200 mt-6 pt-6">
+      <div className="w-full px-4 sm:px-6 md:px-8">
         <FooterHeader />
         <FooterNav quickLinks={quickLinks} />
         <FooterCategories categories={categories} />
