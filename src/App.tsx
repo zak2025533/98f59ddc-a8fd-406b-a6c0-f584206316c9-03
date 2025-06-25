@@ -30,12 +30,12 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <div
-              className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-between bg-background font-arabic"
+              className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-start bg-background font-arabic"
               style={{
                 background: `linear-gradient(to bottom, #2563eb 0%, #2563eb 150px, transparent 300px)`,
               }}
             >
-              <div className="flex-grow bg-white rounded-t-xl shadow-lg p-4 mx-auto max-w-screen-lg">
+              <div className="bg-white rounded-t-xl shadow-lg p-4 mx-auto max-w-screen-lg">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
