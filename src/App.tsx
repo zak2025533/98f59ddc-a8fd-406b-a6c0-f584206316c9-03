@@ -35,7 +35,7 @@ const App = () => (
                 background: `linear-gradient(to bottom, #2563eb 0%, #2563eb 150px, transparent 300px)`,
               }}
             >
-              <div className="bg-white rounded-t-xl shadow-lg p-4 mx-auto max-w-screen-lg">
+              <div className="bg-white rounded-t-xl shadow-lg p-4 w-full h-full">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
@@ -56,3 +56,4 @@ const App = () => (
 );
 
 export default App;
+
