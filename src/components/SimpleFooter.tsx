@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { 
   Facebook, 
@@ -22,45 +21,21 @@ const SimpleFooter = () => {
   ];
 
   const contactInfo = [
-    { 
-      icon: Phone, 
-      text: "770006120", 
-      href: "tel:+967770006120"
-    },
-    { 
-      icon: Mail, 
-      text: "motahr4742@gmail.com", 
-      href: "mailto:motahr4742@gmail.com"
-    },
-    { 
-      icon: MapPin, 
-      text: "اليمن - محافظة إب", 
-      href: "#"
-    }
+    { icon: Phone, text: "770006120", href: "tel:+967770006120" },
+    { icon: Mail, text: "motahr4742@gmail.com", href: "mailto:motahr4742@gmail.com" },
+    { icon: MapPin, text: "اليمن - محافظة إب", href: "#" }
   ];
 
   const socialLinks = [
-    { 
-      icon: Facebook, 
-      href: "#", 
-      name: "فيسبوك"
-    },
-    { 
-      icon: Instagram, 
-      href: "https://www.instagram.com/mthr8180?utm_source=qr&igsh=MWx3dDJkajk0OGY3eg==", 
-      name: "انستقرام"
-    },
-    { 
-      icon: Twitter, 
-      href: "#", 
-      name: "تويتر"
-    }
+    { icon: Facebook, href: "#", name: "فيسبوك" },
+    { icon: Instagram, href: "https://www.instagram.com/mthr8180?utm_source=qr&igsh=MWx3dDJkajk0OGY3eg==", name: "انستقرام" },
+    { icon: Twitter, href: "#", name: "تويتر" }
   ];
 
   return (
     <footer className="bg-gradient-to-br from-blue-900 to-purple-900 text-white">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="w-full px-4 py-12">
         {/* Company Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-3 mb-4">
@@ -76,7 +51,6 @@ const SimpleFooter = () => {
               <p className="text-blue-200 text-sm">Unlimited Sweets</p>
             </div>
           </div>
-          
           <p className="text-blue-100 font-arabic max-w-2xl mx-auto">
             متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي
           </p>
@@ -155,12 +129,11 @@ const SimpleFooter = () => {
 
       {/* Bottom Footer */}
       <div className="border-t border-white/10 bg-blue-900/20">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="w-full px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-blue-200 text-sm font-arabic">
               بلا حدود للحلويات - جميع الحقوق محفوظة
             </div>
-            
             <div className="text-blue-200 text-sm font-arabic text-center">
               <div className="mb-2">
                 تصميم وتطوير المهندس: زكريا نبيل الحاج
