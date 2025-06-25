@@ -59,36 +59,36 @@ const Footer = () => {
     {
       icon: Phone,
       text: "770006120",
-      color: "text-green-500",
+      color: "text-green-400",
       href: "tel:+967770006120",
       bgColor: "hover:bg-green-500/10",
     },
     {
       icon: Mail,
       text: "motahr4742@gmail.com",
-      color: "text-red-500",
+      color: "text-red-400",
       href: "mailto:motahr4742@gmail.com",
       bgColor: "hover:bg-red-500/10",
     },
     {
       icon: MapPin,
       text: "اليمن - محافظة إب",
-      color: "text-yellow-500",
+      color: "text-yellow-400",
       href: "https://maps.google.com/?q=اليمن محافظة إب",
       bgColor: "hover:bg-yellow-500/10",
     },
     {
       icon: Clock,
       text: "السبت - الخميس: 8 ص - 12 م",
-      color: "text-purple-500",
+      color: "text-purple-400",
       href: "#",
       bgColor: "hover:bg-purple-500/10",
     },
   ];
 
   return (
-    <footer className="w-full text-gray-800 border-t border-gray-200 mt-6 pt-6">
-      <div className="w-full px-4 sm:px-6 md:px-8">
+    <footer className="w-full text-gray-800 border-t border-gray-200 mt-4 pt-6">
+      <div className="px-4">
         <FooterHeader />
         <FooterNav quickLinks={quickLinks} />
         <FooterCategories categories={categories} />
