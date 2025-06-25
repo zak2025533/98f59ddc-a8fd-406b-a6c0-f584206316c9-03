@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 3,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
@@ -29,18 +29,22 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            {/* ✅ تغليف المحتوى بواجهة متوافقة مع الموبايل */}
-            <div className="min-h-[100dvh] pt-safe-top pb-safe-bottom px-4 flex flex-col justify-between bg-background font-arabic">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/category" element={<Category />} />
-                <Route path="/category/:categorySlug" element={<Category />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/admin/*" element={<Admin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+            <div className="min-h-[100dvh] flex flex-col justify-between font-arabic pt-safe-top pb-safe-bottom">
+              {/* خلفية زرقاء محددة الارتفاع */}
+              <header className="bg-background h-[250px] w-full" />
+              {/* محتوى التطبيق */}
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/category" element={<Category />} />
+                  <Route path="/category/:categorySlug" element={<Category />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/admin/*" element={<Admin />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
             </div>
           </BrowserRouter>
         </FavoritesProvider>
