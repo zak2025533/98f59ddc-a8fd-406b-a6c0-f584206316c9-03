@@ -32,10 +32,10 @@ const App = () => (
             <div
               className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-start bg-background font-arabic"
               style={{
-                background: `linear-gradient(to bottom, #2563eb 0%, #2563eb 150px, transparent 300px)`,
+                backgroundColor: "#2563eb",
               }}
             >
-              <div className="bg-white rounded-t-xl shadow-lg p-4 w-full h-full">
+              <div className="bg-white rounded-t-xl shadow-lg w-full h-full px-0 py-4">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
@@ -56,4 +56,3 @@ const App = () => (
 );
 
 export default App;
-
