@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* متغيرات Safe Area */
 :root {
   --safe-area-inset-top: env(safe-area-inset-top);
   --safe-area-inset-right: env(safe-area-inset-right);
@@ -13,7 +14,8 @@
 html,
 body,
 #root {
-  height: 100dvh;
+  height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
@@ -24,55 +26,60 @@ body {
   font-family: 'Cairo', sans-serif;
   direction: rtl;
   text-align: right;
-  margin: 0;
-  padding: 0;
   overscroll-behavior-y: contain;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
+  background-color: #ffffff;
 }
 
 .font-arabic {
   font-family: 'Cairo', sans-serif;
 }
 
-/* ✅ حاوية المحتوى لتظهر كواجهة تطبيق */
+/* ✅ حاوية المحتوى الأبيض */
 .app-content-wrapper {
   width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 24px;
-  padding-bottom: 24px;
-  border-radius: 1rem 1rem 0 0; /* rounded-t-xl */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 16px;
   background-color: #ffffff;
+  border-radius: 1rem 1rem 0 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-/* إزالة الهوامش الجانبية لعناصر النصوص */
-h1, h2, h3, p {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-/* Safe area utilities for native apps */
-.pt-safe-area-inset-top {
+/* ✅ دعم Safe Area */
+.pt-safe-top {
   padding-top: var(--safe-area-inset-top);
 }
 
-.pb-safe-area-inset-bottom {
+.pb-safe-bottom {
   padding-bottom: var(--safe-area-inset-bottom);
 }
 
-.pl-safe-area-inset-left {
+.pl-safe-left {
   padding-left: var(--safe-area-inset-left);
 }
 
-.pr-safe-area-inset-right {
+.pr-safe-right {
   padding-right: var(--safe-area-inset-right);
 }
 
-/* Line clamp utilities */
+/* ✅ مظهر احترافي للفوتر والهيدر */
+footer, header {
+  padding-inline: 1rem;
+  width: 100%;
+}
+
+/* ✅ تكبير مساحة اللمس */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ تقليم النصوص */
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -87,7 +94,7 @@ h1, h2, h3, p {
   -webkit-line-clamp: 2;
 }
 
-/* Mobile-first button styles */
+/* ✅ تنسيقات الجوال */
 @media (max-width: 768px) {
   .mobile-button {
     min-height: 44px;
@@ -101,18 +108,12 @@ h1, h2, h3, p {
   }
 }
 
-/* منع التكبير عند التركيز */
+/* ✅ منع التكبير التلقائي في الحقول */
 input, select, textarea {
   font-size: 16px !important;
 }
 
-/* Smooth scrolling for mobile */
-* {
-  -webkit-overflow-scrolling: touch;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* شريط تمرير نحيف */
+/* ✅ شريط تمرير نحيف */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -130,7 +131,7 @@ input, select, textarea {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* Mobile slide up animation */
+/* ✅ تأثير الانزلاق */
 @keyframes mobile-slide-up {
   from {
     transform: translateY(100%);
@@ -146,14 +147,14 @@ input, select, textarea {
   animation: mobile-slide-up 0.3s ease-out;
 }
 
-/* Enhanced focus styles */
+/* ✅ تنسيق التركيز */
 button:focus-visible,
 a:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
 
-/* Hover effects */
+/* ✅ تأثير Hover للجوال */
 @media (hover: hover) {
   .mobile-card:hover {
     transform: translateY(-2px);
@@ -161,7 +162,7 @@ a:focus-visible {
   }
 }
 
-/* Dark mode support */
+/* ✅ دعم الوضع الليلي */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: 222.2 84% 4.9%;
