@@ -155,7 +155,7 @@ a:focus-visible {
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 222.2 84% 4.9%;
+    --background: 215.2 84% 4.9%;
     --foreground: 210 40% 98%;
   }
 }
@@ -171,8 +171,8 @@ h1, h2, h3, p {
 /* ضمان أن حاوية المحتوى تمتد عرضيًا بالكامل */
 .bg-white {
   width: 100%;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0.5;
+  padding-right: 0.5;
 }
 
 /* في حال رغبتك بإضافة حشو داخلي بسيط */
