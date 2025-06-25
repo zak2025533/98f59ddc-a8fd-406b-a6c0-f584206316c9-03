@@ -32,10 +32,11 @@ const App = () => (
             <div
               className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-start bg-background font-arabic"
               style={{
-                backgroundColor: "#2563eb",
+                backgroundColor: "#2563eb", // خلفية زرقاء ثابتة
               }}
             >
-              <div className="bg-white rounded-t-xl shadow-lg w-full h-full px-0 py-4">
+              {/* ✅ محتوى التطبيق */}
+              <div className="bg-white app-content-wrapper">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
