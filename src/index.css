@@ -159,3 +159,24 @@ a:focus-visible {
     --foreground: 210 40% 98%;
   }
 }
+
+/* === التعديلات لإزالة الحواف البيضاء الجانبية === */
+
+/* إزالة الهوامش الجانبية لعناصر النصوص الشائعة */
+h1, h2, h3, p {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ضمان أن حاوية المحتوى تمتد عرضيًا بالكامل */
+.bg-white {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* في حال رغبتك بإضافة حشو داخلي بسيط */
+.bg-white.px-4 {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
