@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 3,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // 5 دقائق
     },
   },
 });
@@ -29,11 +29,13 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="min-h-[100dvh] flex flex-col justify-between font-arabic pt-safe-top pb-safe-bottom">
-              {/* خلفية زرقاء محددة الارتفاع */}
-              <header className="bg-background h-[250px] w-full" />
-              {/* محتوى التطبيق */}
-              <main className="flex-grow">
+            <div
+              className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-between bg-background font-arabic"
+              style={{
+                background: `linear-gradient(to bottom, #2563eb 0%, #2563eb 150px, transparent 300px)`,
+              }}
+            >
+              <div className="flex-grow bg-white rounded-t-xl shadow-lg p-4 mx-auto max-w-screen-lg">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
@@ -44,7 +46,7 @@ const App = () => (
                   <Route path="/admin/*" element={<Admin />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-              </main>
+              </div>
             </div>
           </BrowserRouter>
         </FavoritesProvider>
