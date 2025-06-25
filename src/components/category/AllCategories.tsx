@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -43,8 +42,8 @@ const AllCategories = () => {
   }
 
   return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white w-full px-0">
+      <div className="w-full py-16 px-4">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 font-arabic">جميع الفئات</h2>
           <p className="mt-4 text-lg text-gray-500 font-arabic">اختر فئة لتصفح منتجاتها</p>
@@ -58,7 +57,7 @@ const AllCategories = () => {
                   alt={category.name}
                   className="w-full h-full object-center object-cover"
                 />
-                 <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300" />
+                <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300" />
               </div>
               <h3 className="mt-4 text-xl font-semibold text-gray-900 font-arabic">{category.name}</h3>
             </Link>
