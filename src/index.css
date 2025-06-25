@@ -164,8 +164,8 @@ a:focus-visible {
 
 /* إزالة الهوامش الجانبية لعناصر النصوص الشائعة */
 h1, h2, h3, p {
-  margin-left: 0;
-  margin-right: 0;
+  margin-left: 2;
+  margin-right: 2;
 }
 
 /* ضمان أن حاوية المحتوى تمتد عرضيًا بالكامل */
