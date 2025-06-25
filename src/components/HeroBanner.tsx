@@ -18,9 +18,9 @@ const HeroBanner = () => {
         <div className="hidden md:block absolute top-24 right-1/3 opacity-20 text-4xl float-animation" style={{ animationDelay: '2.5s' }}>🍪</div>
       </div>
 
-      {/* محتوى البانر */}
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <div className="max-w-4xl mx-auto">
+      {/* محتوى البانر بعرض كامل بدون حواف */}
+      <div className="relative w-full text-center text-white px-0">
+        <div className="w-full px-4">
           {/* الشعار */}
           <div className="animate-bounce-in flex items-center justify-center mb-4">
             <img
