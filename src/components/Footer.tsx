@@ -87,8 +87,8 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full text-gray-800 border-t border-gray-200 mt-4 pt-6">
-      <div className="px-4">
+    <footer className="w-full bg-blue-700 text-white mt-6 pt-6 rounded-t-2xl shadow-lg">
+      <div className="max-w-4xl mx-auto px-4">
         <FooterHeader />
         <FooterNav quickLinks={quickLinks} />
         <FooterCategories categories={categories} />
