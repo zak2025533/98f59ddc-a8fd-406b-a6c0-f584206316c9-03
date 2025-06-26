@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center px-4">
       <div className="max-w-2xl mx-auto text-center">
-        <Card className="shadow-2xl border-blue-200 bg-white/80 backdrop-blur-sm">
+        <Card className="shadow-2xl border-blue-200 bg-white/90 backdrop-blur-sm">
           <CardHeader className="pb-6">
             <div className="mx-auto mb-6">
               <img
@@ -20,10 +20,10 @@ const NotFound = () => {
             <CardTitle className="text-6xl font-bold text-blue-800 mb-4">
               404
             </CardTitle>
-            <h1 className="text-2xl font-bold text-gray-800 font-arabic mb-2">
+            <h1 className="text-2xl font-bold text-blue-700 font-arabic mb-2">
               الصفحة غير موجودة
             </h1>
-            <p className="text-gray-600 font-arabic">
+            <p className="text-blue-600 font-arabic">
               عذراً، الصفحة التي تبحث عنها غير متوفرة أو تم نقلها إلى مكان آخر
             </p>
           </CardHeader>
@@ -32,14 +32,14 @@ const NotFound = () => {
             {/* Quick Actions */}
             <div className="grid sm:grid-cols-2 gap-4">
               <Link to="/">
-                <Button className="w-full font-arabic bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <Button className="w-full font-arabic bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
                   <Home className="h-4 w-4 ml-2" />
                   العودة للرئيسية
                 </Button>
               </Link>
               
               <Link to="/#categories">
-                <Button variant="outline" className="w-full font-arabic hover:bg-blue-50">
+                <Button variant="outline" className="w-full font-arabic hover:bg-blue-50 border-blue-300 text-blue-700">
                   <ShoppingCart className="h-4 w-4 ml-2" />
                   تصفح المنتجات
                 </Button>
@@ -64,13 +64,13 @@ const NotFound = () => {
             {/* Contact Links */}
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <Link to="/contact" className="flex-1">
-                <Button variant="ghost" className="w-full font-arabic text-gray-600 hover:text-blue-600">
+                <Button variant="ghost" className="w-full font-arabic text-blue-600 hover:text-blue-700 hover:bg-blue-50">
                   تواصل معنا
                 </Button>
               </Link>
               
               <Link to="/about" className="flex-1">
-                <Button variant="ghost" className="w-full font-arabic text-gray-600 hover:text-blue-600">
+                <Button variant="ghost" className="w-full font-arabic text-blue-600 hover:text-blue-700 hover:bg-blue-50">
                   من نحن
                 </Button>
               </Link>
@@ -83,7 +83,7 @@ const NotFound = () => {
           <Button
             variant="ghost"
             onClick={() => window.history.back()}
-            className="font-arabic text-gray-500 hover:text-blue-600"
+            className="font-arabic text-blue-500 hover:text-blue-700 hover:bg-blue-50"
           >
             <ArrowLeft className="h-4 w-4 ml-2" />
             العودة للصفحة السابقة

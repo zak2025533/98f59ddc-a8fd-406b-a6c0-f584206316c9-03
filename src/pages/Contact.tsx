@@ -1,18 +1,18 @@
+import SimpleNavbar from "@/components/SimpleNavbar";
 import SimpleFooter from "@/components/SimpleFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import emailjs from "emailjs-com";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  MessageSquare,
+import { 
+  Phone, 
+  Mail, 
+  MapPin, 
+  Clock, 
+  MessageSquare, 
   Send,
   Facebook,
   Instagram,
@@ -27,11 +27,11 @@ const Contact = () => {
     message: ''
   });
   const { toast } = useToast();
-  const formRef = useRef(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
+    
+    // تحقق من البيانات
     if (!formData.name || !formData.email || !formData.message) {
       toast({
         title: "خطأ",
@@ -41,23 +41,18 @@ const Contact = () => {
       return;
     }
 
-    emailjs.sendForm(
-      "service_l0ufhib",
-      "template_12labw9",
-      formRef.current!,
-      "egJiLm9r0XTOMvN0x"
-    ).then(() => {
-      toast({
-        title: "تم الإرسال بنجاح",
-        description: "شكراً لتواصلكم معنا. سنقوم بالرد عليكم في أقرب وقت ممكن."
-      });
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    }).catch(() => {
-      toast({
-        title: "فشل في الإرسال",
-        description: "حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة لاحقاً.",
-        variant: "destructive",
-      });
+    // محاكاة إرسال الرسالة
+    toast({
+      title: "تم الإرسال بنجاح",
+      description: "شكراً لتواصلكم معنا. سنقوم بالرد عليكم في أقرب وقت ممكن.",
+    });
+
+    // إعادة تعيين النموذج
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      message: ''
     });
   };
 
@@ -89,31 +84,16 @@ const Contact = () => {
   ];
 
   const socialLinks = [
-    {
-      icon: Facebook,
-      name: "فيسبوك",
-      color: "text-blue-600 hover:bg-blue-50",
-      url: "https://facebook.com"
-    },
-    {
-      icon: Instagram,
-      name: "انستقرام",
-      color: "text-pink-600 hover:bg-pink-50",
-      url: "https://instagram.com"
-    },
-    {
-      icon: Twitter,
-      name: "تويتر",
-      color: "text-blue-400 hover:bg-blue-50",
-      url: "https://twitter.com"
-    }
+    { icon: Facebook, name: "فيسبوك", color: "text-blue-600 hover:bg-blue-50" },
+    { icon: Instagram, name: "انستقرام", color: "text-pink-600 hover:bg-pink-50" },
+    { icon: Twitter, name: "تويتر", color: "text-blue-400 hover:bg-blue-50" }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* تم إيقاف شريط القائمة العلوي */}
-      {/* <SimpleNavbar /> */}
-
+      <SimpleNavbar />
+      
+      {/* Hero Section */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <Badge variant="secondary" className="mb-4 font-arabic">
@@ -128,6 +108,7 @@ const Contact = () => {
         </div>
       </section>
 
+      {/* Contact Info Cards */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
@@ -153,7 +134,9 @@ const Contact = () => {
             })}
           </div>
 
+          {/* Contact Form and Map */}
           <div className="grid lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
             <Card className="shadow-lg border-blue-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-3 text-blue-800 font-arabic text-right">
@@ -162,54 +145,50 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label className="block text-sm mb-1 text-right font-arabic">الاسم الكامل *</label>
                     <Input
-                      name="from_name"
+                      placeholder="الاسم الكامل *"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
                       className="font-arabic text-right"
                       required
                     />
                   </div>
-
+                  
                   <div>
-                    <label className="block text-sm mb-1 text-right font-arabic">البريد الإلكتروني *</label>
                     <Input
                       type="email"
-                      name="from_email"
+                      placeholder="البريد الإلكتروني *"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
                       className="font-arabic text-right"
                       required
                     />
                   </div>
-
+                  
                   <div>
-                    <label className="block text-sm mb-1 text-right font-arabic">رقم الهاتف</label>
                     <Input
                       type="tel"
-                      name="phone"
+                      placeholder="رقم الهاتف"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
                       className="font-arabic text-right"
                     />
                   </div>
-
+                  
                   <div>
-                    <label className="block text-sm mb-1 text-right font-arabic">الرسالة *</label>
                     <Textarea
-                      name="message"
+                      placeholder="اكتب رسالتك هنا... *"
                       value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      onChange={(e) => setFormData({...formData, message: e.target.value})}
                       className="font-arabic text-right min-h-[120px]"
                       required
                     />
                   </div>
-
-                  <Button
-                    type="submit"
+                  
+                  <Button 
+                    type="submit" 
                     className="w-full font-arabic bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   >
                     <Send className="h-4 w-4 ml-2" />
@@ -219,7 +198,9 @@ const Contact = () => {
               </CardContent>
             </Card>
 
+            {/* Map and Social Media */}
             <div className="space-y-6">
+              {/* Map Placeholder */}
               <Card className="shadow-lg border-purple-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-purple-800 font-arabic text-right">
@@ -228,18 +209,17 @@ const Contact = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-hidden rounded-lg h-64">
-                    <iframe
-                      src="https://www.google.com/maps?q=Ibb,Yemen&output=embed"
-                      className="w-full h-full border-0"
-                      allowFullScreen
-                      loading="lazy"
-                      title="خريطة الموقع"
-                    ></iframe>
+                  <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-64 rounded-lg flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-600 font-arabic">خريطة الموقع</p>
+                      <p className="text-sm text-gray-500 font-arabic">اليمن - محافظة إب</p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
+              {/* Social Media */}
               <Card className="shadow-lg border-green-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3 text-green-800 font-arabic text-right">
@@ -256,7 +236,6 @@ const Contact = () => {
                           key={index}
                           variant="outline"
                           className={`p-4 h-auto flex-col gap-2 ${social.color} border-gray-200`}
-                          onClick={() => window.open(social.url, "_blank")}
                         >
                           <Icon className="h-6 w-6" />
                           <span className="text-xs font-arabic">{social.name}</span>

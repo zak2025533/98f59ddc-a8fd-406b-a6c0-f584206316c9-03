@@ -14,14 +14,14 @@ interface OrderActionsProps {
 
 const OrderActions = ({ order, onView, onUpdateStatus, onDelete, onOpenWhatsApp }: OrderActionsProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       <Button
         size="sm"
         variant="outline"
         onClick={() => onView(order)}
-        className="font-arabic"
+        className="font-arabic text-xs px-2 py-1"
       >
-        <Eye className="h-4 w-4 ml-2" />
+        <Eye className="h-3 w-3 ml-1" />
         عرض
       </Button>
       {order.whatsapp_message && (
@@ -29,9 +29,9 @@ const OrderActions = ({ order, onView, onUpdateStatus, onDelete, onOpenWhatsApp 
           size="sm"
           variant="outline"
           onClick={() => onOpenWhatsApp(order)}
-          className="font-arabic"
+          className="font-arabic text-xs px-2 py-1"
         >
-          <ExternalLink className="h-4 w-4 ml-2" />
+          <ExternalLink className="h-3 w-3 ml-1" />
           واتساب
         </Button>
       )}
@@ -39,7 +39,7 @@ const OrderActions = ({ order, onView, onUpdateStatus, onDelete, onOpenWhatsApp 
         <Button
           size="sm"
           onClick={() => onUpdateStatus(order.id, 'processing')}
-          className="font-arabic"
+          className="font-arabic text-xs px-2 py-1"
         >
           قبول
         </Button>
@@ -49,9 +49,9 @@ const OrderActions = ({ order, onView, onUpdateStatus, onDelete, onOpenWhatsApp 
           <Button
             size="sm"
             variant="destructive"
-            className="font-arabic"
+            className="font-arabic text-xs px-2 py-1"
           >
-            <Trash2 className="h-4 w-4 ml-2" />
+            <Trash2 className="h-3 w-3 ml-1" />
             حذف
           </Button>
         </AlertDialogTrigger>

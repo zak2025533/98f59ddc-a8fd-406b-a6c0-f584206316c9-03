@@ -1,3 +1,4 @@
+
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -34,7 +35,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const getSessionId = () => {
     let sessionId = localStorage.getItem('session_id');
     if (!sessionId) {
-      sessionId = 'session_' + Math.random().toString(36).substring(2, 15);
+      sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
       localStorage.setItem('session_id', sessionId);
     }
     return sessionId;
@@ -42,6 +43,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchFavorites = async () => {
     try {
+      console.log('Loading favorites...');
       const sessionId = getSessionId();
       const { data, error } = await supabase
         .from('favorites')
@@ -57,51 +59,79 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
         `)
         .eq('session_id', sessionId);
 
-      if (error) throw error;
-
+      if (error) {
+        console.error('Error fetching favorites:', error);
+        throw error;
+      }
+      
       const formattedItems = (data || []).map(item => ({
         id: item.id,
         product_id: item.product_id,
-        product: item.products,
+        product: item.products as any
       }));
-
+      
       setFavoriteItems(formattedItems);
+      console.log('Favorites loaded:', formattedItems.length);
     } catch (error) {
+      console.error('Error fetching favorites:', error);
       toast({
-        title: "فشل في تحميل المفضلة",
-        description: "حدث خطأ أثناء تحميل المنتجات المفضلة",
+        title: "خطأ",
+        description: "فشل في تحميل المفضلة",
         variant: "destructive",
       });
     }
   };
 
   const addToFavorites = async (productId: string) => {
-    const sessionId = getSessionId();
+    if (!productId) {
+      console.error('Product ID is required');
+      return;
+    }
 
-    if (isFavorite(productId)) return;
-
+    if (isFavorite(productId)) {
+      console.log('Product already in favorites');
+      return;
+    }
+    
+    setLoading(true);
     try {
+      console.log('Adding to favorites:', productId);
+      const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
-        .insert({ session_id: sessionId, product_id: productId });
+        .insert({
+          session_id: sessionId,
+          product_id: productId
+        });
 
       if (error) throw error;
       await fetchFavorites();
-
-      toast({ title: "تم الإضافة", description: "تم إضافة المنتج إلى المفضلة" });
+      
+      toast({
+        title: "تم إضافة المنتج للمفضلة",
+        description: "تم إضافة المنتج إلى قائمة المفضلة بنجاح",
+      });
     } catch (error) {
+      console.error('Error adding to favorites:', error);
       toast({
         title: "خطأ",
-        description: "فشل في إضافة المنتج إلى المفضلة",
+        description: "فشل في إضافة المنتج للمفضلة",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   const removeFromFavorites = async (productId: string) => {
-    const sessionId = getSessionId();
+    if (!productId) {
+      console.error('Product ID is required');
+      return;
+    }
 
     try {
+      console.log('Removing from favorites:', productId);
+      const sessionId = getSessionId();
       const { error } = await supabase
         .from('favorites')
         .delete()
@@ -110,18 +140,27 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) throw error;
       setFavoriteItems(prev => prev.filter(item => item.product_id !== productId));
-
-      toast({ title: "تم الحذف", description: "تمت إزالة المنتج من المفضلة" });
+      
+      toast({
+        title: "تم حذف المنتج",
+        description: "تم حذف المنتج من قائمة المفضلة",
+      });
     } catch (error) {
+      console.error('Error removing from favorites:', error);
       toast({
         title: "خطأ",
-        description: "فشل في إزالة المنتج من المفضلة",
+        description: "فشل في حذف المنتج من المفضلة",
         variant: "destructive",
       });
     }
   };
 
   const toggleFavorite = async (productId: string) => {
+    if (!productId) {
+      console.error('Product ID is required');
+      return;
+    }
+
     if (isFavorite(productId)) {
       await removeFromFavorites(productId);
     } else {

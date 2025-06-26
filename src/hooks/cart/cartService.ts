@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { CartItem } from './CartContext';
 import { getSessionId } from './cartUtils';
@@ -69,4 +68,74 @@ export const clearAllCartItems = async () => {
     .eq('session_id', sessionId);
 
   if (error) throw error;
+};
+
+/**
+ * Creates an order and its items in the database.
+ * @param cartItems
+ * @param total
+ * @param whatsappMessage
+ * @returns { orderId, invoiceNumber }
+ */
+export const createOrderWithItems = async (
+  cartItems: CartItem[],
+  total: number,
+  whatsappMessage: string,
+  customerName?: string,
+  customerPhone?: string,
+  customerAddress?: string,
+) => {
+  const sessionId = getSessionId();
+
+  // 1. Insert order
+  const { data: orderData, error: orderError } = await supabase
+    .from('orders')
+    .insert([{
+      session_id: sessionId,
+      total_amount: total,
+      whatsapp_message: whatsappMessage,
+      customer_name: customerName ?? null,
+      customer_phone: customerPhone ?? null,
+      customer_address: customerAddress ?? null,
+    }])
+    .select('id, invoice_number')
+    .single();
+
+  if (orderError || !orderData) throw new Error(orderError?.message ?? "خطأ أثناء إنشاء الطلب");
+
+  const orderId = orderData.id;
+  const invoiceNumber = orderData.invoice_number;
+
+  // 2. Insert order items
+  const itemsToInsert = cartItems.map(item => ({
+    order_id: orderId,
+    product_id: item.product.id,
+    product_name: item.product.name,
+    quantity: item.quantity,
+    price: item.product.price,
+  }));
+  const { error: itemsError } = await supabase
+    .from('order_items')
+    .insert(itemsToInsert);
+
+  if (itemsError) throw new Error(itemsError.message);
+
+  return { orderId, invoiceNumber };
+};
+
+/**
+ * تحديث نص رسالة واتساب للطلب بعد توليدها المفصل
+ */
+export const updateOrderWhatsappMessage = async (
+  orderId: string,
+  whatsappMessage: string
+) => {
+  const { error } = await supabase
+    .from('orders')
+    .update({
+      whatsapp_message: whatsappMessage,
+    })
+    .eq('id', orderId);
+
+  if (error) throw new Error(error.message);
 };

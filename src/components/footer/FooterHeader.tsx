@@ -1,9 +1,10 @@
+
 import React from 'react';
 
 const FooterHeader = () => {
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 mb-8">
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-center">
+    <div className="text-center mb-8">
+      <div className="flex items-center justify-center space-x-3 mb-4">
         <img
           src="/lovable-uploads/2d3014b7-1117-47ac-8b34-9b089e9c499f.png"
           alt="بلا حدود للحلويات"
@@ -16,8 +17,8 @@ const FooterHeader = () => {
           <p className="text-blue-200 text-sm">Unlimited Sweets</p>
         </div>
       </div>
-
-      <p className="text-blue-100 font-arabic leading-relaxed max-w-3xl mx-auto mt-4 px-4 sm:px-0">
+      
+      <p className="text-blue-100 font-arabic leading-relaxed max-w-2xl mx-auto">
         متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي
       </p>
     </div>

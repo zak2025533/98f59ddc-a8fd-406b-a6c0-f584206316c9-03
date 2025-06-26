@@ -1,8 +1,7 @@
+
 import { ReactNode } from "react";
 import BottomNavigation from "./BottomNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CartSheet } from "@/components/CartSheet";
-import { FavoritesSheet } from "@/components/FavoritesSheet";
 
 interface MobileLayoutProps {
   children: ReactNode;
@@ -13,20 +12,14 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const isMobile = useIsMobile();
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col w-full">
-      {/* ✅ المحتوى الرئيسي بعرض كامل بدون أي قيود أو حواف */}
-      <main className={`flex-1 w-full ${showBottomNav && isMobile ? "pb-20" : ""}`}>
-        <div className="w-full">{children}</div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex flex-col">
+      {/* Main content with bottom padding on mobile to accommodate bottom nav */}
+      <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
+        {children}
       </main>
-
-      {/* ✅ شريط التنقل السفلي والشرائح الجانبية */}
-      {showBottomNav && isMobile && (
-        <>
-          <CartSheet />
-          <FavoritesSheet />
-          <BottomNavigation />
-        </>
-      )}
+      
+      {/* Bottom Navigation - only show on mobile */}
+      {showBottomNav && isMobile && <BottomNavigation />}
     </div>
   );
 };

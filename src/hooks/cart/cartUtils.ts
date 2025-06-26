@@ -8,17 +8,64 @@ export const getSessionId = () => {
   return sessionId;
 };
 
-export const generateOrderText = (cartItems: any[], total: number) => {
-  let orderText = "مرحباً، أود طلب:\n\n";
-  cartItems.forEach(item => {
-    orderText += `• ${item.product.name} - الكمية: ${item.quantity} - ${item.product.price * item.quantity} ريال يمني\n`;
+/**
+ * توليد نص فاتورة واتساب بتنسيق احترافي يشمل جميع التفاصيل
+ */
+export const generateOrderText = (
+  cartItems: any[],
+  total: number,
+  invoiceNumber?: number,
+  orderDate?: Date,
+  customerName?: string,
+  customerAddress?: string,
+  customerPhone?: string
+) => {
+  // إعداد المعلومات الرئيسية
+  const storeName = "متجر الحلوى الذكية 🍬";
+  const logo = "🍬";
+  const currentDate = orderDate
+    ? orderDate.toLocaleString('ar-YE', { dateStyle: 'short', timeStyle: 'short' })
+    : new Date().toLocaleString('ar-YE', { dateStyle: 'short', timeStyle: 'short' });
+
+  // ملخص الأصناف
+  const uniqueProducts = cartItems.length;
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // بناء نص الفاتورة
+  let orderText = `${logo} *${storeName}*\n`;
+  if (invoiceNumber !== undefined) orderText += `*فاتورة رقم:* ${invoiceNumber}\n`;
+  orderText += `*تاريخ الطلب:* ${currentDate}\n`;
+  orderText += '-------------------------------------\n';
+
+  orderText += '📋 *تفاصيل الطلب:*\n';
+  cartItems.forEach((item, idx) => {
+    const name = item.product?.name || "";
+    const qty = item.quantity;
+    const price = item.product?.price || 0;
+    orderText += `${idx + 1}. ${name}\n   الكمية: ${qty} × ${price} = *${price * qty}* ريال\n`;
   });
-  orderText += `\nالمجموع الكلي: ${total.toFixed(2)} ريال يمني`;
+  orderText += '-------------------------------------\n';
+
+  orderText += `عدد الأصناف: ${uniqueProducts}\nإجمالي القطع: ${totalItems}\nالمجموع الكلي: *${total.toFixed(2)}* ريال يمني\n`;
+
+  orderText += '-------------------------------------\n';
+  orderText += `📍 *معلومات التوصيل:*\n`;
+  orderText += customerName ? `الاسم: ${customerName}\n` : '';
+  orderText += customerAddress ? `العنوان: ${customerAddress}\n` : '---\n';
+  orderText += customerPhone ? `الجوال: ${customerPhone}\n` : '';
+
+  orderText += '-------------------------------------\n';
+  orderText += `🚚 *طرق التوصيل:*\n- شحن داخلي / توصيل مباشر\n\n💰 *طرق الدفع:*\n- دفع عند الاستلام\n- تحويل بنكي\n`;
+
+  orderText += '-------------------------------------\n';
+  orderText += '☎️ *للتواصل مع المتجر:*\nواتساب: 715833246\n';
+
+  // بإمكانك لاحقاً تضمين QR أو رابط إذا رغبت
   return orderText;
 };
 
 export const openWhatsApp = (orderText: string) => {
-  const whatsappNumber = "967777777777"; // Replace with actual number
+  const whatsappNumber = "967715833246";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderText)}`;
   window.open(whatsappUrl, '_blank');
 };
