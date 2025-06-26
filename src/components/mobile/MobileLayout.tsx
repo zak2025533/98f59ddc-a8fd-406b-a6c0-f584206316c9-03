@@ -13,10 +13,10 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-gray-50">
+    <div className="w-screen h-screen flex flex-col bg-gray-50" dir="rtl">
       {/* المحتوى الرئيسي يأخذ كل المساحة المتاحة */}
       <main
-        className={`flex-grow w-full ${
+        className={`flex-grow w-full h-full ${
           showBottomNav && isMobile ? "pb-20" : ""
         }`}
       >
