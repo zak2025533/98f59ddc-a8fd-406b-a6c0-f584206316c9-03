@@ -4,35 +4,30 @@
     <meta charset="UTF-8" />
     <title>بلا حدود للحلويات</title>
 
-    <!-- Viewport: دعم الشاشات الطويلة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-
-    <!-- فافيكون -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- تحسينات Android و iOS -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="بلا حدود للحلويات" />
     <meta name="theme-color" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="msapplication-TileColor" content="#2563eb" />
     <meta name="HandheldFriendly" content="true" />
     <meta name="format-detection" content="telephone=no, email=no, address=no" />
     <meta name="google" content="notranslate" />
     <meta name="color-scheme" content="light dark" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <!-- وصف الموقع -->
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
 
-    <!-- CSS لتغطية الشاشة الكاملة وتجربة موبايل مثالية -->
     <style>
       html, body, #root {
-        height: 100%;
-        width: 100%;
         margin: 0;
         padding: 0;
+        height: 100%;
+        width: 100%;
+        background-color: #2563eb; /* ✅ خلفية زرقاء تغطي الشاشة بالكامل */
       }
 
       :root {
@@ -48,15 +43,24 @@
       }
 
       body {
-        font-family: system-ui, "Cairo", "Arial", sans-serif;
-        background-color: #ffffff;
+        font-family: "Cairo", system-ui, Arial, sans-serif;
+        direction: rtl;
+        text-align: right;
         overflow-x: hidden;
         overscroll-behavior-y: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
         -webkit-tap-highlight-color: transparent;
-        direction: rtl;
-        text-align: right;
+      }
+
+      #root {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        min-height: 100vh;
+        padding-top: var(--safe-area-inset-top);
+        padding-bottom: var(--safe-area-inset-bottom);
       }
 
       input, select, textarea {
@@ -68,18 +72,6 @@
         height: auto;
         display: block;
       }
-
-      /* تعديل الحواف لملء العرض بالكامل */
-      #root {
-        margin: 0;
-        padding-top: var(--safe-area-inset-top);
-        padding-bottom: var(--safe-area-inset-bottom);
-        padding-left: 0;
-        padding-right: 0;
-        width: 100vw;
-        min-height: 100vh;
-        box-sizing: border-box;
-      }
     </style>
 
     <!-- ✅ SendPulse Web Push -->
@@ -88,8 +80,6 @@
 
   <body>
     <div id="root"></div>
-
-    <!-- سكربت التطبيق -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
