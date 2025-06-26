@@ -29,14 +29,12 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            {/* الحاوية الرئيسية ذات الخلفية الزرقاء */}
             <div
-              className="min-h-[100dvh] pt-safe-top pb-safe-bottom flex flex-col justify-start bg-background font-arabic"
-              style={{
-                backgroundColor: "#2563eb", // خلفية زرقاء ثابتة
-              }}
+              className="min-h-[100dvh] w-full bg-blue-600 font-arabic pt-safe-area-inset-top pb-safe-area-inset-bottom"
             >
-              {/* ✅ محتوى التطبيق */}
-              <div className="bg-white app-content-wrapper">
+              {/* محتوى التطبيق */}
+              <main className="w-full max-w-4xl mx-auto px-4 py-6 bg-white rounded-t-2xl shadow-lg">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category" element={<Category />} />
@@ -47,7 +45,7 @@ const App = () => (
                   <Route path="/admin/*" element={<Admin />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-              </div>
+              </main>
             </div>
           </BrowserRouter>
         </FavoritesProvider>
