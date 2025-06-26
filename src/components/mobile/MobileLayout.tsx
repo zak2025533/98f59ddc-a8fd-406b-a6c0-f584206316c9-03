@@ -13,17 +13,13 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-gray-50" dir="rtl">
-      {/* المحتوى الرئيسي يأخذ كل المساحة المتاحة */}
-      <main
-        className={`flex-grow w-full h-full ${
-          showBottomNav && isMobile ? "pb-20" : ""
-        }`}
-      >
-        <div className="w-full h-full">{children}</div>
+    <div className="min-h-screen bg-gray-50 flex flex-col w-full">
+      {/* ✅ المحتوى الرئيسي بعرض كامل بدون أي قيود أو حواف */}
+      <main className={`flex-1 w-full ${showBottomNav && isMobile ? "pb-20" : ""}`}>
+        <div className="w-full">{children}</div>
       </main>
 
-      {/* شريط التنقل والشرائح الجانبية */}
+      {/* ✅ شريط التنقل السفلي والشرائح الجانبية */}
       {showBottomNav && isMobile && (
         <>
           <CartSheet />
