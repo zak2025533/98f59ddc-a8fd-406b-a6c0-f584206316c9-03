@@ -70,8 +70,8 @@ const BottomNavigation = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe-area-inset-bottom backdrop-blur-sm bg-white/90 border-t border-gray-200 rounded-t-2xl shadow-md mx-2 mb-2">
-        <div className="flex justify-around items-center py-3 px-4">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pt-2 pb-safe-area-inset-bottom shadow-md">
+        <div className="flex justify-around items-center px-4">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
