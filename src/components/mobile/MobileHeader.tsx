@@ -1,5 +1,4 @@
-// MobileHeader.tsx
-import { Search, Menu } from "lucide-react";
+من import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SearchDialog from "@/components/SearchDialog";
 
@@ -11,7 +10,7 @@ interface MobileHeaderProps {
 
 const MobileHeader = ({ title, showSearch = true, onMenuClick }: MobileHeaderProps) => {
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white fixed top-0 left-0 right-0 z-50 pt-safe-area-inset-top shadow-md">
+    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 pt-safe-area-inset-top rounded-t-xl rounded-b-xl shadow-md">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
           <img 
