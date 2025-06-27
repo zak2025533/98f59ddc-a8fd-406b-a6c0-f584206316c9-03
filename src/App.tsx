@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/hooks/useCart";
 import { FavoritesProvider } from "@/hooks/useFavorites";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 
 import Index from "./pages/Index";
 import Category from "./pages/Category";
@@ -23,12 +22,13 @@ const App = () => (
         <FavoritesProvider>
           <Toaster />
           <Sonner />
+
+          {/* ✅ العنصر الجذري للواجهة */}
           <div
             className="min-h-screen font-arabic bg-background text-foreground rtl dark:bg-background dark:text-foreground"
             dir="rtl"
             lang="ar"
           >
-            <ThemeToggle />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -41,6 +41,7 @@ const App = () => (
               </Routes>
             </BrowserRouter>
           </div>
+
         </FavoritesProvider>
       </CartProvider>
     </TooltipProvider>
