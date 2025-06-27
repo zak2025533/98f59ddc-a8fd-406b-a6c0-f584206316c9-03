@@ -1,7 +1,5 @@
-
 import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNativeApp } from "@/hooks/useNativeApp";
 import SearchDialog from "@/components/SearchDialog";
 
 interface MobileHeaderProps {
@@ -11,10 +9,8 @@ interface MobileHeaderProps {
 }
 
 const MobileHeader = ({ title, showSearch = true, onMenuClick }: MobileHeaderProps) => {
-  const { isNative } = useNativeApp();
-
   return (
-    <header className={`bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
+    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 pt-safe-area-inset-top">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-3 space-x-reverse">
           <img 
