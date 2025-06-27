@@ -1,11 +1,17 @@
-
-import { Home, Grid3X3, ShoppingCart, Heart, User } from "lucide-react";
+import {
+  Home, Grid3X3, ShoppingCart, Heart, User
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Admin from "@/pages/Admin";
 
 const BottomNavigation = () => {
@@ -18,39 +24,29 @@ const BottomNavigation = () => {
   const favoritesCount = favoriteItems.length;
 
   const navItems = [
-    {
-      icon: Home,
-      label: "الرئيسية",
-      path: "/",
-      count: 0
-    },
-    {
-      icon: Grid3X3,
-      label: "المنتجات",
-      path: "/category",
-      count: 0
-    },
+    { icon: Home, label: "الرئيسية", path: "/", count: 0 },
+    { icon: Grid3X3, label: "المنتجات", path: "/category", count: 0 },
     {
       icon: ShoppingCart,
       label: "السلة",
       path: "#",
       count: cartCount,
-      isCart: true
+      isCart: true,
     },
     {
       icon: Heart,
       label: "المفضلة",
       path: "#",
       count: favoritesCount,
-      isFavorites: true
+      isFavorites: true,
     },
     {
       icon: User,
       label: "لوحة التحكم",
       path: "#",
       count: 0,
-      isAdmin: true
-    }
+      isAdmin: true,
+    },
   ];
 
   const isActive = (path: string) => {
@@ -58,107 +54,59 @@ const BottomNavigation = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Wait for DOM to be ready before trying to find elements
-  useEffect(() => {
-    console.log('BottomNavigation mounted, DOM ready');
-  }, []);
-
   const handleCartClick = () => {
-    try {
-      console.log('Cart button clicked');
-      // Wait a bit for DOM to be ready
-      setTimeout(() => {
-        const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-        if (cartButton) {
-          console.log('Cart trigger found, clicking...');
-          cartButton.click();
-        } else {
-          console.error('Cart trigger button not found');
-          // Fallback: try finding any cart sheet trigger
-          const fallbackCartButton = document.querySelector('button[data-cart-trigger], [data-testid="cart-trigger"]') as HTMLButtonElement;
-          if (fallbackCartButton) {
-            console.log('Fallback cart trigger found, clicking...');
-            fallbackCartButton.click();
-          }
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Error opening cart:', error);
-    }
+    setTimeout(() => {
+      const cartButton = document.querySelector('[data-cart-trigger]');
+      if (cartButton instanceof HTMLButtonElement) cartButton.click();
+    }, 100);
   };
 
   const handleFavoritesClick = () => {
-    try {
-      console.log('Favorites button clicked');
-      // Wait a bit for DOM to be ready
-      setTimeout(() => {
-        const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-        if (favButton) {
-          console.log('Favorites trigger found, clicking...');
-          favButton.click();
-        } else {
-          console.error('Favorites trigger button not found');
-          // Fallback: try finding any favorites sheet trigger
-          const fallbackFavButton = document.querySelector('button[data-favorites-trigger], [data-testid="favorites-trigger"]') as HTMLButtonElement;
-          if (fallbackFavButton) {
-            console.log('Fallback favorites trigger found, clicking...');
-            fallbackFavButton.click();
-          }
-        }
-      }, 100);
-    } catch (error) {
-      console.error('Error opening favorites:', error);
-    }
+    setTimeout(() => {
+      const favButton = document.querySelector('[data-favorites-trigger]');
+      if (favButton instanceof HTMLButtonElement) favButton.click();
+    }, 100);
   };
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe-area-inset-bottom">
-        <div className="flex justify-around items-center py-2 px-4">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe-area-inset-bottom backdrop-blur-sm bg-white/90 border-t border-gray-200 rounded-t-2xl shadow-md mx-2 mb-2">
+        <div className="flex justify-around items-center py-3 px-4">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-            
+
+            const commonClass = `flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${active ? "text-blue-600" : "text-gray-500"}`;
+
+            const iconWithBadge = (
+              <div className="relative">
+                <Icon className="h-6 w-6" />
+                {item.count > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                    {item.count > 99 ? "99+" : item.count}
+                  </Badge>
+                )}
+              </div>
+            );
+
+            const label = (
+              <span className="text-xs mt-1 font-arabic">{item.label}</span>
+            );
+
             if (item.isCart) {
               return (
-                <button
-                  key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    active ? "text-blue-600" : "text-gray-500"
-                  }`}
-                  onClick={handleCartClick}
-                >
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                    {item.count > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
-                        {item.count > 99 ? "99+" : item.count}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                <button key={item.label} className={commonClass} onClick={handleCartClick}>
+                  {iconWithBadge}
+                  {label}
                 </button>
               );
             }
 
             if (item.isFavorites) {
               return (
-                <button
-                  key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    active ? "text-blue-600" : "text-gray-500"
-                  }`}
-                  onClick={handleFavoritesClick}
-                >
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                    {item.count > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
-                        {item.count > 99 ? "99+" : item.count}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                <button key={item.label} className={commonClass} onClick={handleFavoritesClick}>
+                  {iconWithBadge}
+                  {label}
                 </button>
               );
             }
@@ -167,43 +115,25 @@ const BottomNavigation = () => {
               return (
                 <button
                   key={item.label}
-                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                    adminDialogOpen ? "text-blue-600" : "text-gray-500"
-                  }`}
+                  className={commonClass}
                   onClick={() => setAdminDialogOpen(true)}
                 >
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                  {iconWithBadge}
+                  {label}
                 </button>
               );
             }
 
             return (
-              <Link
-                key={item.label}
-                to={item.path}
-                className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
-                  active ? "text-blue-600" : "text-gray-500"
-                }`}
-              >
-                <div className="relative">
-                  <Icon className="h-6 w-6" />
-                  {item.count > 0 && (
-                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
-                      {item.count > 99 ? "99+" : item.count}
-                    </Badge>
-                  )}
-                </div>
-                <span className="text-xs mt-1 font-arabic">{item.label}</span>
+              <Link key={item.label} to={item.path} className={commonClass}>
+                {iconWithBadge}
+                {label}
               </Link>
             );
           })}
         </div>
       </nav>
 
-      {/* Admin Dialog for Mobile */}
       <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>
         <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-y-auto p-0 m-2">
           <DialogHeader className="sr-only">
