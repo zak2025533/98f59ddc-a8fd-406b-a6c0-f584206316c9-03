@@ -10,7 +10,7 @@ interface MobileHeaderProps {
 
 const MobileHeader = ({ title, showSearch = true, onMenuClick }: MobileHeaderProps) => {
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 pt-safe-area-inset-top">
+    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 pt-safe-area-inset-top rounded-b-xl shadow-md">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center space-x-3 space-x-reverse">
           <img 
