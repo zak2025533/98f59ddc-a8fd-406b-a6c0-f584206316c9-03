@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search } from "lucide-react";
+import { Link } from "react-router-dom";  // استيراد Link
 import SearchDialog from "./SearchDialog";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
@@ -34,11 +34,11 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6 space-x-reverse">
-            <a href="#home" className="hover:text-blue-200 transition-colors font-arabic">الرئيسية</a>
+            <Link to="/" className="hover:text-blue-200 transition-colors font-arabic">الرئيسية</Link>
             <CategoriesDialog />
-            <a href="#products" className="hover:text-blue-200 transition-colors font-arabic">المنتجات</a>
-            <a href="#about" className="hover:text-blue-200 transition-colors font-arabic">من نحن</a>
-            <a href="#contact" className="hover:text-blue-200 transition-colors font-arabic">تواصل معنا</a>
+            <Link to="/category" className="hover:text-blue-200 transition-colors font-arabic">المنتجات</Link>
+            <Link to="/about" className="hover:text-blue-200 transition-colors font-arabic">من نحن</Link>
+            <Link to="/contact" className="hover:text-blue-200 transition-colors font-arabic">تواصل معنا</Link>
           </div>
 
           {/* Action Buttons */}
@@ -64,13 +64,13 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-blue-500">
             <div className="flex flex-col space-y-3">
-              <a href="#home" className="hover:text-blue-200 transition-colors font-arabic py-2">الرئيسية</a>
+              <Link to="/" className="hover:text-blue-200 transition-colors font-arabic py-2">الرئيسية</Link>
               <div className="py-2">
                 <CategoriesDialog />
               </div>
-              <a href="#products" className="hover:text-blue-200 transition-colors font-arabic py-2">المنتجات</a>
-              <a href="#about" className="hover:text-blue-200 transition-colors font-arabic py-2">من نحن</a>
-              <a href="#contact" className="hover:text-blue-200 transition-colors font-arabic py-2">تواصل معنا</a>
+              <Link to="/category" className="hover:text-blue-200 transition-colors font-arabic py-2">المنتجات</Link>
+              <Link to="/about" className="hover:text-blue-200 transition-colors font-arabic py-2">من نحن</Link>
+              <Link to="/contact" className="hover:text-blue-200 transition-colors font-arabic py-2">تواصل معنا</Link>
             </div>
           </div>
         )}
