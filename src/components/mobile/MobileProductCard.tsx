@@ -2,7 +2,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Product {
   id: string;
@@ -22,11 +23,37 @@ interface MobileProductCardProps {
 }
 
 const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: MobileProductCardProps) => {
+  const [averageRating, setAverageRating] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      const { data, error } = await supabase
+        .from("product_reviews")
+        .select("rating")
+        .eq("product_id", product.id);
+
+      if (error) {
+        console.error("خطأ في جلب التقييمات:", error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const total = data.reduce((sum, r) => sum + r.rating, 0);
+        const avg = total / data.length;
+        setAverageRating(parseFloat(avg.toFixed(1)));
+      } else {
+        setAverageRating(null); // لا توجد تقييمات
+      }
+    };
+
+    fetchRating();
+  }, [product.id]);
+
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite(product.id);
   };
-  
+
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onAddToCart(product.id);
@@ -41,7 +68,7 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        
+
         {/* Action buttons overlay */}
         <div className="absolute top-2 right-2 flex flex-col gap-1">
           {product.is_featured && (
@@ -50,10 +77,10 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
               مميز
             </Badge>
           )}
-          <Button 
+          <Button
             type="button"
-            size="sm" 
-            variant="ghost" 
+            size="sm"
+            variant="ghost"
             className="h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full shadow-sm"
             onClick={handleFavoriteClick}
             aria-label={isFavorite(product.id) ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
@@ -79,7 +106,7 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
             {product.description}
           </p>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <div className="flex items-center">
@@ -88,13 +115,15 @@ const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite 
             </div>
             <div className="flex items-center">
               <Star className="h-3 w-3 text-yellow-400 fill-current" />
-              <span className="text-xs text-blue-500 mr-1">4.8</span>
+              <span className="text-xs text-blue-500 mr-1">
+                {averageRating !== null ? averageRating : "—"}
+              </span>
             </div>
           </div>
-          
-          <Button 
+
+          <Button
             type="button"
-            size="sm" 
+            size="sm"
             className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-arabic px-3 py-2 h-9"
             onClick={handleAddToCartClick}
             disabled={!product.in_stock}
