@@ -19,29 +19,29 @@ const BottomNavigation = () => {
   const navItems = [
     { icon: Home, label: "الرئيسية", path: "/" },
     { icon: Grid3X3, label: "المنتجات", path: "/category" },
-    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, isCart: true },
-    { icon: Heart, label: "المفضلة", path: "#", count: favoritesCount, isFavorites: true },
-    { icon: User, label: "لوحة التحكم", path: "#", isAdmin: true }
+    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, onClick: handleCartClick },
+    { icon: Heart, label: "المفضلة", path: "#", count: favoritesCount, onClick: handleFavoritesClick },
+    { icon: User, label: "لوحة التحكم", path: "#", onClick: () => setAdminDialogOpen(true) }
   ];
 
-  const isActive = (path: string) => {
+  function isActive(path: string) {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
-  };
+  }
 
-  const handleCartClick = () => {
+  function handleCartClick() {
     setTimeout(() => {
       const trigger = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
       trigger?.click();
     }, 100);
-  };
+  }
 
-  const handleFavoritesClick = () => {
+  function handleFavoritesClick() {
     setTimeout(() => {
       const trigger = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
       trigger?.click();
     }, 100);
-  };
+  }
 
   return (
     <>
@@ -55,59 +55,32 @@ const BottomNavigation = () => {
               active ? "text-blue-600" : "text-gray-500"
             }`;
 
-            if (item.isCart) {
-              return (
-                <button key={item.label} onClick={handleCartClick} className={commonClasses}>
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                    {item.count! > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 text-xs bg-red-500 text-white p-0 flex items-center justify-center">
-                        {item.count! > 99 ? "99+" : item.count}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
-                </button>
-              );
-            }
+            const iconWithBadge = (
+              <div className="relative">
+                <Icon className="h-6 w-6" />
+                {item.count && item.count > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 text-xs bg-red-500 text-white p-0 flex items-center justify-center">
+                    {item.count > 99 ? "99+" : item.count}
+                  </Badge>
+                )}
+              </div>
+            );
 
-            if (item.isFavorites) {
-              return (
-                <button key={item.label} onClick={handleFavoritesClick} className={commonClasses}>
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                    {item.count! > 0 && (
-                      <Badge className="absolute -top-2 -right-2 h-5 w-5 text-xs bg-red-500 text-white p-0 flex items-center justify-center">
-                        {item.count! > 99 ? "99+" : item.count}
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
-                </button>
-              );
-            }
+            const label = <span className="text-xs mt-1 font-arabic">{item.label}</span>;
 
-            if (item.isAdmin) {
+            if (item.onClick) {
               return (
-                <button
-                  key={item.label}
-                  onClick={() => setAdminDialogOpen(true)}
-                  className={commonClasses}
-                >
-                  <div className="relative">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                <button key={item.label} onClick={item.onClick} className={commonClasses}>
+                  {iconWithBadge}
+                  {label}
                 </button>
               );
             }
 
             return (
               <Link key={item.label} to={item.path} className={commonClasses}>
-                <div className="relative">
-                  <Icon className="h-6 w-6" />
-                </div>
-                <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                {iconWithBadge}
+                {label}
               </Link>
             );
           })}
