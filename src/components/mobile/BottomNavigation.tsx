@@ -1,3 +1,4 @@
+
 import { Home, Grid3X3, ShoppingCart, Heart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
@@ -17,91 +18,167 @@ const BottomNavigation = () => {
   const favoritesCount = favoriteItems.length;
 
   const navItems = [
-    { icon: Home, label: "الرئيسية", path: "/" },
-    { icon: Grid3X3, label: "المنتجات", path: "/category" },
-    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, onClick: handleCartClick },
-    { icon: Heart, label: "المفضلة", path: "#", count: favoritesCount, onClick: handleFavoritesClick },
-    { icon: User, label: "لوحة التحكم", path: "#", onClick: () => setAdminDialogOpen(true) }
+    {
+      icon: Home,
+      label: "الرئيسية",
+      path: "/",
+      count: 0
+    },
+    {
+      icon: Grid3X3,
+      label: "المنتجات",
+      path: "/category",
+      count: 0
+    },
+    {
+      icon: ShoppingCart,
+      label: "السلة",
+      path: "#",
+      count: cartCount,
+      isCart: true
+    },
+    {
+      icon: Heart,
+      label: "المفضلة",
+      path: "#",
+      count: favoritesCount,
+      isFavorites: true
+    },
+    {
+      icon: User,
+      label: "لوحة التحكم",
+      path: "#",
+      count: 0,
+      isAdmin: true
+    }
   ];
 
-  function isActive(path: string) {
+  const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
-  }
+  };
 
-  function handleCartClick() {
-    setTimeout(() => {
-      const trigger = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-      trigger?.click();
-    }, 100);
-  }
+  const handleCartClick = () => {
+    try {
+      console.log('Cart button clicked');
+      const cartButton = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
+      if (cartButton) {
+        cartButton.click();
+      } else {
+        console.error('Cart trigger button not found');
+      }
+    } catch (error) {
+      console.error('Error opening cart:', error);
+    }
+  };
 
-  function handleFavoritesClick() {
-    setTimeout(() => {
-      const trigger = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-      trigger?.click();
-    }, 100);
-  }
+  const handleFavoritesClick = () => {
+    try {
+      console.log('Favorites button clicked');
+      const favButton = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
+      if (favButton) {
+        favButton.click();
+      } else {
+        console.error('Favorites trigger button not found');
+      }
+    } catch (error) {
+      console.error('Error opening favorites:', error);
+    }
+  };
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 rounded-t-2xl shadow-lg">
-        <div className="flex justify-around items-center px-4 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-safe-area-inset-bottom">
+        <div className="flex justify-around items-center py-2 px-4">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
-
-            const commonClasses = `group flex flex-col items-center justify-center min-w-[60px] relative transition-all duration-200 ${
-              active ? "text-blue-600" : "text-gray-500 hover:text-blue-500"
-            }`;
-
-            const iconWithBadge = (
-              <div className="relative">
-                <Icon className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                {item.count && item.count > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 text-[10px] bg-red-600 text-white p-0 flex items-center justify-center">
-                    {item.count > 99 ? "99+" : item.count}
-                  </Badge>
-                )}
-              </div>
-            );
-
-            const label = (
-              <span className="text-[11px] mt-1 font-arabic group-hover:font-semibold transition-all">
-                {item.label}
-              </span>
-            );
-
-            const activeDot = active && (
-              <span className="absolute bottom-0 w-2 h-2 bg-blue-600 rounded-full mt-1"></span>
-            );
-
-            const content = (
-              <>
-                {iconWithBadge}
-                {label}
-                {activeDot}
-              </>
-            );
-
-            if (item.onClick) {
+            
+            if (item.isCart) {
               return (
-                <button key={item.label} onClick={item.onClick} className={commonClasses}>
-                  {content}
+                <button
+                  key={item.label}
+                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
+                    active ? "text-blue-600" : "text-gray-500"
+                  }`}
+                  onClick={handleCartClick}
+                >
+                  <div className="relative">
+                    <Icon className="h-6 w-6" />
+                    {item.count > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                        {item.count > 99 ? "99+" : item.count}
+                      </Badge>
+                    )}
+                  </div>
+                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                </button>
+              );
+            }
+
+            if (item.isFavorites) {
+              return (
+                <button
+                  key={item.label}
+                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
+                    active ? "text-blue-600" : "text-gray-500"
+                  }`}
+                  onClick={handleFavoritesClick}
+                >
+                  <div className="relative">
+                    <Icon className="h-6 w-6" />
+                    {item.count > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                        {item.count > 99 ? "99+" : item.count}
+                      </Badge>
+                    )}
+                  </div>
+                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
+                </button>
+              );
+            }
+
+            if (item.isAdmin) {
+              return (
+                <button
+                  key={item.label}
+                  className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
+                    adminDialogOpen ? "text-blue-600" : "text-gray-500"
+                  }`}
+                  onClick={() => setAdminDialogOpen(true)}
+                >
+                  <div className="relative">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <span className="text-xs mt-1 font-arabic">{item.label}</span>
                 </button>
               );
             }
 
             return (
-              <Link key={item.label} to={item.path} className={commonClasses}>
-                {content}
+              <Link
+                key={item.label}
+                to={item.path}
+                className={`flex flex-col items-center justify-center p-2 min-w-[60px] relative touch-target ${
+                  active ? "text-blue-600" : "text-gray-500"
+                }`}
+              >
+                <div className="relative">
+                  <Icon className="h-6 w-6" />
+                  {item.count > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
+                      {item.count > 99 ? "99+" : item.count}
+                    </Badge>
+                  )}
+                </div>
+                <span className="text-xs mt-1 font-arabic">{item.label}</span>
               </Link>
             );
           })}
         </div>
       </nav>
 
-      {/* لوحة التحكم (admin) */}
+      {/* Admin Dialog for Mobile */}
       <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>
         <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-y-auto p-0 m-2">
           <DialogHeader className="sr-only">

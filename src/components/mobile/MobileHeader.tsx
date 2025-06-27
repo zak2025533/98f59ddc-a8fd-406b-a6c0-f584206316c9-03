@@ -1,5 +1,7 @@
+
 import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNativeApp } from "@/hooks/useNativeApp";
 import SearchDialog from "@/components/SearchDialog";
 
 interface MobileHeaderProps {
@@ -9,10 +11,12 @@ interface MobileHeaderProps {
 }
 
 const MobileHeader = ({ title, showSearch = true, onMenuClick }: MobileHeaderProps) => {
+  const { isNative } = useNativeApp();
+
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 pt-safe-area-inset-top rounded-t-xl rounded-b-xl shadow-md">
+    <header className={`bg-gradient-to-r from-blue-600 to-blue-800 text-white sticky top-0 z-40 ${isNative ? 'pt-safe-area-inset-top' : ''}`}>
       <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center space-x-3 rtl:space-x-reverse">
+        <div className="flex items-center space-x-3 space-x-reverse">
           <img 
             src="/lovable-uploads/420dd569-71cd-4e6b-9d6a-946abecbc0e9.png" 
             alt="بلا حدود للحلويات" 
@@ -21,7 +25,7 @@ const MobileHeader = ({ title, showSearch = true, onMenuClick }: MobileHeaderPro
           <h1 className="text-lg font-bold font-arabic truncate">{title}</h1>
         </div>
         
-        <div className="flex items-center space-x-2 rtl:space-x-reverse">
+        <div className="flex items-center space-x-2 space-x-reverse">
           {showSearch && <SearchDialog />}
           {onMenuClick && (
             <Button
