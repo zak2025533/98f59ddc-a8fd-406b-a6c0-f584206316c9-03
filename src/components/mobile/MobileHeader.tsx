@@ -1,4 +1,4 @@
-من import { Search, Menu } from "lucide-react";
+import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SearchDialog from "@/components/SearchDialog";
 
