@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,7 +32,7 @@ interface Category {
 }
 
 const CategoryPage = () => {
-  const { categorySlug } = useParams();
+  const { categorySlug } = useParams<{ categorySlug?: string }>();
   const [category, setCategory] = useState<Category | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,44 +42,46 @@ const CategoryPage = () => {
 
   useEffect(() => {
     if (categorySlug) {
-      fetchCategoryAndProducts();
+      fetchCategoryAndProducts(categorySlug);
     } else {
+      // لو بدون سلق نوقف التحميل (لأننا نعرض كل الفئات)
       setLoading(false);
+      setCategory(null);
+      setProducts([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categorySlug]);
 
-  const fetchCategoryAndProducts = async () => {
+  const fetchCategoryAndProducts = async (slug: string) => {
     setLoading(true);
     try {
-      // Fetch category info
+      // جلب بيانات الفئة بناءً على السلق
       const { data: categoryData, error: categoryError } = await supabase
-        .from('categories')
-        .select('id, name, image_url')
-        .eq('slug', categorySlug)
+        .from("categories")
+        .select("id, name, image_url")
+        .eq("slug", slug)
         .single();
 
-      if (categoryError && categoryError.code !== 'PGRST116') {
-        throw categoryError;
-      }
-      
+      if (categoryError) throw categoryError;
+
       if (categoryData) {
         setCategory(categoryData);
-        // Fetch products in this category
+
+        // جلب المنتجات المرتبطة بالفئة
         const { data: productsData, error: productsError } = await supabase
-          .from('products')
-          .select('id, name, description, price, image_url, is_featured, in_stock')
-          .eq('category_id', categoryData.id)
-          .eq('in_stock', true);
+          .from("products")
+          .select("id, name, description, price, image_url, is_featured, in_stock")
+          .eq("category_id", categoryData.id)
+          .eq("in_stock", true);
 
         if (productsError) throw productsError;
+
         setProducts(productsData || []);
       } else {
         setCategory(null);
         setProducts([]);
       }
     } catch (error) {
-      console.error('Error fetching category data:', error);
+      console.error("Error fetching category or products:", error);
       setCategory(null);
       setProducts([]);
     } finally {
@@ -96,6 +97,7 @@ const CategoryPage = () => {
     }
   };
 
+  // إذا ما في سلق، عرض كل الفئات
   if (!categorySlug) {
     if (isMobile) {
       return (
@@ -106,7 +108,7 @@ const CategoryPage = () => {
         </MobileLayout>
       );
     }
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
         <SimpleNavbar />
@@ -116,14 +118,17 @@ const CategoryPage = () => {
     );
   }
 
+  // إذا جاري التحميل
   if (loading) {
     return <CategoryLoading />;
   }
 
+  // إذا الفئة غير موجودة
   if (!category) {
     return <CategoryNotFound />;
   }
 
+  // عرض المنتجات في الفئة حسب نوع الجهاز (موبايل / سطح مكتب)
   if (isMobile) {
     return (
       <MobileLayout>
@@ -142,16 +147,13 @@ const CategoryPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-50">
       <SimpleNavbar />
-      
       <CategoryHeader name={category.name} />
-
       <ProductsGrid
         products={products}
         isFavorite={isFavorite}
         onAddToCart={addToCart}
         onToggleFavorite={handleToggleFavorite}
       />
-
       <SimpleFooter />
     </div>
   );
