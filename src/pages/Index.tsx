@@ -1,4 +1,4 @@
-
+import { useRef } from "react";
 import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import HeroBanner from "@/components/HeroBanner";
@@ -13,14 +13,18 @@ const Index = () => {
   useVisitorTracking();
   const isMobile = useIsMobile();
 
+  const featuredRef = useRef<HTMLDivElement>(null); // ✅ مرجع التمرير
+
   if (isMobile) {
     return (
       <MobileLayout>
         <MobileHeader title="بلا حدود للحلويات" />
         <div className="space-y-0">
-          <HeroBanner />
+          <HeroBanner scrollToRef={featuredRef} /> {/* ✅ تمرير المرجع */}
           <AnnouncementBanner />
-          <FeaturedProducts />
+          <div ref={featuredRef}>
+            <FeaturedProducts />
+          </div>
         </div>
         <SimpleFooter />
       </MobileLayout>
@@ -32,9 +36,11 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="space-y-0">
-        <HeroBanner />
+        <HeroBanner scrollToRef={featuredRef} /> {/* ✅ تمرير المرجع */}
         <AnnouncementBanner />
-        <FeaturedProducts />
+        <div ref={featuredRef}>
+          <FeaturedProducts />
+        </div>
       </div>
       <SimpleFooter />
     </div>
