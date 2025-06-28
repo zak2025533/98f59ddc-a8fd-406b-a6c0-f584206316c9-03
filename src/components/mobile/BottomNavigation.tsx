@@ -45,21 +45,21 @@ const BottomNavigation = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 rounded-t-2xl shadow-lg">
-        <div className="flex justify-around items-center px-4 py-2">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 rounded-t-xl shadow-md">
+        <div className="flex justify-around items-center px-3 py-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
 
-            const commonClasses = `group flex flex-col items-center justify-center min-w-[60px] relative transition-all duration-200 ${
+            const commonClasses = `group flex flex-col items-center justify-center min-w-[50px] relative transition-all duration-200 ${
               active ? "text-blue-600" : "text-gray-500 hover:text-blue-500"
             }`;
 
             const iconWithBadge = (
               <div className="relative">
-                <Icon className="h-6 w-6 group-hover:scale-110 transition-transform" />
+                <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
                 {item.count && item.count > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 text-[10px] bg-red-600 text-white p-0 flex items-center justify-center">
+                  <Badge className="absolute -top-2 -right-2 h-4 w-4 text-[9px] bg-red-600 text-white p-0 flex items-center justify-center">
                     {item.count > 99 ? "99+" : item.count}
                   </Badge>
                 )}
@@ -67,13 +67,13 @@ const BottomNavigation = () => {
             );
 
             const label = (
-              <span className="text-[11px] mt-1 font-arabic group-hover:font-semibold transition-all">
+              <span className="text-[10px] mt-1 font-arabic group-hover:font-semibold transition-all">
                 {item.label}
               </span>
             );
 
             const activeDot = active && (
-              <span className="absolute bottom-0 w-2 h-2 bg-blue-600 rounded-full mt-1"></span>
+              <span className="absolute bottom-0 w-1.5 h-1.5 bg-blue-600 rounded-full mt-0.5"></span>
             );
 
             const content = (
