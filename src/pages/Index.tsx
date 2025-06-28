@@ -12,35 +12,29 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Index = () => {
   useVisitorTracking();
   const isMobile = useIsMobile();
-
-  const featuredRef = useRef<HTMLDivElement>(null); // ✅ مرجع التمرير
+  const productsRef = useRef<HTMLDivElement>(null);
 
   if (isMobile) {
     return (
       <MobileLayout>
         <MobileHeader title="بلا حدود للحلويات" />
-        <div className="space-y-0">
-          <HeroBanner scrollToRef={featuredRef} /> {/* ✅ تمرير المرجع */}
-          <AnnouncementBanner />
-          <div ref={featuredRef}>
-            <FeaturedProducts />
-          </div>
+        <HeroBanner scrollToRef={productsRef} />
+        <AnnouncementBanner />
+        <div ref={productsRef}>
+          <FeaturedProducts />
         </div>
         <SimpleFooter />
       </MobileLayout>
     );
   }
 
-  // Desktop version
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="space-y-0">
-        <HeroBanner scrollToRef={featuredRef} /> {/* ✅ تمرير المرجع */}
-        <AnnouncementBanner />
-        <div ref={featuredRef}>
-          <FeaturedProducts />
-        </div>
+      <HeroBanner scrollToRef={productsRef} />
+      <AnnouncementBanner />
+      <div ref={productsRef}>
+        <FeaturedProducts />
       </div>
       <SimpleFooter />
     </div>
