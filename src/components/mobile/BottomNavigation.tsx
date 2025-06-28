@@ -45,8 +45,8 @@ const BottomNavigation = () => {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 rounded-t-xl shadow-md">
-        <div className="flex justify-around items-center px-3 py-1.5">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-200 rounded-b-xl shadow-md">
+        <div className="flex justify-around items-center px-3 py-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
