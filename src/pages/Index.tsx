@@ -12,29 +12,36 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Index = () => {
   useVisitorTracking();
   const isMobile = useIsMobile();
-  const productsRef = useRef<HTMLDivElement>(null);
+
+  // ✅ مرجع لقسم المنتجات
+  const featuredRef = useRef<HTMLDivElement>(null);
 
   if (isMobile) {
     return (
       <MobileLayout>
         <MobileHeader title="بلا حدود للحلويات" />
-        <HeroBanner scrollToRef={productsRef} />
-        <AnnouncementBanner />
-        <div ref={productsRef}>
-          <FeaturedProducts />
+        <div className="space-y-0">
+          <HeroBanner scrollToRef={featuredRef} />
+          <AnnouncementBanner />
+          <div ref={featuredRef}>
+            <FeaturedProducts />
+          </div>
         </div>
         <SimpleFooter />
       </MobileLayout>
     );
   }
 
+  // نسخة سطح المكتب
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <HeroBanner scrollToRef={productsRef} />
-      <AnnouncementBanner />
-      <div ref={productsRef}>
-        <FeaturedProducts />
+      <div className="space-y-0">
+        <HeroBanner scrollToRef={featuredRef} />
+        <AnnouncementBanner />
+        <div ref={featuredRef}>
+          <FeaturedProducts />
+        </div>
       </div>
       <SimpleFooter />
     </div>
