@@ -16,8 +16,9 @@ const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
 
   return (
     <section className="relative min-h-[400px] flex items-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/15 via-transparent to-transparent"></div>
+      {/* الخلفية */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800" />
+      <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/15 via-transparent to-transparent" />
 
       {/* الزينة المتحركة */}
       <div className="absolute inset-0 overflow-hidden">
@@ -29,6 +30,7 @@ const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
         <div className="hidden md:block absolute top-24 right-1/3 opacity-20 text-4xl float-animation" style={{ animationDelay: '2.5s' }}>🍪</div>
       </div>
 
+      {/* المحتوى */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
         <div className="max-w-4xl mx-auto">
           <div className="animate-bounce-in flex items-center justify-center mb-4">
@@ -65,6 +67,7 @@ const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
             <Button
               size="lg"
               className="text-base md:text-lg px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-bold transition-all duration-300"
+              onClick={handleScroll} // ✅ اجعل زر "تسوق الآن" أيضاً يمرر
             >
               <ShoppingBag className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               تسوق الآن
