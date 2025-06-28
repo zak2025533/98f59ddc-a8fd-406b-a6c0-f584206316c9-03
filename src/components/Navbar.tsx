@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search } from "lucide-react";
@@ -62,15 +61,15 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-blue-500">
-            <div className="flex flex-col space-y-3">
-              <a href="#home" className="hover:text-blue-200 transition-colors font-arabic py-2">الرئيسية</a>
-              <div className="py-2">
+          <div className="md:hidden h-screen py-6 px-6 bg-blue-700 border-t border-blue-500">
+            <div className="flex flex-col space-y-5">
+              <a href="#home" className="text-lg font-arabic font-medium hover:text-blue-200">الرئيسية</a>
+              <div>
                 <CategoriesDialog />
               </div>
-              <a href="#products" className="hover:text-blue-200 transition-colors font-arabic py-2">المنتجات</a>
-              <a href="#about" className="hover:text-blue-200 transition-colors font-arabic py-2">من نحن</a>
-              <a href="#contact" className="hover:text-blue-200 transition-colors font-arabic py-2">تواصل معنا</a>
+              <a href="#products" className="text-lg font-arabic font-medium hover:text-blue-200">المنتجات</a>
+              <a href="#about" className="text-lg font-arabic font-medium hover:text-blue-200">من نحن</a>
+              <a href="#contact" className="text-lg font-arabic font-medium hover:text-blue-200">تواصل معنا</a>
             </div>
           </div>
         )}
