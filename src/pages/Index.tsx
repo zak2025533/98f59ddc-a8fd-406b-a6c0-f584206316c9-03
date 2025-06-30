@@ -8,8 +8,6 @@ import SimpleFooter from "@/components/SimpleFooter";
 import Navbar from "@/components/Navbar";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CartSheet } from "@/components/CartSheet"; // ✅ إضافة
-import { FavoritesSheet } from "@/components/FavoritesSheet"; // ✅ إضافة
 
 const Index = () => {
   useVisitorTracking();
@@ -17,35 +15,27 @@ const Index = () => {
 
   const featuredRef = useRef<HTMLDivElement>(null);
 
-  // ✅ حالتا فتح السلة والمفضلة
-  const [openCart, setOpenCart] = useState(false);
-  const [openFavorites, setOpenFavorites] = useState(false);
+  // حالات فتح السلة والمفضلة تمت إزالتها من هنا
 
   if (isMobile) {
     return (
-      <>
-        <MobileLayout showBottomNav={true}>
-          <MobileHeader title="بلا حدود للحلويات" />
-          <div className="space-y-0">
-            <HeroBanner scrollToRef={featuredRef} onOpenCart={() => setOpenCart(true)} /> {/* ✅ تمرير onOpenCart */}
-            <AnnouncementBanner />
-            <div ref={featuredRef}>
-              <FeaturedProducts />
-            </div>
+      <MobileLayout showBottomNav={true}>
+        <MobileHeader title="بلا حدود للحلويات" />
+        <div className="space-y-0">
+          <HeroBanner scrollToRef={featuredRef} onOpenCart={() => {}} /> {/* تمرير دالة فارغة أو تعديل حسب الحاجة */}
+          <AnnouncementBanner />
+          <div ref={featuredRef}>
+            <FeaturedProducts />
           </div>
-          <SimpleFooter />
-        </MobileLayout>
-
-        {/* ✅ CartSheet و FavoritesSheet */}
-        <CartSheet open={openCart} onOpenChange={setOpenCart} />
-        <FavoritesSheet open={openFavorites} onOpenChange={setOpenFavorites} />
-      </>
+        </div>
+        <SimpleFooter />
+      </MobileLayout>
     );
   }
 
   // نسخة سطح المكتب
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-[100vh] bg-[#2563eb] text-white">
       <Navbar />
       <div className="space-y-0">
         <HeroBanner scrollToRef={featuredRef} />
