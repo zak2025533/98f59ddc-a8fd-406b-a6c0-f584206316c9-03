@@ -17,13 +17,13 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const [openFavorites, setOpenFavorites] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#2563eb] text-white flex flex-col">
-      {/* المحتوى الرئيسي مع هامش سفلي إذا ظهر الشريط السفلي */}
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Main content with bottom padding on mobile to accommodate bottom nav */}
       <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
         {children}
       </main>
-
-      {/* الشريط السفلي (يظهر فقط على الجوال) */}
+      
+      {/* Bottom Navigation - only show on mobile */}
       {showBottomNav && isMobile && (
         <BottomNavigation
           onOpenCart={() => setOpenCart(true)}
@@ -31,10 +31,10 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
         />
       )}
 
-      {/* نافذة السلة */}
+      {/* Cart Sheet */}
       <CartSheet open={openCart} onOpenChange={setOpenCart} />
 
-      {/* نافذة المفضلة */}
+      {/* Favorites Sheet */}
       <FavoritesSheet open={openFavorites} onOpenChange={setOpenFavorites} />
     </div>
   );
