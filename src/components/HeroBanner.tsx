@@ -5,9 +5,10 @@ import { RefObject } from "react";
 
 interface HeroBannerProps {
   scrollToRef?: RefObject<HTMLDivElement>;
+  onOpenCart?: () => void; // ✅ دعم فتح السلة
 }
 
-const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
+const HeroBanner = ({ scrollToRef, onOpenCart }: HeroBannerProps) => {
   const isMobile = useIsMobile();
 
   const handleScroll = () => {
@@ -17,10 +18,10 @@ const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
   return (
     <section className="relative min-h-[400px] flex items-center overflow-hidden">
       {/* الخلفية */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800" />
-      <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/15 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/15 via-transparent to-transparent"></div>
 
-      {/* الزينة المتحركة */}
+      {/* الزينة */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-16 left-6 opacity-20 text-4xl md:text-5xl float-animation">🍰</div>
         <div className="absolute top-32 right-8 opacity-15 text-3xl md:text-4xl float-animation" style={{ animationDelay: '1s' }}>🧁</div>
@@ -60,18 +61,18 @@ const HeroBanner = ({ scrollToRef }: HeroBannerProps) => {
             </p>
           </div>
 
-          <div
-            className="flex flex-col sm:flex-row gap-3 justify-center animate-slide-up px-4"
-            style={{ animationDelay: '0.6s' }}
-          >
+          <div className="flex flex-col sm:flex-row gap-3 justify-center animate-slide-up px-4" style={{ animationDelay: '0.6s' }}>
+            {/* ✅ زر تسوق الآن يفتح السلة */}
             <Button
               size="lg"
               className="text-base md:text-lg px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-bold transition-all duration-300"
-              onClick={handleScroll} // ✅ اجعل زر "تسوق الآن" أيضاً يمرر
+              onClick={onOpenCart}
             >
               <ShoppingBag className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               تسوق الآن
             </Button>
+
+            {/* ✅ زر الاستكشاف ينزل للأسفل */}
             <Button
               size="lg"
               variant="outline"
