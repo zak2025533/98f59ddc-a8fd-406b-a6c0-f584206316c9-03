@@ -3,26 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Language" content="ar" />
-    
-    <!-- Favicon متعدد الأحجام -->
+
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    
+
+    <!-- Viewport & PWA -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="بلا حدود للحلويات" />
-    
     <meta name="theme-color" content="#2563eb" />
     <meta name="msapplication-navbutton-color" content="#2563eb" />
-    
+
     <title>بلا حدود للحلويات</title>
     <meta name="description" content="متجر متخصص ببيع أفضل الحلويات والمشروبات الطازجة بجودة عالية وطعم استثنائي" />
-    
+
     <style>
       :root {
         --safe-area-inset-top: env(safe-area-inset-top);
@@ -30,8 +29,7 @@
         --safe-area-inset-bottom: env(safe-area-inset-bottom);
         --safe-area-inset-left: env(safe-area-inset-left);
       }
-      
-      /* الخلفية الأساسية زرقاء وتغطي full viewport مع safe area */
+
       body {
         margin: 0;
         padding: 0;
@@ -43,20 +41,18 @@
         -webkit-tap-highlight-color: transparent;
         direction: rtl;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        /* نضيف padding bottom مساوي لل safe area */
         padding-bottom: var(--safe-area-inset-bottom);
         min-height: 100vh;
         box-sizing: border-box;
       }
-      
-      /* العنصر المحتوى أبيض ولا يغطي safe area السفلي */
+
+      /* ✅ اجعل الخلفية شفافة لتجنب الأبيض */
       #root {
-        background-color: #fff;
+        background-color: transparent;
         min-height: calc(100vh - var(--safe-area-inset-bottom));
         box-sizing: border-box;
       }
-      
-      /* منع الزوم على الحقول */
+
       input, select, textarea {
         font-size: 16px !important;
       }
