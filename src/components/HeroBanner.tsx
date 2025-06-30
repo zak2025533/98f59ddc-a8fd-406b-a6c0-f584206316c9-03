@@ -6,19 +6,14 @@ import { RefObject } from "react";
 interface HeroBannerProps {
   scrollToRef?: RefObject<HTMLDivElement>;
   onOpenCart?: () => void;
-  allCategories?: any[];  // أضف هنا النوع المناسب
 }
 
-const HeroBanner = ({ scrollToRef, onOpenCart, allCategories }: HeroBannerProps) => {
+const HeroBanner = ({ scrollToRef, onOpenCart }: HeroBannerProps) => {
   const isMobile = useIsMobile();
 
   const handleScroll = () => {
     scrollToRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
-
-  // مثال على استخدام allCategories
-  // يمكنك استبداله بما يناسبك
-  console.log("All categories:", allCategories);
 
   return (
     <section className="relative min-h-[400px] flex items-center overflow-hidden">
@@ -66,7 +61,11 @@ const HeroBanner = ({ scrollToRef, onOpenCart, allCategories }: HeroBannerProps)
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center animate-slide-up px-4" style={{ animationDelay: '0.6s' }}>
+          <div
+            className="flex flex-col sm:flex-row gap-3 justify-center animate-slide-up px-4"
+            style={{ animationDelay: '0.6s' }}
+          >
+            {/* زر فتح السلة */}
             <Button
               size="lg"
               className="text-base md:text-lg px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-blue-800 font-bold transition-all duration-300"
@@ -76,6 +75,7 @@ const HeroBanner = ({ scrollToRef, onOpenCart, allCategories }: HeroBannerProps)
               تسوق الآن
             </Button>
 
+            {/* زر التمرير لقسم الفئات */}
             <Button
               size="lg"
               variant="outline"
