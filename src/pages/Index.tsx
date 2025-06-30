@@ -3,7 +3,7 @@ import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import HeroBanner from "@/components/HeroBanner";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
-import AllCategories from "@/components/AllCategories"; // استيراد AllCategories بدل FeaturedProducts
+import AllCategories from "@/components/AllCategories"; // تم التعديل هنا
 import SimpleFooter from "@/components/SimpleFooter";
 import Navbar from "@/components/Navbar";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
@@ -15,7 +15,7 @@ const Index = () => {
   useVisitorTracking();
   const isMobile = useIsMobile();
 
-  // تغيير اسم المرجع ليعبر عن الفئات
+  // تم تغيير اسم المرجع ليعبر عن الفئات
   const categoriesRef = useRef<HTMLDivElement>(null);
 
   const [openCart, setOpenCart] = useState(false);
@@ -27,6 +27,7 @@ const Index = () => {
         <MobileLayout showBottomNav={true}>
           <MobileHeader title="بلا حدود للحلويات" />
           <div className="space-y-0">
+            {/* تمرير المرجع لتمرير الصفحة لقسم AllCategories */}
             <HeroBanner scrollToRef={categoriesRef} onOpenCart={() => setOpenCart(true)} />
             <AnnouncementBanner />
             <div ref={categoriesRef}>
