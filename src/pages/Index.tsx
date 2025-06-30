@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import HeroBanner from "@/components/HeroBanner";
@@ -15,14 +15,12 @@ const Index = () => {
 
   const featuredRef = useRef<HTMLDivElement>(null);
 
-  // حالات فتح السلة والمفضلة تمت إزالتها من هنا
-
   if (isMobile) {
     return (
       <MobileLayout showBottomNav={true}>
         <MobileHeader title="بلا حدود للحلويات" />
         <div className="space-y-0">
-          <HeroBanner scrollToRef={featuredRef} onOpenCart={() => {}} /> {/* تمرير دالة فارغة أو تعديل حسب الحاجة */}
+          <HeroBanner scrollToRef={featuredRef} onOpenCart={() => {}} />
           <AnnouncementBanner />
           <div ref={featuredRef}>
             <FeaturedProducts />
@@ -33,9 +31,9 @@ const Index = () => {
     );
   }
 
-  // نسخة سطح المكتب
+  // نسخة سطح المكتب مع الخلفية الجديدة
   return (
-    <div className="min-h-[100vh] bg-[#2563eb] text-white">
+    <div className="min-h-screen bg-[#3b2fa0] text-white">
       <Navbar />
       <div className="space-y-0">
         <HeroBanner scrollToRef={featuredRef} />
