@@ -17,7 +17,7 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const [openFavorites, setOpenFavorites] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#1e40af] text-white flex flex-col">
+    <div className="min-h-screen bg-[#3b2fa0] text-white flex flex-col">
       {/* المحتوى الرئيسي مع هامش سفلي إذا ظهر الشريط السفلي */}
       <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
         {children}
