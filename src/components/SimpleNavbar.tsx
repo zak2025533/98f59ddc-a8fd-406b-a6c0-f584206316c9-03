@@ -12,6 +12,8 @@ import Admin from "@/pages/Admin";
 const SimpleNavbar = () => {
   const { isNative } = useNativeApp();
   const [adminDialogOpen, setAdminDialogOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
 
   const navItems = [
     { name: "الرئيسية", href: "/", icon: Home },
@@ -66,8 +68,23 @@ const SimpleNavbar = () => {
                 <Search className="h-5 w-5" />
               </Button>
               
-              <FavoritesSheet />
-              <CartSheet />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setFavoritesOpen(true)}
+                className="rounded-full text-white bg-white/10 hover:bg-white/20"
+              >
+                <Heart className="h-5 w-5" />
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setCartOpen(true)}
+                className="rounded-full text-white bg-white/10 hover:bg-white/20"
+              >
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
 
               {/* Mobile menu */}
               <div className="md:hidden">
@@ -112,6 +129,10 @@ const SimpleNavbar = () => {
           </div>
         </div>
       </nav>
+
+      {/* Sheets */}
+      <FavoritesSheet open={favoritesOpen} onOpenChange={setFavoritesOpen} />
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
       {/* Admin Dialog */}
       <Dialog open={adminDialogOpen} onOpenChange={setAdminDialogOpen}>

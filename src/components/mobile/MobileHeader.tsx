@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,15 +12,49 @@ interface MobileHeaderProps {
   showSearch?: boolean;
 }
 
-const actionItems = [
-  { component: <SearchDialog />, label: "بحث" },
-  { component: <FavoritesSheet />, label: "المفضلة" },
-  { component: <CartSheet />, label: "السلة" },
-  { component: <AdminDialog />, label: "لوحة التحكم" },
-];
-
 const MobileHeader = ({ title, showSearch = true }: MobileHeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [favoritesOpen, setFavoritesOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const actionItems = [
+    { 
+      component: <SearchDialog key="search" />, 
+      label: "بحث" 
+    },
+    { 
+      component: (
+        <Button
+          key="favorites"
+          variant="ghost"
+          size="icon"
+          onClick={() => setFavoritesOpen(true)}
+          className="text-white hover:bg-white/20"
+        >
+          <span>❤️</span>
+        </Button>
+      ), 
+      label: "المفضلة" 
+    },
+    { 
+      component: (
+        <Button 
+          key="cart"
+          variant="ghost"
+          size="icon"
+          onClick={() => setCartOpen(true)}
+          className="text-white hover:bg-white/20"
+        >
+          <span>🛒</span>
+        </Button>
+      ), 
+      label: "السلة" 
+    },
+    { 
+      component: <AdminDialog key="admin" />, 
+      label: "لوحة التحكم" 
+    },
+  ];
 
   return (
     <>
@@ -68,9 +103,12 @@ const MobileHeader = ({ title, showSearch = true }: MobileHeaderProps) => {
           </div>
         </div>
       )}
+
+      {/* Sheets */}
+      <FavoritesSheet open={favoritesOpen} onOpenChange={setFavoritesOpen} />
+      <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
     </>
   );
 };
 
 export default MobileHeader;
-

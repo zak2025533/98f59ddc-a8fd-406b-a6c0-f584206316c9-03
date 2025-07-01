@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Star, ArrowLeft } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/hooks/cart/useCart';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -133,9 +133,6 @@ const FeaturedProducts = () => {
               <MobileProductCard
                 key={product.id}
                 product={product}
-                isFavorite={isFavorite}
-                onAddToCart={handleAddToCart}
-                onToggleFavorite={handleToggleFavorite}
               />
             ) : (
               <ProductCard
