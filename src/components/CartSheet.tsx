@@ -1,18 +1,17 @@
+
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/hooks/useCart";
+import { useCart } from "@/hooks/cart/useCart";
 import { CartHeader } from "./cart/CartHeader";
 import { EmptyCart } from "./cart/EmptyCart";
 import { CartItemCard } from "./cart/CartItemCard";
 import { CartSummary } from "./cart/CartSummary";
-import { Badge } from "@/components/ui/badge";
 import { useOrder, DeliveryInfo } from "@/hooks/useOrder";
 
 interface CartSheetProps {
-  triggerClassName?: string;
-  iconClassName?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const distributionPoints = [
@@ -33,8 +32,8 @@ const distributionPoints = [
   }
 ];
 
-export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) => {
-  const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
+export const CartSheet = ({ open, onOpenChange }: CartSheetProps) => {
+  const { cartItems, updateQuantity, removeFromCart, clearCart, total } = useCart();
   const { handleOrderWithDeliveryInfo } = useOrder();
 
   const [deliveryInfo, setDeliveryInfo] = useState<DeliveryInfo>({
@@ -45,7 +44,6 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const total = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const handleInputChange = (field: keyof DeliveryInfo, value: string) => {
     setDeliveryInfo((prev) => ({ ...prev, [field]: value }));
@@ -56,26 +54,8 @@ export const CartSheet = ({ triggerClassName, iconClassName }: CartSheetProps) =
     clearCart();
   };
 
-  const defaultTriggerClasses = "relative p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors";
-
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className={triggerClassName || defaultTriggerClasses}
-          data-cart-trigger
-        >
-          <ShoppingCart className={iconClassName || "h-5 w-5"} />
-          {cartCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
-              {cartCount > 99 ? "99+" : cartCount}
-            </Badge>
-          )}
-          {triggerClassName && <span className="mr-2 font-arabic">سلة التسوق</span>}
-        </Button>
-      </SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="h-full flex flex-col">
           <CartHeader cartCount={cartCount} />

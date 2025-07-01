@@ -1,68 +1,50 @@
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
 import { useFavorites } from "@/hooks/useFavorites";
-import { useCart } from "@/hooks/useCart";
+import { useCart } from "@/hooks/cart/useCart";
 import { useProducts } from "@/hooks/useProducts";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 
 interface FavoritesSheetProps {
-  triggerClassName?: string;
-  iconClassName?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-export const FavoritesSheet = ({ triggerClassName, iconClassName }: FavoritesSheetProps) => {
-  const { favorites, toggleFavorite } = useFavorites();
+export const FavoritesSheet = ({ open, onOpenChange }: FavoritesSheetProps) => {
+  const { favoriteItems, toggleFavorite } = useFavorites();
   const { addToCart } = useCart();
   const { products } = useProducts();
   const { toast } = useToast();
 
-  const favoriteProducts = products.filter(product => favorites.includes(product.id));
-  const favoritesCount = favorites.length;
+  const favoriteProducts = products.filter(product => 
+    favoriteItems.some(fav => fav.product_id === product.id)
+  );
 
-  const handleAddToCart = (productId: string) => {
-    addToCart(productId);
+  const handleAddToCart = async (productId: string) => {
+    await addToCart(productId);
     toast({
       title: "تمت الإضافة للسلة",
       description: "تم إضافة المنتج إلى سلة التسوق بنجاح",
     });
   };
 
-  const handleRemoveFromFavorites = (productId: string) => {
-    toggleFavorite(productId);
+  const handleRemoveFromFavorites = async (productId: string) => {
+    await toggleFavorite(productId);
     toast({
       title: "تمت الإزالة من المفضلة",
       description: "تم إزالة المنتج من المفضلة",
     });
   };
 
-  const defaultTriggerClasses = "relative p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors";
-
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className={triggerClassName || defaultTriggerClasses}
-          data-favorites-trigger
-        >
-          <Heart className={iconClassName || "h-5 w-5"} />
-          {favoritesCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 text-white">
-              {favoritesCount > 99 ? "99+" : favoritesCount}
-            </Badge>
-          )}
-          {triggerClassName && <span className="mr-2 font-arabic">المفضلة</span>}
-        </Button>
-      </SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md bg-gradient-to-br from-pink-50 to-red-50">
         <div className="h-full flex flex-col">
           <SheetHeader>
             <SheetTitle className="text-right font-arabic text-pink-900">
-              المفضلة ({favoritesCount} منتج)
+              المفضلة ({favoriteProducts.length} منتج)
             </SheetTitle>
           </SheetHeader>
           

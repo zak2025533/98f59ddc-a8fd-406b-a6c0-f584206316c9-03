@@ -1,7 +1,11 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
+import { useCart } from "@/hooks/cart/useCart";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useToast } from "@/hooks/use-toast";
 import React from "react";
 
 interface Product {
@@ -16,20 +20,29 @@ interface Product {
 
 interface MobileProductCardProps {
   product: Product;
-  isFavorite: (productId: string) => boolean;
-  onAddToCart: (productId: string) => void;
-  onToggleFavorite: (productId: string) => void;
 }
 
-const MobileProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: MobileProductCardProps) => {
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+const MobileProductCard = ({ product }: MobileProductCardProps) => {
+  const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { toast } = useToast();
+
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    onToggleFavorite(product.id);
+    await toggleFavorite(product.id);
+    toast({
+      title: isFavorite(product.id) ? "تمت الإزالة من المفضلة" : "تمت الإضافة للمفضلة",
+      description: isFavorite(product.id) ? "تم إزالة المنتج من المفضلة" : "تم إضافة المنتج إلى المفضلة",
+    });
   };
   
-  const handleAddToCartClick = (e: React.MouseEvent) => {
+  const handleAddToCartClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    onAddToCart(product.id);
+    await addToCart(product.id);
+    toast({
+      title: "تمت الإضافة للسلة",
+      description: "تم إضافة المنتج إلى سلة التسوق بنجاح",
+    });
   };
 
   return (

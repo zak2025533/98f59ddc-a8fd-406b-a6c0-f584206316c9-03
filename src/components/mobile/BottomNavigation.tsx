@@ -1,46 +1,35 @@
+
 import { Home, Grid3X3, ShoppingCart, Heart, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useCart } from "@/hooks/useCart";
+import { useCart } from "@/hooks/cart/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Admin from "@/pages/Admin";
 
-const BottomNavigation = () => {
-  const location = useLocation();
-  const { cartItems } = useCart();
-  const { favoriteItems } = useFavorites();
-  const [adminDialogOpen, setAdminDialogOpen] = useState(false);
+interface BottomNavigationProps {
+  onOpenCart: () => void;
+  onOpenFavorites: () => void;
+}
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const favoritesCount = favoriteItems.length;
+const BottomNavigation = ({ onOpenCart, onOpenFavorites }: BottomNavigationProps) => {
+  const location = useLocation();
+  const { cartCount } = useCart();
+  const { favoriteCount } = useFavorites();
+  const [adminDialogOpen, setAdminDialogOpen] = useState(false);
 
   const navItems = [
     { icon: Home, label: "الرئيسية", path: "/" },
     { icon: Grid3X3, label: "المنتجات", path: "/category" },
-    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, onClick: handleCartClick },
-    { icon: Heart, label: "المفضلة", path: "#", count: favoritesCount, onClick: handleFavoritesClick },
+    { icon: ShoppingCart, label: "السلة", path: "#", count: cartCount, onClick: onOpenCart },
+    { icon: Heart, label: "المفضلة", path: "#", count: favoriteCount, onClick: onOpenFavorites },
     { icon: User, label: "لوحة التحكم", path: "#", onClick: () => setAdminDialogOpen(true) }
   ];
 
   function isActive(path: string) {
     if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
-  }
-
-  function handleCartClick() {
-    setTimeout(() => {
-      const trigger = document.querySelector('[data-cart-trigger]') as HTMLButtonElement;
-      trigger?.click();
-    }, 100);
-  }
-
-  function handleFavoritesClick() {
-    setTimeout(() => {
-      const trigger = document.querySelector('[data-favorites-trigger]') as HTMLButtonElement;
-      trigger?.click();
-    }, 100);
   }
 
   return (
