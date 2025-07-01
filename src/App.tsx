@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartProvider } from "@/hooks/useCart";
+import { CartProvider } from "@/hooks/cart/CartProvider";
 import { FavoritesProvider } from "@/hooks/useFavorites";
 import Index from "./pages/Index";
 import Category from "./pages/Category";

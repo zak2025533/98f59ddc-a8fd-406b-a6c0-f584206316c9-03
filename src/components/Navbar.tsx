@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, Heart, ShoppingCart } from "lucide-react";
 import SearchDialog from "./SearchDialog";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
@@ -53,7 +53,7 @@ const Navbar = () => {
                 onClick={() => setFavoritesOpen(true)}
                 className="text-white hover:bg-white/20"
               >
-                <Search className="h-5 w-5" />
+                <Heart className="h-5 w-5" />
               </Button>
               <Button
                 variant="ghost"
@@ -61,7 +61,7 @@ const Navbar = () => {
                 onClick={() => setCartOpen(true)}
                 className="text-white hover:bg-white/20"
               >
-                <Search className="h-5 w-5" />
+                <ShoppingCart className="h-5 w-5" />
               </Button>
               <AdminDialog />
               
