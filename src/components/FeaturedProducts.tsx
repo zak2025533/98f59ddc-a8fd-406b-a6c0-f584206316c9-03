@@ -37,7 +37,7 @@ const FeaturedProducts = () => {
         .from('products')
         .select('id, name, description, price, image_url, is_featured, in_stock')
         .eq('is_featured', true)
-        .eq('in_stock', true) // Only show products that are in stock
+        .eq('in_stock', true)
         .limit(isMobile ? 6 : 8);
 
       if (error) {
