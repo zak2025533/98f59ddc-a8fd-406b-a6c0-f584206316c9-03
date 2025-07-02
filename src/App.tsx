@@ -10,6 +10,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import ProductDetails from "./pages/ProductDetails";
 
 const queryClient = new QueryClient({
   defaultOptions: {
