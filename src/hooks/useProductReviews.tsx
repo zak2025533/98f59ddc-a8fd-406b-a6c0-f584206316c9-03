@@ -46,7 +46,7 @@ export const useProductReviews = (productId: string) => {
 
       if (reviewsError) {
         console.error('Error fetching reviews:', reviewsError);
-        throw reviewsError;
+        // Don't throw error, just log it and continue
       }
 
       console.log('Reviews data:', reviewsData);
@@ -56,7 +56,7 @@ export const useProductReviews = (productId: string) => {
         .from('product_ratings_summary')
         .select('*')
         .eq('product_id', productId)
-        .single();
+        .maybeSingle();
 
       if (statsError && statsError.code !== 'PGRST116') {
         console.error('Error fetching stats:', statsError);
@@ -89,15 +89,21 @@ export const useProductReviews = (productId: string) => {
         localStorage.setItem('session_id', sessionId);
       }
 
+      const reviewData = {
+        product_id: productId,
+        customer_name: customerName,
+        rating,
+        comment: comment || null,
+        session_id: sessionId,
+        is_approved: true, // Auto-approve reviews since no moderation system
+        is_verified: false
+      };
+
+      console.log('Inserting review data:', reviewData);
+
       const { data, error } = await supabase
         .from('product_reviews')
-        .insert({
-          product_id: productId,
-          customer_name: customerName,
-          rating,
-          comment: comment || null,
-          session_id: sessionId,
-        })
+        .insert(reviewData)
         .select();
 
       if (error) {
@@ -109,11 +115,11 @@ export const useProductReviews = (productId: string) => {
 
       toast({
         title: "تم إضافة التقييم",
-        description: "شكراً لك! سيتم مراجعة تقييمك قبل النشر",
+        description: "تم إضافة تقييمك بنجاح",
       });
 
       // Refresh reviews
-      fetchReviews();
+      await fetchReviews();
       return true;
     } catch (error) {
       console.error('Error adding review:', error);

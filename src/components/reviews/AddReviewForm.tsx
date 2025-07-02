@@ -26,6 +26,8 @@ const AddReviewForm = ({ productId, onSubmit }: AddReviewFormProps) => {
     }
 
     setIsSubmitting(true);
+    console.log('Submitting review:', { customerName: customerName.trim(), rating, comment: comment.trim() });
+    
     const success = await onSubmit(customerName.trim(), rating, comment.trim() || undefined);
     
     if (success) {

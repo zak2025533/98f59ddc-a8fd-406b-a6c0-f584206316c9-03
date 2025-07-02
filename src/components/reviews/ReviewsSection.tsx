@@ -17,6 +17,7 @@ const ReviewsSection = ({ productId, productName }: ReviewsSectionProps) => {
   const { reviews, stats, loading, addReview } = useProductReviews(productId);
 
   const handleAddReview = async (customerName: string, rating: number, comment?: string) => {
+    console.log('ReviewsSection: Handling add review', { customerName, rating, comment });
     const success = await addReview(customerName, rating, comment);
     if (success) {
       setShowAddForm(false);
@@ -127,10 +128,19 @@ const ReviewsSection = ({ productId, productName }: ReviewsSectionProps) => {
           إضافة تقييم
         </Button>
       ) : (
-        <AddReviewForm
-          productId={productId}
-          onSubmit={handleAddReview}
-        />
+        <div>
+          <AddReviewForm
+            productId={productId}
+            onSubmit={handleAddReview}
+          />
+          <Button
+            onClick={() => setShowAddForm(false)}
+            variant="outline"
+            className="w-full mt-2 font-arabic"
+          >
+            إلغاء
+          </Button>
+        </div>
       )}
 
       {/* Reviews List */}
