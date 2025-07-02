@@ -6,6 +6,7 @@ import { Star, ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/hooks/cart/useCart";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useToast } from "@/hooks/use-toast";
+import ProductRating from "@/components/ProductRating";
 import React from "react";
 
 interface Product {
@@ -99,10 +100,7 @@ const MobileProductCard = ({ product }: MobileProductCardProps) => {
               <span className="text-lg font-bold text-blue-700 font-arabic">{product.price.toLocaleString('ar-EG')}</span>
               <span className="text-xs text-blue-500 mr-1">ريال</span>
             </div>
-            <div className="flex items-center">
-              <Star className="h-3 w-3 text-yellow-400 fill-current" />
-              <span className="text-xs text-blue-500 mr-1">4.8</span>
-            </div>
+            <ProductRating productId={product.id} showCount={false} size="sm" />
           </div>
           
           <Button 

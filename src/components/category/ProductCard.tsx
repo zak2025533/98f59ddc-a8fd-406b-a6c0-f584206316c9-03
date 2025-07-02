@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
+import ProductRating from "@/components/ProductRating";
 import React from "react";
 
 interface Product {
@@ -64,10 +65,7 @@ const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: Pro
           <h3 className="text-xl font-bold text-blue-800 group-hover:text-purple-600 transition-colors font-arabic">
             {product.name}
           </h3>
-          <div className="flex items-center">
-            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            <span className="text-sm text-gray-600 mr-1">4.8</span>
-          </div>
+          <ProductRating productId={product.id} showCount={false} size="sm" />
         </div>
         
         <p className="text-gray-700 text-sm leading-relaxed mb-4 font-arabic line-clamp-2">
