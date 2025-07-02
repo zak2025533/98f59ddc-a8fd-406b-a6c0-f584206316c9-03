@@ -31,7 +31,11 @@ export const useProductReviews = (productId: string) => {
   const { toast } = useToast();
 
   const fetchReviews = async () => {
+    if (!productId) return;
+    
     try {
+      console.log('Fetching reviews for product:', productId);
+      
       // Fetch approved reviews
       const { data: reviewsData, error: reviewsError } = await supabase
         .from('product_reviews')
@@ -40,7 +44,12 @@ export const useProductReviews = (productId: string) => {
         .eq('is_approved', true)
         .order('created_at', { ascending: false });
 
-      if (reviewsError) throw reviewsError;
+      if (reviewsError) {
+        console.error('Error fetching reviews:', reviewsError);
+        throw reviewsError;
+      }
+
+      console.log('Reviews data:', reviewsData);
 
       // Fetch ratings summary
       const { data: statsData, error: statsError } = await supabase
@@ -52,6 +61,8 @@ export const useProductReviews = (productId: string) => {
       if (statsError && statsError.code !== 'PGRST116') {
         console.error('Error fetching stats:', statsError);
       }
+
+      console.log('Stats data:', statsData);
 
       setReviews(reviewsData || []);
       setStats(statsData || null);
@@ -69,6 +80,8 @@ export const useProductReviews = (productId: string) => {
 
   const addReview = async (customerName: string, rating: number, comment?: string) => {
     try {
+      console.log('Adding review:', { customerName, rating, comment, productId });
+      
       // Get or generate session ID
       let sessionId = localStorage.getItem('session_id');
       if (!sessionId) {
@@ -76,7 +89,7 @@ export const useProductReviews = (productId: string) => {
         localStorage.setItem('session_id', sessionId);
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('product_reviews')
         .insert({
           product_id: productId,
@@ -84,9 +97,15 @@ export const useProductReviews = (productId: string) => {
           rating,
           comment: comment || null,
           session_id: sessionId,
-        });
+        })
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error adding review:', error);
+        throw error;
+      }
+
+      console.log('Review added successfully:', data);
 
       toast({
         title: "تم إضافة التقييم",

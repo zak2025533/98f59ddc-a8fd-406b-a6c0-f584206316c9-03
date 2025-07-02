@@ -5,8 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart, ArrowRight } from "lucide-react";
-import { useCart } from '@/hooks/cart/useCart';
-import { useFavorites } from '@/hooks/useFavorites';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SimpleNavbar from '@/components/SimpleNavbar';
@@ -30,8 +28,6 @@ const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
-  const { isFavorite, toggleFavorite } = useFavorites();
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -67,12 +63,29 @@ const ProductDetails = () => {
     if (!product) return;
     
     try {
-      await addToCart(product.id);
+      // Get or generate session ID
+      let sessionId = localStorage.getItem('session_id');
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem('session_id', sessionId);
+      }
+
+      const { error } = await supabase
+        .from('cart_items')
+        .insert({
+          product_id: product.id,
+          session_id: sessionId,
+          quantity: 1,
+        });
+
+      if (error) throw error;
+
       toast({
         title: "تمت الإضافة للسلة",
         description: "تم إضافة المنتج إلى سلة التسوق بنجاح",
       });
     } catch (error) {
+      console.error('Error adding to cart:', error);
       toast({
         title: "خطأ",
         description: "فشل في إضافة المنتج إلى السلة",
@@ -85,12 +98,48 @@ const ProductDetails = () => {
     if (!product) return;
     
     try {
-      await toggleFavorite(product.id);
-      toast({
-        title: isFavorite(product.id) ? "تمت الإزالة من المفضلة" : "تمت الإضافة للمفضلة",
-        description: isFavorite(product.id) ? "تم إزالة المنتج من المفضلة" : "تم إضافة المنتج إلى المفضلة",
-      });
+      // Get or generate session ID
+      let sessionId = localStorage.getItem('session_id');
+      if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem('session_id', sessionId);
+      }
+
+      // Check if already in favorites
+      const { data: existingFavorite } = await supabase
+        .from('favorites')
+        .select('id')
+        .eq('product_id', product.id)
+        .eq('session_id', sessionId)
+        .single();
+
+      if (existingFavorite) {
+        // Remove from favorites
+        await supabase
+          .from('favorites')
+          .delete()
+          .eq('id', existingFavorite.id);
+        
+        toast({
+          title: "تمت الإزالة من المفضلة",
+          description: "تم إزالة المنتج من المفضلة",
+        });
+      } else {
+        // Add to favorites
+        await supabase
+          .from('favorites')
+          .insert({
+            product_id: product.id,
+            session_id: sessionId,
+          });
+        
+        toast({
+          title: "تمت الإضافة للمفضلة",
+          description: "تم إضافة المنتج إلى المفضلة",
+        });
+      }
     } catch (error) {
+      console.error('Error toggling favorite:', error);
       toast({
         title: "خطأ",
         description: "فشل في تحديث المفضلة",
@@ -217,8 +266,8 @@ const ProductDetails = () => {
               onClick={handleToggleFavorite}
               className="font-arabic"
             >
-              <Heart className={`h-5 w-5 ml-2 ${isFavorite(product.id) ? 'text-red-500 fill-red-500' : 'text-red-500'}`} />
-              {isFavorite(product.id) ? 'إزالة من المفضلة' : 'أضف للمفضلة'}
+              <Heart className="h-5 w-5 ml-2 text-red-500" />
+              أضف للمفضلة
             </Button>
           </div>
 
