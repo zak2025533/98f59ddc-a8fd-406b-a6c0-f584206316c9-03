@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart, Heart } from "lucide-react";
 import ProductRating from "@/components/ProductRating";
+import { useNavigate } from "react-router-dom";
 import React from "react";
 
 interface Product {
@@ -24,6 +25,12 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: ProductCardProps) => {
+  const navigate = useNavigate();
+  
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+  
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite(product.id);
@@ -35,7 +42,10 @@ const ProductCard = ({ product, isFavorite, onAddToCart, onToggleFavorite }: Pro
   };
 
   return (
-    <Card className="hover:scale-105 transition-all duration-300 cursor-pointer group overflow-hidden border-2 border-blue-200 bg-white">
+    <Card 
+      className="hover:scale-105 transition-all duration-300 cursor-pointer group overflow-hidden border-2 border-blue-200 bg-white"
+      onClick={handleCardClick}
+    >
       <div className="h-48 relative overflow-hidden">
         <img
           src={product.image_url || "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80"}
