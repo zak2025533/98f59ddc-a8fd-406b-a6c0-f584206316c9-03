@@ -76,7 +76,7 @@ const AddReviewForm = ({ productId, onSubmit }: AddReviewFormProps) => {
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="اكتب اسمك هنا"
               required
-              className="font-arabic text-gray-900 bg-white border-gray-300 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500"
+              className="font-arabic text-sweet-gold bg-white border-gray-300 placeholder-gray-500 focus:border-sweet-gold focus:ring-sweet-gold"
             />
           </div>
 
@@ -101,7 +101,7 @@ const AddReviewForm = ({ productId, onSubmit }: AddReviewFormProps) => {
               onChange={(e) => setComment(e.target.value)}
               placeholder="شاركنا رأيك في المنتج..."
               rows={4}
-              className="font-arabic text-gray-900 bg-white border-gray-300 placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500"
+              className="font-arabic text-sweet-gold bg-white border-gray-300 placeholder-gray-500 focus:border-sweet-gold focus:ring-sweet-gold"
             />
           </div>
 

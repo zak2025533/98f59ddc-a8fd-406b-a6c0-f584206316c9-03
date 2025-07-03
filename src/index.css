@@ -9,6 +9,12 @@
   --safe-area-inset-right: env(safe-area-inset-right);
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
   --safe-area-inset-left: env(safe-area-inset-left);
+  
+  /* Sweet shop colors */
+  --sweet-gold: 45 100% 55%;
+  --sweet-orange: 25 95% 60%;
+  --sweet-cream: 50 20% 95%;
+  --sweet-brown: 20 25% 35%;
 }
 
 body {
