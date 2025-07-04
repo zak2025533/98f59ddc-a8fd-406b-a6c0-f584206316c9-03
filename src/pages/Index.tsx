@@ -1,6 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
+import PullToRefresh from "@/components/mobile/PullToRefresh";
 import HeroBanner from "@/components/HeroBanner";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import FeaturedProducts from "@/components/FeaturedProducts";
@@ -8,24 +9,39 @@ import SimpleFooter from "@/components/SimpleFooter";
 import Navbar from "@/components/Navbar";
 import { useVisitorTracking } from "@/hooks/useVisitorTracking";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   useVisitorTracking();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const featuredRef = useRef<HTMLDivElement>(null);
+
+  const handleRefresh = async () => {
+    // Simulate refresh delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setRefreshKey(prev => prev + 1);
+    toast({
+      title: "تم التحديث",
+      description: "تم تحديث المحتوى بنجاح",
+    });
+  };
 
   if (isMobile) {
     return (
       <MobileLayout showBottomNav={true}>
         <MobileHeader title="بلا حدود للحلويات" />
-        <div className="space-y-0">
-          <HeroBanner scrollToRef={featuredRef} onOpenCart={() => {}} />
-          <AnnouncementBanner />
-          <div ref={featuredRef}>
-            <FeaturedProducts />
+        <PullToRefresh onRefresh={handleRefresh}>
+          <div className="space-y-0" key={refreshKey}>
+            <HeroBanner scrollToRef={featuredRef} onOpenCart={() => {}} />
+            <AnnouncementBanner />
+            <div ref={featuredRef}>
+              <FeaturedProducts />
+            </div>
           </div>
-        </div>
+        </PullToRefresh>
         <SimpleFooter />
       </MobileLayout>
     );

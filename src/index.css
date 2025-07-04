@@ -237,6 +237,75 @@ input, select, textarea {
   transform: scale(0.98);
 }
 
+/* Float animation for hero decorations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(-5px) rotate(-1deg); }
+  75% { transform: translateY(-15px) rotate(1deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pull to refresh styling */
+.pull-to-refresh {
+  position: relative;
+  overflow: hidden;
+}
+
+.pull-to-refresh::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, hsl(var(--app-primary)), hsl(var(--app-secondary)));
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.pull-to-refresh.pulling::before {
+  opacity: 1;
+  top: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+/* Enhanced focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--app-primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Enhanced scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--app-background));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(hsl(var(--app-primary)), hsl(var(--app-secondary)));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(hsl(var(--app-primary-dark)), hsl(var(--app-secondary)));
+}
+
 /* Tap highlight removal for better mobile experience */
 * {
   -webkit-tap-highlight-color: transparent;

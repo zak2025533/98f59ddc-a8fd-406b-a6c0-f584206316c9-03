@@ -93,14 +93,31 @@ const FeaturedProducts = () => {
 
   if (loading) {
     return (
-      <section className="bg-white py-4 px-4">
+      <section className="bg-gradient-to-br from-gray-50 to-white py-8 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+          {/* Header skeleton */}
+          <div className="text-center mb-6">
+            <div className="flex items-center justify-center mb-3">
+              <div className="w-6 h-6 bg-gray-200 rounded animate-pulse mr-2"></div>
+              <div className="w-40 h-6 bg-gray-200 rounded animate-pulse"></div>
+              <div className="w-6 h-6 bg-gray-200 rounded animate-pulse ml-2"></div>
+            </div>
+            <div className="w-60 h-4 bg-gray-200 rounded animate-pulse mx-auto"></div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {[...Array(isMobile ? 6 : 8)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 h-32 md:h-40 rounded-lg mb-2"></div>
-                <div className="bg-gray-200 h-3 rounded mb-1"></div>
-                <div className="bg-gray-200 h-3 rounded w-3/4"></div>
+              <div key={i} className="modern-card animate-pulse">
+                <div className="bg-gray-200 h-44 rounded-t-2xl"></div>
+                <div className="p-4 space-y-3">
+                  <div className="bg-gray-200 h-4 rounded w-3/4"></div>
+                  <div className="bg-gray-200 h-3 rounded w-full"></div>
+                  <div className="bg-gray-200 h-3 rounded w-1/2"></div>
+                  <div className="flex justify-between items-center">
+                    <div className="bg-gray-200 h-5 rounded w-16"></div>
+                    <div className="bg-gray-200 h-8 rounded-lg w-20"></div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -110,59 +127,63 @@ const FeaturedProducts = () => {
   }
 
   return (
-    <section className="bg-white py-4 px-4">
+    <section className="bg-gradient-to-br from-gray-50 to-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4">
-          <div className="flex items-center justify-center mb-2">
-            <Star className="h-5 w-5 md:h-6 md:w-6 text-yellow-500 fill-yellow-500 ml-2" />
-            <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 font-arabic">
-              المنتجات المميزة
-            </h2>
-            <Star className="h-5 w-5 md:h-6 md:w-6 text-yellow-500 fill-yellow-500 mr-2" />
+        {/* Enhanced Header */}
+        <div className="text-center mb-8 fade-in-up">
+          <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center space-x-3 space-x-reverse bg-gradient-to-r from-yellow-400 to-yellow-500 px-6 py-3 rounded-full shadow-lg">
+              <Star className="h-6 w-6 text-yellow-900 fill-yellow-900 animate-pulse" />
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-yellow-900 font-arabic">
+                المنتجات المميزة
+              </h2>
+              <Star className="h-6 w-6 text-yellow-900 fill-yellow-900 animate-pulse" />
+            </div>
           </div>
-          <p className="text-sm text-gray-600 font-arabic">
-            اكتشف أفضل منتجاتنا الأكثر طلباً
+          <p className="text-base text-gray-600 font-arabic max-w-md mx-auto leading-relaxed">
+            اكتشف أفضل منتجاتنا الأكثر طلباً والأعلى تقييماً
           </p>
         </div>
 
-        {/* Products Grid */}
-        <div className="grid gap-3 md:gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((product) => 
-            isMobile ? (
-              <MobileProductCard
-                key={product.id}
-                product={product}
-              />
-            ) : (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isFavorite={isFavorite}
-                onAddToCart={handleAddToCart}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            )
+        {/* Enhanced Products Grid */}
+        <div className="grid gap-4 md:gap-6 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {products.map((product, index) => 
+            <div key={product.id} className="fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+              {isMobile ? (
+                <MobileProductCard product={product} />
+              ) : (
+                <ProductCard
+                  product={product}
+                  isFavorite={isFavorite}
+                  onAddToCart={handleAddToCart}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              )}
+            </div>
           )}
         </div>
 
-        {/* View All Button */}
+        {/* Enhanced View All Button */}
         {products.length > 0 && (
-          <div className="text-center mt-4">
+          <div className="text-center mt-8 fade-in-up" style={{ animationDelay: '0.6s' }}>
             <a
               href="/category"
-              className="inline-flex items-center space-x-2 space-x-reverse bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 font-arabic text-sm md:text-base shadow-lg"
+              className="modern-button inline-flex items-center space-x-3 space-x-reverse bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 font-arabic text-lg border border-blue-400/50"
             >
               <span>عرض جميع المنتجات</span>
-              <ArrowLeft className="h-4 w-4 md:h-5 md:w-5" />
+              <ArrowLeft className="h-5 w-5" />
             </a>
           </div>
         )}
 
-        {/* No products message */}
+        {/* Enhanced No products message */}
         {products.length === 0 && !loading && (
-          <div className="text-center py-8">
-            <p className="text-gray-500 font-arabic">لا توجد منتجات مميزة متاحة حالياً</p>
+          <div className="text-center py-12 fade-in-up">
+            <div className="bg-gray-100 rounded-2xl p-8 max-w-md mx-auto">
+              <div className="text-4xl mb-4">🍰</div>
+              <p className="text-gray-600 font-arabic text-lg">لا توجد منتجات مميزة متاحة حالياً</p>
+              <p className="text-gray-500 font-arabic text-sm mt-2">تابعونا للحصول على أحدث المنتجات</p>
+            </div>
           </div>
         )}
       </div>
