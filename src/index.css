@@ -10,11 +10,33 @@
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
   --safe-area-inset-left: env(safe-area-inset-left);
   
-  /* Sweet shop colors */
+  /* Modern app colors */
   --sweet-gold: 45 100% 55%;
   --sweet-orange: 25 95% 60%;
   --sweet-cream: 50 20% 95%;
   --sweet-brown: 20 25% 35%;
+  
+  /* Modern UI colors */
+  --app-primary: 220 70% 50%;
+  --app-primary-dark: 220 70% 45%;
+  --app-secondary: 45 100% 55%;
+  --app-background: 220 15% 97%;
+  --app-surface: 0 0% 100%;
+  --app-surface-glass: 0 0% 100% / 0.8;
+  --app-border: 220 15% 90%;
+  --app-text: 220 15% 15%;
+  --app-text-muted: 220 10% 50%;
+  
+  /* Glass morphism */
+  --glass-bg: 0 0% 100% / 0.25;
+  --glass-border: 0 0% 100% / 0.3;
+  --glass-blur: blur(20px);
+  
+  /* Modern shadows */
+  --shadow-soft: 0 2px 20px -2px hsl(220 15% 15% / 0.1);
+  --shadow-medium: 0 4px 30px -4px hsl(220 15% 15% / 0.15);
+  --shadow-strong: 0 8px 40px -8px hsl(220 15% 15% / 0.2);
+  --shadow-glow: 0 0 0 1px hsl(var(--app-primary) / 0.1), 0 0 20px hsl(var(--app-primary) / 0.2);
 }
 
 body {
@@ -117,7 +139,7 @@ input, select, textarea {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* Mobile-specific animations */
+/* Modern mobile animations */
 @keyframes mobile-slide-up {
   from {
     transform: translateY(100%);
@@ -129,8 +151,90 @@ input, select, textarea {
   }
 }
 
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
 .mobile-slide-up {
   animation: mobile-slide-up 0.3s ease-out;
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+
+.scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, hsl(var(--app-background)) 25%, hsl(var(--app-border)) 50%, hsl(var(--app-background)) 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Glass morphism utilities */
+.glass-card {
+  background: hsl(var(--glass-bg));
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid hsl(var(--glass-border));
+}
+
+/* Modern card styles */
+.modern-card {
+  background: hsl(var(--app-surface));
+  border: 1px solid hsl(var(--app-border));
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.modern-card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Enhanced button styles */
+.modern-button {
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modern-button:active {
+  transform: scale(0.98);
 }
 
 /* Tap highlight removal for better mobile experience */

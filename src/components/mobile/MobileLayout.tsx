@@ -17,18 +17,22 @@ const MobileLayout = ({ children, showBottomNav = true }: MobileLayoutProps) => 
   const [openFavorites, setOpenFavorites] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#3b2fa0] text-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900 flex flex-col">
       {/* المحتوى الرئيسي مع هامش سفلي إذا ظهر الشريط السفلي */}
-      <main className={`flex-1 ${showBottomNav && isMobile ? 'pb-20' : ''}`}>
-        {children}
+      <main className={`flex-1 transition-all duration-300 ${showBottomNav && isMobile ? 'pb-24' : ''}`}>
+        <div className="fade-in-up">
+          {children}
+        </div>
       </main>
 
       {/* الشريط السفلي (يظهر فقط على الجوال) */}
       {showBottomNav && isMobile && (
-        <BottomNavigation
-          onOpenCart={() => setOpenCart(true)}
-          onOpenFavorites={() => setOpenFavorites(true)}
-        />
+        <div className="mobile-slide-up">
+          <BottomNavigation
+            onOpenCart={() => setOpenCart(true)}
+            onOpenFavorites={() => setOpenFavorites(true)}
+          />
+        </div>
       )}
 
       {/* نافذة السلة */}
