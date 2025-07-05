@@ -14,15 +14,11 @@ serve(async (req) => {
   try {
     const { title, message, segment = "All" } = await req.json();
 
-    const appId = Deno.env.get('ONESIGNAL_APP_ID');
-    const apiKey = Deno.env.get('ONESIGNAL_REST_API_KEY');
+    const appId = "3c3da35a-91f0-4526-95d7-9799a3407583";
+    const apiKey = "m7be6aklyubou2vnoxdnsddvb";
 
     console.log("Sending push notification:", { title, message, segment });
-    console.log("Environment check:", { appId: appId ? "✓ Found" : "✗ Missing", apiKey: apiKey ? "✓ Found" : "✗ Missing" });
-
-    if (!appId || !apiKey) {
-      throw new Error("OneSignal credentials not configured properly");
-    }
+    console.log("Credential check:", { appId: appId ? "✓ Found" : "✗ Missing", apiKey: apiKey ? "✓ Found" : "✗ Missing" });
 
     const headers = {
       "Content-Type": "application/json; charset=utf-8",
@@ -54,7 +50,7 @@ serve(async (req) => {
     });
 
     const result = await response.json();
-    
+
     console.log("OneSignal response:", result);
 
     return new Response(JSON.stringify({
@@ -67,7 +63,7 @@ serve(async (req) => {
 
   } catch (error) {
     console.error("Error sending push notification:", error);
-    
+
     return new Response(JSON.stringify({
       success: false,
       error: error.message
