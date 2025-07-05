@@ -7,6 +7,7 @@ import {
   ShoppingCart, 
   BarChart3,
   Eye,
+  Bell,
 } from "lucide-react";
 
 const AdminNavTabs = () => {
@@ -27,6 +28,13 @@ const AdminNavTabs = () => {
           >
             <Megaphone className="h-5 w-5" />
             الإعلانات
+          </TabsTrigger>
+          <TabsTrigger 
+            value="push-notifications" 
+            className="font-arabic flex items-center gap-2 px-6 py-4 text-gray-700 hover:text-red-700 hover:bg-red-50 data-[state=active]:bg-white data-[state=active]:text-red-700 data-[state=active]:border-b-4 data-[state=active]:border-red-600"
+          >
+            <Bell className="h-5 w-5" />
+            الإشعارات المباشرة
           </TabsTrigger>
           <TabsTrigger 
             value="categories" 

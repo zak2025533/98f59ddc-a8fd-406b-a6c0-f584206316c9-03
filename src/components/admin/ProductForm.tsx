@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import ProductFormFields from "./ProductFormFields";
 import CategorySelectors from "./CategorySelectors";
 import ProductToggles from "./ProductToggles";
@@ -28,6 +29,7 @@ const ProductForm = ({ product, onSuccess, onCancel }: ProductFormProps) => {
   const [subcategories, setSubcategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { sendNewProductNotification } = usePushNotifications();
 
   useEffect(() => {
     if (product) {
@@ -150,6 +152,11 @@ const ProductForm = ({ product, onSuccess, onCancel }: ProductFormProps) => {
       });
 
       console.log('Product saved successfully:', result.data);
+      
+      // إرسال إشعار عند إضافة منتج جديد فقط
+      if (!product) {
+        await sendNewProductNotification(result.data.name, result.data.price);
+      }
       
       const productWithCategory = {
         ...result.data,

@@ -2,6 +2,7 @@
 import { TabsContent } from "@/components/ui/tabs";
 import ProductManagement from "./ProductManagement";
 import AnnouncementsManagement from "./AnnouncementsManagement";
+import PushNotificationsManagement from "./PushNotificationsManagement";
 import CategoryManagement from "./CategoryManagement";
 import OrdersManagement from "./OrdersManagement";
 import AnalyticsSection from "./AnalyticsSection";
@@ -20,6 +21,10 @@ const AdminTabsContent = ({ onStatsUpdate }: AdminTabsContentProps) => {
 
       <TabsContent value="announcements" className="m-0">
         <AnnouncementsManagement onStatsUpdate={onStatsUpdate} />
+      </TabsContent>
+
+      <TabsContent value="push-notifications" className="m-0">
+        <PushNotificationsManagement />
       </TabsContent>
 
       <TabsContent value="categories" className="m-0">
