@@ -85,20 +85,26 @@ const SimpleFooter = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
+            <h4 className="text-lg font-semibold font-arabic mb-6 text-yellow-300 text-center">
               روابط سريعة
             </h4>
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               {quickLinks.map((link, index) => {
                 const Icon = link.icon;
                 return (
                   <Link
                     key={index}
                     to={link.href}
-                    className="flex items-center space-x-3 space-x-reverse text-blue-100 hover:text-white transition-colors group"
+                    className="group bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
                   >
-                    <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                    <span className="font-arabic">{link.name}</span>
+                    <div className="text-center">
+                      <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-3 rounded-xl mx-auto w-fit mb-2 group-hover:scale-110 transition-transform shadow-lg">
+                        <Icon className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-sm font-arabic text-blue-100 group-hover:text-white transition-colors">
+                        {link.name}
+                      </span>
+                    </div>
                   </Link>
                 );
               })}
@@ -107,20 +113,26 @@ const SimpleFooter = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
+            <h4 className="text-lg font-semibold font-arabic mb-6 text-yellow-300 text-center">
               معلومات التواصل
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {contactInfo.map((info, index) => {
                 const Icon = info.icon;
                 return (
                   <a 
                     key={index} 
                     href={info.href}
-                    className="flex items-center space-x-3 space-x-reverse text-blue-100 hover:text-white transition-colors group"
+                    className="group bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30 block"
                   >
-                    <Icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
-                    <span className="font-arabic text-sm">{info.text}</span>
+                    <div className="flex items-center space-x-3 space-x-reverse">
+                      <div className="bg-gradient-to-br from-blue-400 to-purple-500 p-3 rounded-xl group-hover:scale-110 transition-transform shadow-lg">
+                        <Icon className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="font-arabic text-sm text-blue-100 group-hover:text-white transition-colors flex-1">
+                        {info.text}
+                      </span>
+                    </div>
                   </a>
                 );
               })}
@@ -129,10 +141,10 @@ const SimpleFooter = () => {
 
           {/* Social Media */}
           <div>
-            <h4 className="text-lg font-semibold font-arabic mb-4 text-yellow-300">
+            <h4 className="text-lg font-semibold font-arabic mb-6 text-yellow-300 text-center">
               تابعونا على
             </h4>
-            <div className="flex space-x-4 space-x-reverse">
+            <div className="grid grid-cols-3 gap-3">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
                 return (
@@ -141,10 +153,17 @@ const SimpleFooter = () => {
                     href={social.href}
                     target={social.href.startsWith('http') ? '_blank' : '_self'}
                     rel={social.href.startsWith('http') ? 'noopener noreferrer' : ''}
-                    className="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-all duration-300 hover:scale-110 group"
+                    className="group bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/30"
                     aria-label={social.name}
                   >
-                    <Icon className="h-6 w-6 group-hover:scale-110 transition-transform" />
+                    <div className="text-center">
+                      <div className="bg-gradient-to-br from-pink-400 to-red-500 p-3 rounded-xl mx-auto w-fit mb-2 group-hover:scale-110 transition-transform shadow-lg">
+                        <Icon className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-xs font-arabic text-blue-100 group-hover:text-white transition-colors">
+                        {social.name}
+                      </span>
+                    </div>
                   </a>
                 );
               })}
