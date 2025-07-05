@@ -1,5 +1,5 @@
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
 
 interface ProductDialogProps {
@@ -17,6 +17,9 @@ const ProductDialog = ({ isOpen, onClose, product, onSuccess }: ProductDialogPro
           <DialogTitle className="font-arabic text-right text-blue-800 text-xl">
             {product ? "تعديل المنتج" : "إضافة منتج جديد"}
           </DialogTitle>
+          <DialogDescription className="text-right font-arabic text-blue-600">
+            {product ? "قم بتعديل بيانات المنتج أدناه" : "أدخل بيانات المنتج الجديد"}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4">

@@ -127,9 +127,6 @@ const AnnouncementDialog = ({ isOpen, onClose, announcement, onSuccess }: Announ
           <DialogTitle className="text-right font-arabic text-green-800 text-xl">
             {announcement ? "تعديل إعلان" : "إضافة إعلان جديد"}
           </DialogTitle>
-          <DialogDescription className="text-right font-arabic text-green-600">
-            {announcement ? "قم بتعديل بيانات الإعلان أدناه" : "أدخل بيانات الإعلان الجديد"}
-          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
