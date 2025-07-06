@@ -1,16 +1,18 @@
 
 import { useState } from "react";
-import { Menu, Search, ShoppingCart, Heart, Home, Grid3X3, Info, MessageCircle, Settings } from "lucide-react";
+import { Menu, Search, ShoppingCart, Heart, Home, Grid3X3, Info, MessageCircle, Settings, Bell, BellRing } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CartSheet } from "./CartSheet";
 import { FavoritesSheet } from "./FavoritesSheet";
 import { useNativeApp } from "@/hooks/useNativeApp";
+import { useOneSignal } from "@/hooks/useOneSignal";
 import Admin from "@/pages/Admin";
 
 const SimpleNavbar = () => {
   const { isNative } = useNativeApp();
+  const { isSubscribed, requestPermission } = useOneSignal();
   const [adminDialogOpen, setAdminDialogOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
@@ -71,6 +73,16 @@ const SimpleNavbar = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={requestPermission}
+                className={`rounded-full text-white ${isSubscribed ? 'bg-green-500/20 hover:bg-green-500/30' : 'bg-white/10 hover:bg-white/20'}`}
+                title={isSubscribed ? "الإشعارات مفعلة" : "تفعيل الإشعارات"}
+              >
+                {isSubscribed ? <BellRing className="h-5 w-5" /> : <Bell className="h-5 w-5" />}
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setFavoritesOpen(true)}
                 className="rounded-full text-white bg-white/10 hover:bg-white/20"
               >
@@ -96,6 +108,19 @@ const SimpleNavbar = () => {
                   </SheetTrigger>
                   <SheetContent side="right" className="w-[300px] bg-gradient-to-br from-orange-50 to-yellow-50">
                     <nav className="flex flex-col space-y-4 mt-6">
+                      {/* زر الإشعارات في القائمة المحمولة */}
+                      <button
+                        onClick={requestPermission}
+                        className={`flex items-center space-x-3 space-x-reverse font-arabic text-lg py-3 px-2 rounded-lg transition-all duration-200 ${
+                          isSubscribed 
+                            ? 'text-green-800 hover:text-green-600 bg-green-100 hover:bg-green-200' 
+                            : 'text-orange-800 hover:text-orange-600 hover:bg-orange-100'
+                        }`}
+                      >
+                        {isSubscribed ? <BellRing className="h-6 w-6" /> : <Bell className="h-6 w-6" />}
+                        <span>{isSubscribed ? "الإشعارات مفعلة" : "تفعيل الإشعارات"}</span>
+                      </button>
+                      
                       {navItems.map((item) => {
                         const Icon = item.icon;
                         if (item.isAdmin) {

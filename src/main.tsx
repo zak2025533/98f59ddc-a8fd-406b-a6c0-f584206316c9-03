@@ -6,6 +6,13 @@ import { FavoritesProvider } from "@/hooks/useFavorites";
 import App from "./App";
 import "./index.css";
 
+// تسجيل Service Worker للإشعارات
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/OneSignalSDKWorker.js')
+    .then(() => console.log('OneSignal Service Worker registered'))
+    .catch(err => console.log('OneSignal Service Worker registration failed:', err));
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CartProvider>
