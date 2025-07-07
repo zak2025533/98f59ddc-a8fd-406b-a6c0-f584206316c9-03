@@ -12,13 +12,10 @@ import Admin from "@/pages/Admin";
 
 const SimpleNavbar = () => {
   const { isNative } = useNativeApp();
-  const { isSubscribed, requestPermission, isInitialized } = useOneSignal();
+  const { isSubscribed, requestPermission } = useOneSignal();
   const [adminDialogOpen, setAdminDialogOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [favoritesOpen, setFavoritesOpen] = useState(false);
-
-  // تشخيص لمساعدة المستخدم
-  console.log('SimpleNavbar render:', { isInitialized, isSubscribed });
 
   const navItems = [
     { name: "الرئيسية", href: "/", icon: Home },

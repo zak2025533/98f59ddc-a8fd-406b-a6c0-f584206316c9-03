@@ -16,19 +16,13 @@ export const useOneSignal = () => {
   useEffect(() => {
     const initOneSignal = () => {
       if (window.OneSignal) {
-        console.log('OneSignal initialized successfully');
         window.OneSignal.isPushNotificationsEnabled().then((isEnabled: boolean) => {
-          console.log('OneSignal subscription status:', isEnabled);
           setIsSubscribed(isEnabled);
-          setIsInitialized(true);
-        }).catch((error: any) => {
-          console.error('Error checking OneSignal status:', error);
           setIsInitialized(true);
         });
 
         // استمع لتغييرات حالة الاشتراك
         window.OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
-          console.log('OneSignal subscription changed:', isSubscribed);
           setIsSubscribed(isSubscribed);
         });
       }
@@ -36,27 +30,15 @@ export const useOneSignal = () => {
 
     // إذا كان OneSignal محمل بالفعل
     if (window.OneSignal) {
-      console.log('OneSignal already loaded');
       initOneSignal();
     } else {
       // انتظر حتى يتم تحميل OneSignal
-      console.log('Waiting for OneSignal to load...');
       const checkOneSignal = setInterval(() => {
         if (window.OneSignal) {
-          console.log('OneSignal loaded via interval check');
           clearInterval(checkOneSignal);
           initOneSignal();
         }
       }, 100);
-
-      // أضف timeout للتأكد من عدم الانتظار إلى ما لا نهاية
-      setTimeout(() => {
-        clearInterval(checkOneSignal);
-        if (!window.OneSignal) {
-          console.warn('OneSignal failed to load after timeout');
-          setIsInitialized(true);
-        }
-      }, 10000);
 
       return () => clearInterval(checkOneSignal);
     }
