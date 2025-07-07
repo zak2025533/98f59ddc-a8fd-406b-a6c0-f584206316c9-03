@@ -14,53 +14,46 @@ export const useOneSignal = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const initOneSignal = async () => {
+    const initOneSignal = () => {
       if (window.OneSignal) {
-        try {
-          await window.OneSignal.init({
-            appId: "3c3da35a-91f0-4526-95d7-9799a3407583",
-            notifyButton: {
-              enable: false, // أو true لو حبيت زر الاشتراك يظهر في الصفحة
-            },
-            allowLocalhostAsSecureOrigin: true, // مهم أثناء التطوير المحلي
-          });
-
-          console.log("✅ OneSignal initialized successfully");
-
-          const isEnabled = await window.OneSignal.isPushNotificationsEnabled();
-          console.log("🔔 Subscription status:", isEnabled);
+        console.log('OneSignal initialized successfully');
+        window.OneSignal.isPushNotificationsEnabled().then((isEnabled: boolean) => {
+          console.log('OneSignal subscription status:', isEnabled);
           setIsSubscribed(isEnabled);
           setIsInitialized(true);
-
-          // استمع لتغييرات حالة الاشتراك
-          window.OneSignal.on('subscriptionChange', (status: boolean) => {
-            console.log("📡 Subscription changed:", status);
-            setIsSubscribed(status);
-          });
-        } catch (error) {
-          console.error("❌ Error initializing OneSignal:", error);
+        }).catch((error: any) => {
+          console.error('Error checking OneSignal status:', error);
           setIsInitialized(true);
-        }
+        });
+
+        // استمع لتغييرات حالة الاشتراك
+        window.OneSignal.on('subscriptionChange', (isSubscribed: boolean) => {
+          console.log('OneSignal subscription changed:', isSubscribed);
+          setIsSubscribed(isSubscribed);
+        });
       }
     };
 
+    // إذا كان OneSignal محمل بالفعل
     if (window.OneSignal) {
-      console.log("🔄 OneSignal already loaded");
+      console.log('OneSignal already loaded');
       initOneSignal();
     } else {
-      console.log("⏳ Waiting for OneSignal to load...");
+      // انتظر حتى يتم تحميل OneSignal
+      console.log('Waiting for OneSignal to load...');
       const checkOneSignal = setInterval(() => {
         if (window.OneSignal) {
-          console.log("✅ OneSignal loaded via interval");
+          console.log('OneSignal loaded via interval check');
           clearInterval(checkOneSignal);
           initOneSignal();
         }
       }, 100);
 
+      // أضف timeout للتأكد من عدم الانتظار إلى ما لا نهاية
       setTimeout(() => {
         clearInterval(checkOneSignal);
         if (!window.OneSignal) {
-          console.warn("⚠️ OneSignal failed to load after timeout");
+          console.warn('OneSignal failed to load after timeout');
           setIsInitialized(true);
         }
       }, 10000);
@@ -97,7 +90,7 @@ export const useOneSignal = () => {
         return false;
       }
     } catch (error) {
-      console.error("❌ Error requesting notification permission:", error);
+      console.error('Error requesting notification permission:', error);
       toast({
         title: "خطأ",
         description: "حدث خطأ أثناء طلب إذن الإشعارات",
@@ -112,7 +105,7 @@ export const useOneSignal = () => {
     try {
       return await window.OneSignal.getUserId();
     } catch (error) {
-      console.error("❌ Error getting user ID:", error);
+      console.error('Error getting user ID:', error);
       return null;
     }
   };
