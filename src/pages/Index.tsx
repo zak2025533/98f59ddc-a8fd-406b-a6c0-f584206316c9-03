@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MobileLayout from "@/components/mobile/MobileLayout";
 import MobileHeader from "@/components/mobile/MobileHeader";
 import PullToRefresh from "@/components/mobile/PullToRefresh";
@@ -16,13 +16,27 @@ const Index = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [refreshKey, setRefreshKey] = useState(0);
-
   const featuredRef = useRef<HTMLDivElement>(null);
 
+  // ⬇️ تهيئة OneSignal
+  useEffect(() => {
+    if (typeof window !== "undefined" && "OneSignal" in window) {
+      window.OneSignal = window.OneSignal || [];
+      window.OneSignal.push(function () {
+        window.OneSignal.init({
+          appId: "3c3da35a-91f0-4526-95d7-9799a3407583",
+          notifyButton: {
+            enable: true,
+          },
+          allowLocalhostAsSecureOrigin: true,
+        });
+      });
+    }
+  }, []);
+
   const handleRefresh = async () => {
-    // Simulate refresh delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setRefreshKey(prev => prev + 1);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setRefreshKey((prev) => prev + 1);
     toast({
       title: "تم التحديث",
       description: "تم تحديث المحتوى بنجاح",
@@ -47,7 +61,6 @@ const Index = () => {
     );
   }
 
-  // نسخة سطح المكتب مع الخلفية الجديدة
   return (
     <div className="min-h-screen bg-[#3b2fa0] text-white">
       <Navbar />
