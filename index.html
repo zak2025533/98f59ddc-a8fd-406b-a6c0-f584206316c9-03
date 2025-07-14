@@ -46,7 +46,6 @@
         box-sizing: border-box;
       }
 
-      /* ✅ اجعل الخلفية شفافة لتجنب الأبيض */
       #root {
         background-color: transparent;
         min-height: calc(100vh - var(--safe-area-inset-bottom));
@@ -57,11 +56,15 @@
         font-size: 16px !important;
       }
     </style>
+
+    <!-- (اختياري) manifest.json لـ SendPulse إن وُجد -->
+    <!-- <link rel="manifest" href="/manifest.json"> -->
+
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- OneSignal -->
+
+    <!-- ✅ OneSignal Web Push -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -73,7 +76,20 @@
         });
       });
     </script>
-    
+
+    <!-- ✅ SendPulse Web Push -->
+    <script charset="UTF-8" src="//web.webpushs.com/js/push/61333c330abde249981b7d16c65ec232_1.js" async></script>
+
+    <!-- (اختياري) تسجيل worker لـ SendPulse إن وُجد -->
+    <!--
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/push-worker.js');
+      }
+    </script>
+    -->
+
+    <!-- تطبيقك الرئيسي -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
